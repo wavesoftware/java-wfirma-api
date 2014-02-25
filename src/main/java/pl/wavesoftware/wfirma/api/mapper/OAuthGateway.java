@@ -24,8 +24,8 @@
 
 package pl.wavesoftware.wfirma.api.mapper;
 
-import java.net.URI;
 import pl.wavesoftware.wfirma.api.OAuthCredentials;
+import pl.wavesoftware.wfirma.api.model.WFirmaException;
 
 /**
  *
@@ -40,7 +40,7 @@ public class OAuthGateway implements WFirmaGateway {
     }
 
     @Override
-    public String fetch(URI address) {
+    public String fetch(RequestPath address) throws WFirmaException {
         // FIXME: Not yet implemented!!!
         throw new UnsupportedOperationException("Not supported yet.");
     }

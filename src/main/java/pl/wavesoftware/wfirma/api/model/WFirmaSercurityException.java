@@ -22,27 +22,26 @@
  * THE SOFTWARE.
  */
 
-package pl.wavesoftware.wfirma.api.mapper;
-
-import pl.wavesoftware.wfirma.api.model.WFirmaException;
+package pl.wavesoftware.wfirma.api.model;
 
 /**
  *
  * @author Krzysztof Suszyński <krzysztof.suszynski@wavesoftware.pl>
  */
-public interface WFirmaGateway {
+public class WFirmaSercurityException extends WFirmaException {
 
-    /**
-     * Address of WFirma API2 gateway
-     */
-    String GATEWAY_ADDRESS = "https://api2.wfirma.pl";
+    private static final long serialVersionUID = 1L;
 
-    /**
-     * Fetches a data from WFirma API2
-     *
-     * @param address a address to fetch
-     * @return a string with a XML Response from WFirma
-     * @throws WFirmaException if some error occured while fetching data
-     */
-    String fetch(RequestPath address) throws WFirmaException;
+    public WFirmaSercurityException(String format, Object... params) {
+        super(format, params);
+    }
+
+    public WFirmaSercurityException(Throwable cause, String format, Object... params) {
+        super(cause, format, params);
+    }
+
+    public WFirmaSercurityException(Throwable cause) {
+        super(cause);
+    }
+
 }

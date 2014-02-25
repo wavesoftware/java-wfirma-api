@@ -24,25 +24,19 @@
 
 package pl.wavesoftware.wfirma.api.mapper;
 
-import pl.wavesoftware.wfirma.api.model.WFirmaException;
-
 /**
  *
  * @author Krzysztof Suszyński <krzysztof.suszynski@wavesoftware.pl>
  */
-public interface WFirmaGateway {
+public class RequestPath {
 
-    /**
-     * Address of WFirma API2 gateway
-     */
-    String GATEWAY_ADDRESS = "https://api2.wfirma.pl";
+    String path;
 
-    /**
-     * Fetches a data from WFirma API2
-     *
-     * @param address a address to fetch
-     * @return a string with a XML Response from WFirma
-     * @throws WFirmaException if some error occured while fetching data
-     */
-    String fetch(RequestPath address) throws WFirmaException;
+    public RequestPath(String path) {
+        this.path = path;
+    }
+
+    public static RequestPath fromString(String path) {
+        return new RequestPath(path);
+    }
 }
