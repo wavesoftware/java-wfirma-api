@@ -26,10 +26,10 @@ THE SOFTWARE.
     <xsd:element name="parameters" type="parametersType" />
     <xsd:complexType name="parametersType">
         <xsd:sequence>
-            <xsd:element name="conditions" type="conditionsType" />
-            <xsd:element name="order" type="orderType" />
-            <xsd:element name="page" type="xsd:int" />
-            <xsd:element name="limit" type="xsd:int" />
+            <xsd:element name="conditions" type="conditionsType" maxOccurs="1" minOccurs="0"/>
+            <xsd:element name="order" type="orderType" maxOccurs="1" minOccurs="0"/>
+            <xsd:element name="page" type="xsd:int" maxOccurs="1" minOccurs="0"/>
+            <xsd:element name="limit" type="xsd:int" maxOccurs="1" minOccurs="0"/>
         </xsd:sequence>
     </xsd:complexType>
     <xsd:complexType name="orderType">
