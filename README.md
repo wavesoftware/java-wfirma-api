@@ -1,6 +1,10 @@
 WFirma - Java API
 =================
 
+[![Build Status](https://travis-ci.org/wavesoftware/java-wfirma-api.png)](https://travis-ci.org/wavesoftware/java-wfirma-api)
+
+## Work in progress, not ready to be used! ##
+
 A java SDK for WFirma API2
 
 ### Maven ###

@@ -21,7 +21,6 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-
 package pl.wavesoftware.wfirma.api.mapper;
 
 import pl.wavesoftware.wfirma.api.model.WFirmaException;
@@ -44,5 +43,5 @@ public interface WFirmaGateway {
      * @return a string with a XML Response from WFirma
      * @throws WFirmaException if some error occured while fetching data
      */
-    String fetch(RequestPath address) throws WFirmaException;
+    String get(RequestPath address) throws WFirmaException;
 }

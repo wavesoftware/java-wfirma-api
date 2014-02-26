@@ -80,7 +80,7 @@ public class SimpleGatewayTest {
         SimpleCredentials creds = new SimpleCredentials("login@example.org", "a-user-password");
         SimpleGateway instance = new SimpleGateway(creds, mockAddress);
         
-        String result = instance.fetch(RequestPath.fromString(path));
+        String result = instance.get(RequestPath.fromString(path));
         assertNotNull(result);
         assertEquals(expResult, result);
 
@@ -88,7 +88,7 @@ public class SimpleGatewayTest {
         instance = new SimpleGateway(creds, mockAddress);
 
         try {
-            instance.fetch(RequestPath.fromString(path));
+            instance.get(RequestPath.fromString(path));
             fail("Expected to throw a WFirmaSercurityException for invalid auth");
         } catch (WFirmaSercurityException ex) {
             assertEquals("Auth failed for user: `login2@example.org`", ex.getLocalizedMessage());
@@ -101,7 +101,7 @@ public class SimpleGatewayTest {
         SimpleCredentials creds = new SimpleCredentials("login@example.org", "a-user-password");
         SimpleGateway instance = new SimpleGateway(creds, mockAddress);
 
-        String result = instance.fetch(RequestPath.fromString(path));
+        String result = instance.get(RequestPath.fromString(path));
         assertNotNull(result);
         assertEquals(expResult, result);
 
@@ -109,7 +109,7 @@ public class SimpleGatewayTest {
         instance = new SimpleGateway(creds, mockAddress);
 
         try {
-            instance.fetch(RequestPath.fromString(path));
+            instance.get(RequestPath.fromString(path));
             fail("Expected to throw a WFirmaSercurityException for invalid auth");
         } catch (WFirmaSercurityException ex) {
             assertEquals("Auth failed for user: `login2@example.org`", ex.getLocalizedMessage());

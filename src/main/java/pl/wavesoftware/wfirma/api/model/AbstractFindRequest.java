@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2014 Krzysztof Suszyński <krzysztof.suszynski@wavesoftware.pl>.
+ * Copyright 2014 Krzysztof Suszyński <krzysztof.suszynski@gmail.com>.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,27 +22,17 @@
  * THE SOFTWARE.
  */
 
-package pl.wavesoftware.wfirma.api.mapper;
+package pl.wavesoftware.wfirma.api.model;
 
-import pl.wavesoftware.wfirma.api.OAuthCredentials;
-import pl.wavesoftware.wfirma.api.model.WFirmaException;
+import pl.wavesoftware.wfirma.api.model.logic.ConditionsType;
+
 
 /**
  *
- * @author Krzysztof Suszyński <krzysztof.suszynski@wavesoftware.pl>
+ * @author Krzysztof Suszyński <krzysztof.suszynski@gmail.com>
  */
-public class OAuthGateway implements WFirmaGateway {
+public class AbstractFindRequest {
 
-    private OAuthCredentials credentials;
-
-    public OAuthGateway(OAuthCredentials credentials) {
-        this.credentials = credentials;
-    }
-
-    @Override
-    public String get(RequestPath address) throws WFirmaException {
-        // FIXME: Not yet implemented!!!
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
+    private ConditionsType conditions;
 
 }

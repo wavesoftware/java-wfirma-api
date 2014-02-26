@@ -1,0 +1,78 @@
+<?xml version="1.0"?>
+<!--
+The MIT License
+
+Copyright 2014 Krzysztof Suszyński <krzysztof.suszynski@gmail.com>.
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+-->
+
+<?xml version="1.0" encoding="utf-8"?>
+<xsd:schema attributeFormDefault="unqualified" elementFormDefault="qualified" version="1.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <xsd:element name="parameters" type="parametersType" />
+    <xsd:complexType name="parametersType">
+        <xsd:sequence>
+            <xsd:element name="conditions" type="conditionsType" />
+            <xsd:element name="order" type="orderType" />
+            <xsd:element name="page" type="xsd:int" />
+            <xsd:element name="limit" type="xsd:int" />
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:complexType name="orderType">
+        <xsd:sequence>
+            <xsd:element maxOccurs="unbounded" name="asc" type="xsd:string" />
+            <xsd:element maxOccurs="unbounded" name="desc" type="xsd:string" />
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:complexType name="conditionsType">
+        <xsd:sequence>
+            <xsd:element maxOccurs="unbounded" name="or" type="orType" />
+            <xsd:element maxOccurs="unbounded" name="and" type="andType" />
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:complexType name="andType">
+        <xsd:sequence>
+            <xsd:element maxOccurs="unbounded" name="condition" type="conditionType" />
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:complexType name="orType">
+        <xsd:sequence>
+            <xsd:element maxOccurs="unbounded" name="condition" type="conditionType" />
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:complexType name="conditionType">
+        <xsd:sequence>
+            <xsd:element name="field" type="xsd:string" />
+            <xsd:element name="operator" type="logicalOperator" />
+            <xsd:element name="value" type="xsd:string" />
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:simpleType name="logicalOperator">
+        <xsd:restriction base="xsd:string">
+            <xsd:enumeration value="eq"/>
+            <xsd:enumeration value="ne"/>
+            <xsd:enumeration value="lt"/>
+            <xsd:enumeration value="le"/>
+            <xsd:enumeration value="gt"/>
+            <xsd:enumeration value="ge"/>
+            <xsd:enumeration value="like"/>
+            <xsd:enumeration value="not like"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+</xsd:schema>

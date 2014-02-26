@@ -24,15 +24,9 @@
 
 package pl.wavesoftware.wfirma.api.mapper;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.net.URI;
 import java.nio.charset.Charset;
-import javax.xml.xpath.XPath;
-import javax.xml.xpath.XPathConstants;
-import javax.xml.xpath.XPathExpression;
-import javax.xml.xpath.XPathExpressionException;
-import javax.xml.xpath.XPathFactory;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpHost;
 import org.apache.http.StatusLine;
@@ -49,9 +43,6 @@ import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-import org.xml.sax.InputSource;
 import pl.wavesoftware.wfirma.api.SimpleCredentials;
 import pl.wavesoftware.wfirma.api.model.WFirmaException;
 import pl.wavesoftware.wfirma.api.model.WFirmaSercurityException;
@@ -66,6 +57,8 @@ public class SimpleGateway implements WFirmaGateway {
 
     private final URI gateway;
 
+    private final ResponseChecker statusParser = new ResponseChecker();
+
     public SimpleGateway(SimpleCredentials credentials) {
         this.credentials = credentials;
         gateway = URI.create(GATEWAY_ADDRESS);
@@ -77,7 +70,7 @@ public class SimpleGateway implements WFirmaGateway {
     }
 
     @Override
-    public String fetch(RequestPath requestPath) throws WFirmaException {
+    public String get(RequestPath requestPath) throws WFirmaException {
         String path;
         if ("/".equals(requestPath.path.substring(0, 1))) {
             path = requestPath.path;
@@ -140,7 +133,7 @@ public class SimpleGateway implements WFirmaGateway {
                 HttpEntity entity = response.getEntity();
                 try {
                     String content = EntityUtils.toString(entity, Charset.forName("UTF-8"));
-                    return checkedForStatus(content);
+                    return statusParser.checkedForStatus(credentials.getLogin(), content);
                 } catch (IOException | IllegalStateException ex) {
                     throw new RuntimeException(ex);
                 }
@@ -150,32 +143,6 @@ public class SimpleGateway implements WFirmaGateway {
                 StatusLine status = response.getStatusLine();
                 throw new WFirmaException("Connection error: %d - %s", status.getStatusCode(),
                         status.getReasonPhrase());
-        }
-    }
-
-    private String checkedForStatus(String content) throws WFirmaException {
-        try {
-            XPathFactory factory = XPathFactory.newInstance();
-            XPath xpath = factory.newXPath();
-            XPathExpression expr = xpath.compile("/api/status/code");
-            InputSource is = new InputSource();
-            is.setByteStream(new ByteArrayInputStream(content.getBytes()));
-            NodeList nodes = (NodeList) expr.evaluate(is, XPathConstants.NODESET);
-            if (nodes.getLength() != 1) {
-                throw new IllegalStateException("Invalid WFirma output: " + content);
-            }
-            Node node = nodes.item(0);
-            String code = node.getTextContent();
-            switch (code.toUpperCase()) {
-                case "OK":
-                    return content;
-                case "AUTH":
-                    throw new WFirmaSercurityException("Auth failed for user: `%s`", credentials.getLogin());
-                default:
-                    throw new WFirmaException("Unknown status code: " + code);
-            }
-        } catch (XPathExpressionException ex) {
-            throw new RuntimeException("Invalid WFirma output: " + ex.getLocalizedMessage(), ex);
         }
     }
 
