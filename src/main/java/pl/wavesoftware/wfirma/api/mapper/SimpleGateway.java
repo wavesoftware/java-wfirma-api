@@ -44,6 +44,7 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 import pl.wavesoftware.wfirma.api.SimpleCredentials;
+import pl.wavesoftware.wfirma.api.model.AbstractFindRequest;
 import pl.wavesoftware.wfirma.api.model.WFirmaException;
 import pl.wavesoftware.wfirma.api.model.WFirmaSercurityException;
 
@@ -144,6 +145,11 @@ public class SimpleGateway implements WFirmaGateway {
                 throw new WFirmaException("Connection error: %d - %s", status.getStatusCode(),
                         status.getReasonPhrase());
         }
+    }
+
+    @Override
+    public String post(RequestPath address, AbstractFindRequest findRequest) throws WFirmaException {
+        return null;
     }
 
 }

@@ -24,15 +24,26 @@
 
 package pl.wavesoftware.wfirma.api.model;
 
-import pl.wavesoftware.wfirma.api.model.logic.ConditionsType;
-
+import pl.wavesoftware.wfirma.api.model.contractors.ContractorsType;
 
 /**
  *
  * @author Krzysztof Suszyński <krzysztof.suszynski@gmail.com>
  */
-public abstract class AbstractFindRequest implements WFirmaRequest {
+public enum ApiModules {
+    CONTRACTORS(ContractorsType.class);
 
-    private ConditionsType conditions;
+    private Class<? extends ApiModule> module;
 
+    private ApiModules(Class<? extends ApiModule> module) {
+        this.module = module;
+    }
+
+    public Class<? extends ApiModule> getModule() {
+        return module;
+    }
+
+    public interface ApiModule {
+
+    }
 }

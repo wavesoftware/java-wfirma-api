@@ -25,6 +25,7 @@
 package pl.wavesoftware.wfirma.api.mapper;
 
 import pl.wavesoftware.wfirma.api.OAuthCredentials;
+import pl.wavesoftware.wfirma.api.model.AbstractFindRequest;
 import pl.wavesoftware.wfirma.api.model.WFirmaException;
 
 /**
@@ -41,6 +42,12 @@ public class OAuthGateway implements WFirmaGateway {
 
     @Override
     public String get(RequestPath address) throws WFirmaException {
+        // FIXME: Not yet implemented!!!
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public String post(RequestPath address, AbstractFindRequest findRequest) throws WFirmaException {
         // FIXME: Not yet implemented!!!
         throw new UnsupportedOperationException("Not supported yet.");
     }

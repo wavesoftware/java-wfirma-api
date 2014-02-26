@@ -23,6 +23,7 @@
  */
 package pl.wavesoftware.wfirma.api.mapper;
 
+import pl.wavesoftware.wfirma.api.model.AbstractFindRequest;
 import pl.wavesoftware.wfirma.api.model.WFirmaException;
 
 /**
@@ -37,11 +38,21 @@ public interface WFirmaGateway {
     String GATEWAY_ADDRESS = "https://api2.wfirma.pl";
 
     /**
-     * Fetches a data from WFirma API2
+     * Fetches data from WFirma API2
      *
      * @param address a address to fetch
      * @return a string with a XML Response from WFirma
      * @throws WFirmaException if some error occured while fetching data
      */
     String get(RequestPath address) throws WFirmaException;
+
+    /**
+     * Fetches data from WFirma API2 by sending data with find request object
+     *
+     * @param address a address to fetch
+     * @param findRequest a find request
+     * @return a string with a XML Response from WFirma
+     * @throws WFirmaException if some error occured while fetching data
+     */
+    String post(RequestPath address, AbstractFindRequest findRequest) throws WFirmaException;
 }

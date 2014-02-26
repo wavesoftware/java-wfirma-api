@@ -29,5 +29,5 @@ package pl.wavesoftware.wfirma.api.model;
  * @author Krzysztof Suszyński <krzysztof.suszynski@gmail.com>
  */
 public interface WFirmaRequest {
-
+    ApiModules getModule();
 }
