@@ -142,7 +142,7 @@ public class SimpleGatewayTest {
                 + "        <code>OK</code>\n"
                 + "    </status>\n"
                 + "</api>\n"
-                + " \n";
+                + "\n";
         stubFor(get(urlEqualTo(path))
                 .withHeader("Accept", equalTo(CONTENT_TYPE_TEXT_XML))
                 .withHeader("Authorization", equalTo("Basic bG9naW5AZXhhbXBsZS5vcmc6YS11c2VyLXBhc3N3b3Jk"))
