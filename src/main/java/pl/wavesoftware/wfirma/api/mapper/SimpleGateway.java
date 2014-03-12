@@ -27,6 +27,8 @@ package pl.wavesoftware.wfirma.api.mapper;
 import java.io.IOException;
 import java.net.URI;
 import java.nio.charset.Charset;
+import java.util.HashSet;
+import java.util.Set;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpHost;
 import org.apache.http.StatusLine;
@@ -60,6 +62,8 @@ public class SimpleGateway implements WFirmaGateway {
 
     private final ResponseChecker statusParser = new ResponseChecker();
 
+    private final Set<ResponseListener> listeners = new HashSet<>();
+
     public SimpleGateway(SimpleCredentials credentials) {
         this.credentials = credentials;
         gateway = URI.create(GATEWAY_ADDRESS);
@@ -68,6 +72,14 @@ public class SimpleGateway implements WFirmaGateway {
     public SimpleGateway(SimpleCredentials credentials, URI gateway) {
         this.credentials = credentials;
         this.gateway = gateway;
+    }
+
+    public void addListener(ResponseListener listener) {
+        listeners.add(listener);
+    }
+
+    public void removeListener(ResponseListener listener) {
+        listeners.remove(listener);
     }
 
     @Override
@@ -134,6 +146,9 @@ public class SimpleGateway implements WFirmaGateway {
                 HttpEntity entity = response.getEntity();
                 try {
                     String content = EntityUtils.toString(entity, Charset.forName("UTF-8"));
+                    for (ResponseListener responseListener : listeners) {
+                        responseListener.responseRecived(content);
+                    }
                     return statusParser.checkedForStatus(credentials.getLogin(), content);
                 } catch (IOException | IllegalStateException ex) {
                     throw new RuntimeException(ex);

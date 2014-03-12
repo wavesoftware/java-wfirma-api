@@ -26,10 +26,7 @@ package pl.wavesoftware.wfirma.api.mapper;
 
 import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 import org.junit.Assume;
 import org.junit.Before;
 import org.junit.Test;
@@ -75,13 +72,12 @@ public class SimpleGatewayIT {
         Assume.assumeFalse(passCond);
 
         path = "/companies/get";
-        expResultAuth = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
-                + "<api>\n"
-                + "    <status>\n"
-                + "        <code>AUTH</code>\n"
-                + "    </status>\n"
-                + "</api>\n"
-                + " \n";
+        expResultAuth = "<\\?xml version=\"1.0\" encoding=\"UTF-8\"\\?>\\s*"
+                + "<api>\\s*"
+                + "<status>\\s*"
+                + "<code>AUTH</code>\\s*"
+                + "</status>\\s*"
+                + "</api>\\s*";
         expResultRe = "<\\?xml version=\"1.0\" encoding=\"UTF-8\"\\?>\\s*"
                 + "<api>\\s*"
                 + "<companies>\\s*"
@@ -105,7 +101,7 @@ public class SimpleGatewayIT {
     public void testFetch() throws WFirmaException {
         SimpleCredentials creds = new SimpleCredentials(correctLogin, correctPassword);
         SimpleGateway instance = new SimpleGateway(creds);
-        
+
         String result = instance.get(RequestPath.fromString(path));
         assertNotNull(result);
         assertThat(result, matches(expResultRe));
@@ -125,13 +121,24 @@ public class SimpleGatewayIT {
         Assume.assumeTrue(cond);
         SimpleCredentials creds = new SimpleCredentials("non-existing-login-2@example.org", "invalid-password");
         SimpleGateway instance = new SimpleGateway(creds);
+        final StringBuilder responseBuilder = new StringBuilder();
+        ResponseListener listener = new ResponseListener() {
 
+            @Override
+            public void responseRecived(String recived) {
+                responseBuilder.append(recived);
+            }
+        };
+        instance.addListener(listener);
         try {
             instance.get(RequestPath.fromString(path));
             fail("Expected to throw a WFirmaSercurityException for invalid auth");
         } catch (WFirmaSercurityException ex) {
             assertEquals("Auth failed for user: `non-existing-login-2@example.org`", ex.getLocalizedMessage());
+        } finally {
+            instance.removeListener(listener);
         }
+        assertThat(responseBuilder.toString(), matches(expResultAuth));
         prefs.putLong(key, current);
         prefs.flush();
     }
