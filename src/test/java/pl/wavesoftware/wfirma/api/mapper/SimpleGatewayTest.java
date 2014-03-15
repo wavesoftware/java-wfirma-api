@@ -24,24 +24,25 @@
 
 package pl.wavesoftware.wfirma.api.mapper;
 
-import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
-import static com.github.tomakehurst.wiremock.client.WireMock.equalTo;
-import static com.github.tomakehurst.wiremock.client.WireMock.get;
-import static com.github.tomakehurst.wiremock.client.WireMock.notMatching;
-import static com.github.tomakehurst.wiremock.client.WireMock.stubFor;
-import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
+import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.URI;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import pl.wavesoftware.wfirma.api.SimpleCredentials;
+import pl.wavesoftware.wfirma.api.model.AbstractFindRequest;
 import pl.wavesoftware.wfirma.api.model.WFirmaException;
 import pl.wavesoftware.wfirma.api.model.WFirmaSercurityException;
+import pl.wavesoftware.wfirma.api.model.contractors.ContractorsFindRequest;
+import pl.wavesoftware.wfirma.api.model.logic.And;
+import pl.wavesoftware.wfirma.api.model.logic.Condition;
+import pl.wavesoftware.wfirma.api.model.logic.Conditions;
+import pl.wavesoftware.wfirma.api.model.logic.LogicalOperator;
+import pl.wavesoftware.wfirma.api.model.logic.Parameters;
 
 /**
  *
@@ -52,19 +53,17 @@ public class SimpleGatewayTest {
     private static final int PORT;
 
     static {
-        try {
-            ServerSocket socket = new ServerSocket(0);
+        try (ServerSocket socket = new ServerSocket(0)) {
             PORT = socket.getLocalPort();
-            socket.close();
         } catch (IOException ex) {
-            throw new RuntimeException(ex);
+            throw new IllegalStateException(ex);
         }
     }
 
     @Rule
     public WireMockRule wireMockRule = new WireMockRule(PORT);
 
-    private URI mockAddress = URI.create("http://localhost:" + PORT);
+    private final URI mockAddress = URI.create("http://localhost:" + PORT);
 
     private static final String CONTENT_TYPE_TEXT_XML = "text/xml";
 
@@ -74,12 +73,15 @@ public class SimpleGatewayTest {
 
     private String expResult;
 
+    private String expPostResult;
+
+    private String contractorsFindBody;
+
     @Test
     public void testFetch() throws WFirmaException {
-        stubMock();
         SimpleCredentials creds = new SimpleCredentials("login@example.org", "a-user-password");
         SimpleGateway instance = new SimpleGateway(creds, mockAddress);
-        
+
         String result = instance.get(RequestPath.fromString(path));
         assertNotNull(result);
         assertEquals(expResult, result);
@@ -97,7 +99,6 @@ public class SimpleGatewayTest {
 
     @Test
     public void testFetchWithAuthFail() throws WFirmaException {
-        stubMock();
         SimpleCredentials creds = new SimpleCredentials("login@example.org", "a-user-password");
         SimpleGateway instance = new SimpleGateway(creds, mockAddress);
 
@@ -116,7 +117,8 @@ public class SimpleGatewayTest {
         }
     }
 
-    private void stubMock() {
+    @Before
+    public void before() {
         path = "/companies/get";
         expResultAuth = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
                 + "<api>\n"
@@ -143,6 +145,96 @@ public class SimpleGatewayTest {
                 + "    </status>\n"
                 + "</api>\n"
                 + "\n";
+        expPostResult = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+                + "<api>\n"
+                + "    <contractors>\n"
+                + "        <contractor>\n"
+                + "            <id>11111111111</id>\n"
+                + "            <tax_id_type>nip</tax_id_type>\n"
+                + "            <name>SomeSuper Business Ltd.</name>\n"
+                + "            <altname>SomeSuper Business Ltd.</altname>\n"
+                + "            <nip>1112233444</nip>\n"
+                + "            <regon></regon>\n"
+                + "            <street>ul. Przykładowa 13</street>\n"
+                + "            <zip>12-345</zip>\n"
+                + "            <city>Przykładów</city>\n"
+                + "            <country>PL</country>\n"
+                + "            <different_contact_address>0</different_contact_address>\n"
+                + "            <contact_name></contact_name>\n"
+                + "            <contact_street></contact_street>\n"
+                + "            <contact_zip></contact_zip>\n"
+                + "            <contact_city></contact_city>\n"
+                + "            <contact_country>PL</contact_country>\n"
+                + "            <contact_person></contact_person>\n"
+                + "            <phone></phone>\n"
+                + "            <skype></skype>\n"
+                + "            <fax></fax>\n"
+                + "            <email></email>\n"
+                + "            <url></url>\n"
+                + "            <description></description>\n"
+                + "            <buyer>1</buyer>\n"
+                + "            <seller>1</seller>\n"
+                + "            <discount_percent>5.00</discount_percent>\n"
+                + "            <payment_days>7</payment_days>\n"
+                + "            <payment_method></payment_method>\n"
+                + "            <account_number></account_number>\n"
+                + "            <remind>1</remind>\n"
+                + "            <hash>8c3268dbcc1961af03b94d2f938c7902</hash>\n"
+                + "            <tags></tags>\n"
+                + "            <notes>0</notes>\n"
+                + "            <documents>0</documents>\n"
+                + "            <created>2014-03-15 19:23:39</created>\n"
+                + "            <modified>2014-03-15 19:24:53</modified>\n"
+                + "            <reference_company>\n"
+                + "                <id>0</id>\n"
+                + "            </reference_company>\n"
+                + "            <translation_language>\n"
+                + "                <id>0</id>\n"
+                + "            </translation_language>\n"
+                + "            <company_account>\n"
+                + "                <id>0</id>\n"
+                + "            </company_account>\n"
+                + "            <good_price_group>\n"
+                + "                <id>0</id>\n"
+                + "            </good_price_group>\n"
+                + "            <invoice_description>\n"
+                + "                <id>0</id>\n"
+                + "            </invoice_description>\n"
+                + "            <shop_buyer>\n"
+                + "                <id>0</id>\n"
+                + "            </shop_buyer>\n"
+                + "        </contractor>\n"
+                + "        <parameters>\n"
+                + "            <limit>0</limit>\n"
+                + "            <page>1</page>\n"
+                + "            <total>1</total>\n"
+                + "        </parameters>\n"
+                + "    </contractors>\n"
+                + "    <status>\n"
+                + "        <code>OK</code>\n"
+                + "    </status>\n"
+                + "</api>\n"
+                + " \n";
+        contractorsFindBody = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n"
+                + "<api>\n"
+                + "    <contractors>\n"
+                + "        <parameters>\n"
+                + "            <conditions>\n"
+                + "                <and>\n"
+                + "                    <condition>\n"
+                + "                        <field>nip</field>\n"
+                + "                        <operator>eq</operator>\n"
+                + "                        <value>1112233444</value>\n"
+                + "                    </condition>\n"
+                + "                </and>\n"
+                + "            </conditions>\n"
+                + "            <page>0</page>\n"
+                + "            <limit>0</limit>\n"
+                + "        </parameters>\n"
+                + "    </contractors>\n"
+                + "</api>\n"
+                + "";
+
         stubFor(get(urlEqualTo(path))
                 .withHeader("Accept", equalTo(CONTENT_TYPE_TEXT_XML))
                 .withHeader("Authorization", equalTo("Basic bG9naW5AZXhhbXBsZS5vcmc6YS11c2VyLXBhc3N3b3Jk"))
@@ -157,6 +249,76 @@ public class SimpleGatewayTest {
                         .withStatus(200)
                         .withHeader("Content-Type", CONTENT_TYPE_TEXT_XML)
                         .withBody(expResultAuth)));
+        stubFor(post(urlEqualTo("/contractors/find"))
+                .withRequestBody(equalTo(contractorsFindBody))
+                .withHeader("Accept", equalTo(CONTENT_TYPE_TEXT_XML))
+                .withHeader("Authorization", equalTo("Basic bG9naW5AZXhhbXBsZS5vcmc6YS11c2VyLXBhc3N3b3Jk"))
+                .willReturn(aResponse()
+                        .withStatus(200)
+                        .withHeader("Content-Type", CONTENT_TYPE_TEXT_XML)
+                        .withBody(expPostResult)));
+    }
+
+    @Test
+    public void testAddListener() throws WFirmaException {
+        final StringBuilder sb = new StringBuilder();
+        ResponseListener listener = new ResponseListener() {
+
+            @Override
+            public void responseRecived(String response) {
+                sb.append(response);
+            }
+        };
+        SimpleCredentials creds = new SimpleCredentials("login@example.org", "a-user-password");
+        SimpleGateway instance = new SimpleGateway(creds, mockAddress);
+        instance.addListener(listener);
+        instance.get(RequestPath.fromString(path));
+        assertEquals(expResult, sb.toString());
+    }
+
+    @Test
+    public void testRemoveListener() throws WFirmaException {
+        final StringBuilder sb = new StringBuilder();
+        ResponseListener listener = new ResponseListener() {
+
+            @Override
+            public void responseRecived(String response) {
+                sb.append(response);
+            }
+        };
+        SimpleCredentials creds = new SimpleCredentials("login@example.org", "a-user-password");
+        SimpleGateway instance = new SimpleGateway(creds, mockAddress);
+        instance.addListener(listener);
+        instance.removeListener(listener);
+        instance.get(RequestPath.fromString(path));
+        assertEquals("", sb.toString());
+    }
+
+    @Test
+    public void testGet() throws Exception {
+        RequestPath requestPath = RequestPath.fromString(path);
+        SimpleCredentials creds = new SimpleCredentials("login@example.org", "a-user-password");
+        SimpleGateway instance = new SimpleGateway(creds, mockAddress);
+        String result = instance.get(requestPath);
+        assertEquals(expResult, result);
+    }
+
+    @Test
+    public void testPost() throws Exception {
+        Parameters params = new Parameters();
+        Conditions conds = params.getConditions();
+        And and = new And();
+        Condition cond = new Condition();
+        cond.setField("nip");
+        cond.setOperator(LogicalOperator.EQ);
+        cond.setValue("1112233444");
+        and.getCondition().add(cond);
+        conds.getAnd().add(and);
+        AbstractFindRequest findRequest = new ContractorsFindRequest(ContractorsFindRequest.Action.FIND, params);
+        SimpleCredentials creds = new SimpleCredentials("login@example.org", "a-user-password");
+        SimpleGateway instance = new SimpleGateway(creds, mockAddress);
+        String result = instance.post(findRequest);
+        assertEquals(expPostResult, result);
     }
 
 }

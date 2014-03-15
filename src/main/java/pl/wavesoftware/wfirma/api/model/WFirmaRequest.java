@@ -24,10 +24,15 @@
 
 package pl.wavesoftware.wfirma.api.model;
 
+import pl.wavesoftware.wfirma.api.mapper.RequestPath;
+
 /**
  *
  * @author Krzysztof Suszyński <krzysztof.suszynski@gmail.com>
  */
 public interface WFirmaRequest {
-    ApiModules getModule();
+
+    RequestPath getAddress();
+
+    String buildRequest();
 }

@@ -52,51 +52,51 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link ParametersType }
+     * Create an instance of {@link Parameters }
      *
      * @return parameters
      */
-    public ParametersType createParametersType() {
-        return new ParametersType();
+    public Parameters createParametersType() {
+        return new Parameters();
     }
 
     /**
-     * Create an instance of {@link OrderType }
+     * Create an instance of {@link Order }
      *
      * @return order
      */
-    public OrderType createOrderType() {
-        return new OrderType();
+    public Order createOrderType() {
+        return new Order();
     }
 
     /**
-     * Create an instance of {@link AndType }
+     * Create an instance of {@link And }
      *
      * @return and
      */
-    public AndType createAndType() {
-        return new AndType();
+    public And createAndType() {
+        return new And();
     }
 
     /**
-     * Create an instance of {@link ConditionType }
+     * Create an instance of {@link Condition }
      *
      * @return condition
      */
-    public ConditionType createConditionType() {
-        return new ConditionType();
+    public Condition createConditionType() {
+        return new Condition();
     }
 
     /**
-     * Create an instance of {@link ConditionType }
+     * Create an instance of {@link Condition }
      *
      * @param field a field
      * @param operator a operator
      * @param value a value
      * @return condition
      */
-    public ConditionType createConditionType(String field, LogicalOperator operator, Object value) {
-        ConditionType cond = createConditionType();
+    public Condition createConditionType(String field, LogicalOperator operator, Object value) {
+        Condition cond = createConditionType();
         cond.setField(field);
         cond.setOperator(operator);
         cond.setValue(value.toString());
@@ -104,32 +104,32 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link OrType }
+     * Create an instance of {@link Or }
      *
      * @return or
      */
-    public OrType createOrType() {
-        return new OrType();
+    public Or createOrType() {
+        return new Or();
     }
 
     /**
-     * Create an instance of {@link ConditionsType }
+     * Create an instance of {@link Conditions }
      *
      * @return conditions
      */
-    public ConditionsType createConditionsType() {
-        return new ConditionsType();
+    public Conditions createConditionsType() {
+        return new Conditions();
     }
 
     /**
-     * Create an instance of {@link JAXBElement }{@code <}{@link ParametersType }{@code >}}
+     * Create an instance of {@link JAXBElement }{@code <}{@link Parameters }{@code >}}
      *
      * @param value parameters
      * @return a jaxb type
      */
     @XmlElementDecl(namespace = "", name = "parameters")
-    public JAXBElement<ParametersType> createParameters(ParametersType value) {
-        return new JAXBElement<>(_PARAMETERS_QNAME, ParametersType.class, null, value);
+    public JAXBElement<Parameters> createParameters(Parameters value) {
+        return new JAXBElement<>(_PARAMETERS_QNAME, Parameters.class, null, value);
     }
 
 }

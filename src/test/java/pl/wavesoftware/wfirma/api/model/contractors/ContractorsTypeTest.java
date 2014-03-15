@@ -27,7 +27,7 @@ package pl.wavesoftware.wfirma.api.model.contractors;
 import java.util.List;
 import static org.junit.Assert.assertEquals;
 import org.junit.Test;
-import pl.wavesoftware.wfirma.api.model.logic.ParametersType;
+import pl.wavesoftware.wfirma.api.model.logic.Parameters;
 
 /**
  *
@@ -40,23 +40,23 @@ public class ContractorsTypeTest {
 
     @Test
     public void testGetContractor() {
-        ContractorsType instance = new ContractorsType();
-        List<ContractorType> result = instance.getContractor();
+        Contractors instance = new Contractors();
+        List<Contractor> result = instance.getContractor();
         assertEquals(0, result.size());
     }
 
     @Test
     public void testGetParameters() {
-        ContractorsType instance = new ContractorsType();
-        ParametersType expResult = null;
-        ParametersType result = instance.getParameters();
+        Contractors instance = new Contractors();
+        Parameters expResult = null;
+        Parameters result = instance.getParameters();
         assertEquals(expResult, result);
     }
 
     @Test
     public void testSetParameters() {
-        ParametersType value = null;
-        ContractorsType instance = new ContractorsType();
+        Parameters value = null;
+        Contractors instance = new Contractors();
         instance.setParameters(value);
     }
 

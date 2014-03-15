@@ -21,37 +21,57 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package pl.wavesoftware.wfirma.api.mapper;
 
+package pl.wavesoftware.wfirma.api.model.contractors;
+
+import pl.wavesoftware.wfirma.api.mapper.RequestPath;
+import pl.wavesoftware.wfirma.api.mapper.xml.JaxbMarshaller;
 import pl.wavesoftware.wfirma.api.model.AbstractFindRequest;
-import pl.wavesoftware.wfirma.api.model.WFirmaException;
+import pl.wavesoftware.wfirma.api.model.logic.Parameters;
 
 /**
  *
  * @author Krzysztof Suszyński <krzysztof.suszynski@wavesoftware.pl>
  */
-public interface WFirmaGateway {
+public class ContractorsFindRequest extends AbstractFindRequest {
 
-    /**
-     * Address of WFirma API2 gateway
-     */
-    String GATEWAY_ADDRESS = "https://api2.wfirma.pl";
+    private final RequestPath address;
 
-    /**
-     * Fetches data from WFirma API2
-     *
-     * @param address a address to fetch
-     * @return a string with a XML Response from WFirma
-     * @throws WFirmaException if some error occured while fetching data
-     */
-    String get(RequestPath address) throws WFirmaException;
+    private Api api;
 
-    /**
-     * Fetches data from WFirma API2 by sending data with find request object
-     *
-     * @param findRequest a find request
-     * @return a string with a XML Response from WFirma
-     * @throws WFirmaException if some error occured while fetching data
-     */
-    String post(AbstractFindRequest findRequest) throws WFirmaException;
+    private ContractorsFindRequest(Action action, Api api) {
+        super(api.getContractors());
+        this.api = api;
+        String path = String.format("/contractors/%s", action.name().toLowerCase());
+        address = new RequestPath(path);
+    }
+
+    public ContractorsFindRequest(Action action, Parameters parameters) {
+        this(action, new Api());
+        api.getContractors().setParameters(parameters);
+    }
+
+    public ContractorsFindRequest(Action action) {
+        this(action, new Api());
+    }
+
+    public ContractorsFindRequest() {
+        this(Action.FIND);
+    }
+
+    @Override
+    public RequestPath getAddress() {
+        return address;
+    }
+
+    @Override
+    public String buildRequest() {
+        return JaxbMarshaller.create(Api.class).marshal(api);
+    }
+
+    public enum Action {
+
+        FIND, GET
+    }
+
 }

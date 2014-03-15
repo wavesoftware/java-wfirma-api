@@ -32,17 +32,18 @@ import javax.xml.bind.annotation.XmlType;
 
 /**
  * <p>
- * Java class for orType complex type.
+ * Java class for orderType complex type.
  *
  * <p>
  * The following schema fragment specifies the expected content contained within this class.
  *
  * <pre>
- * &lt;complexType name="orType">
+ * &lt;complexType name="orderType">
  *   &lt;complexContent>
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
- *         &lt;element name="condition" type="{}conditionType" maxOccurs="unbounded"/>
+ *         &lt;element name="asc" type="{http://www.w3.org/2001/XMLSchema}string" maxOccurs="unbounded"/>
+ *         &lt;element name="desc" type="{http://www.w3.org/2001/XMLSchema}string" maxOccurs="unbounded"/>
  *       &lt;/sequence>
  *     &lt;/restriction>
  *   &lt;/complexContent>
@@ -52,40 +53,72 @@ import javax.xml.bind.annotation.XmlType;
  *
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "orType", propOrder = {
-    "condition"
+@XmlType(name = "orderType", propOrder = {
+    "asc",
+    "desc"
 })
-public class OrType {
+public class Order {
 
     @XmlElement(required = true)
-    protected List<ConditionType> condition;
+    protected List<String> asc;
+
+    @XmlElement(required = true)
+    protected List<String> desc;
 
     /**
-     * Gets the value of the condition property.
+     * Gets the value of the asc property.
      *
      * <p>
      * This accessor method returns a reference to the live list, not a snapshot. Therefore any modification you make to
      * the returned list will be present inside the JAXB object. This is why there is not a <CODE>set</CODE> method for
-     * the condition property.
+     * the asc property.
      *
      * <p>
      * For example, to add a new item, do as follows:
      * <pre>
-     *    getCondition().add(newItem);
+     *    getAsc().add(newItem);
      * </pre>
      *
      *
      * <p>
-     * Objects of the following type(s) are allowed in the list {@link ConditionType }
+     * Objects of the following type(s) are allowed in the list {@link String }
      *
      *
-     * @return list of condition
+     * @return asc list
      */
-    public List<ConditionType> getCondition() {
-        if (condition == null) {
-            condition = new ArrayList<>();
+    public List<String> getAsc() {
+        if (asc == null) {
+            asc = new ArrayList<>();
         }
-        return this.condition;
+        return this.asc;
+    }
+
+    /**
+     * Gets the value of the desc property.
+     *
+     * <p>
+     * This accessor method returns a reference to the live list, not a snapshot. Therefore any modification you make to
+     * the returned list will be present inside the JAXB object. This is why there is not a <CODE>set</CODE> method for
+     * the desc property.
+     *
+     * <p>
+     * For example, to add a new item, do as follows:
+     * <pre>
+     *    getDesc().add(newItem);
+     * </pre>
+     *
+     *
+     * <p>
+     * Objects of the following type(s) are allowed in the list {@link String }
+     *
+     *
+     * @return desc list
+     */
+    public List<String> getDesc() {
+        if (desc == null) {
+            desc = new ArrayList<>();
+        }
+        return this.desc;
     }
 
 }

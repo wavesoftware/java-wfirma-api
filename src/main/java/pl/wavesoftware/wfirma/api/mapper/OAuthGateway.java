@@ -47,7 +47,7 @@ public class OAuthGateway implements WFirmaGateway {
     }
 
     @Override
-    public String post(RequestPath address, AbstractFindRequest findRequest) throws WFirmaException {
+    public String post(AbstractFindRequest findRequest) throws WFirmaException {
         // FIXME: Not yet implemented!!!
         throw new UnsupportedOperationException("Not supported yet.");
     }

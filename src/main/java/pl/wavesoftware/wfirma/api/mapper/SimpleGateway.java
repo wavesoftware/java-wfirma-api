@@ -25,12 +25,15 @@
 package pl.wavesoftware.wfirma.api.mapper;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.nio.charset.Charset;
 import java.util.HashSet;
 import java.util.Set;
+import javax.annotation.Nonnull;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpHost;
+import org.apache.http.HttpRequest;
 import org.apache.http.StatusLine;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
@@ -38,7 +41,9 @@ import org.apache.http.client.AuthCache;
 import org.apache.http.client.CredentialsProvider;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.protocol.HttpClientContext;
+import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.auth.BasicScheme;
 import org.apache.http.impl.client.BasicAuthCache;
 import org.apache.http.impl.client.BasicCredentialsProvider;
@@ -74,22 +79,16 @@ public class SimpleGateway implements WFirmaGateway {
         this.gateway = gateway;
     }
 
-    public void addListener(ResponseListener listener) {
+    public void addListener(@Nonnull ResponseListener listener) {
         listeners.add(listener);
     }
 
-    public void removeListener(ResponseListener listener) {
+    public void removeListener(@Nonnull ResponseListener listener) {
         listeners.remove(listener);
     }
 
-    @Override
-    public String get(RequestPath requestPath) throws WFirmaException {
-        String path;
-        if ("/".equals(requestPath.path.substring(0, 1))) {
-            path = requestPath.path;
-        } else {
-            path = "/" + requestPath.path;
-        }
+    private String get(@Nonnull HttpRequest httpRequest) throws WFirmaException {
+        httpRequest.setHeader("Accept", "text/xml");
         HttpHost target = getTargetHost();
         CredentialsProvider credsProvider = new BasicCredentialsProvider();
         credsProvider.setCredentials(
@@ -109,10 +108,7 @@ public class SimpleGateway implements WFirmaGateway {
             HttpClientContext localContext = HttpClientContext.create();
             localContext.setAuthCache(authCache);
 
-            HttpGet httpget = new HttpGet(path);
-            httpget.setHeader("Accept", "text/xml");
-
-            try (CloseableHttpResponse response = httpclient.execute(target, httpget, localContext)) {
+            try (CloseableHttpResponse response = httpclient.execute(target, httpRequest, localContext)) {
                 return getContent(response);
             } catch (IOException ioe) {
                 throw new WFirmaException(ioe);
@@ -120,6 +116,13 @@ public class SimpleGateway implements WFirmaGateway {
         } catch (IOException ioe) {
             throw new WFirmaException(ioe);
         }
+    }
+
+    @Override
+    @Nonnull
+    public String get(@Nonnull RequestPath requestPath) throws WFirmaException {
+        HttpGet httpget = new HttpGet(requestPath.getCorrectedPath());
+        return get(httpget);
     }
 
     private HttpHost getTargetHost() {
@@ -163,8 +166,16 @@ public class SimpleGateway implements WFirmaGateway {
     }
 
     @Override
-    public String post(RequestPath address, AbstractFindRequest findRequest) throws WFirmaException {
-        return null;
+    @Nonnull
+    public String post(@Nonnull AbstractFindRequest findRequest) throws WFirmaException {
+        String request = findRequest.buildRequest();
+        HttpPost post = new HttpPost(findRequest.getAddress().getCorrectedPath());
+        try {
+            post.setEntity(new StringEntity(request));
+        } catch (UnsupportedEncodingException ex) {
+            throw new RuntimeException(ex);
+        }
+        return get(post);
     }
 
 }

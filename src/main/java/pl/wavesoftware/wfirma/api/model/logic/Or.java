@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package pl.wavesoftware.wfirma.api.model.contractors;
+package pl.wavesoftware.wfirma.api.model.logic;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,23 +29,20 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
-import pl.wavesoftware.wfirma.api.model.ApiModules;
-import pl.wavesoftware.wfirma.api.model.logic.ParametersType;
 
 /**
  * <p>
- * Java class for contractorsType complex type.
+ * Java class for orType complex type.
  *
  * <p>
  * The following schema fragment specifies the expected content contained within this class.
  *
  * <pre>
- * &lt;complexType name="contractorsType">
+ * &lt;complexType name="orType">
  *   &lt;complexContent>
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
- *         &lt;element name="contractor" type="{}contractorType" maxOccurs="unbounded"/>
- *         &lt;element name="parameters" type="{}parametersType"/>
+ *         &lt;element name="condition" type="{}conditionType" maxOccurs="unbounded"/>
  *       &lt;/sequence>
  *     &lt;/restriction>
  *   &lt;/complexContent>
@@ -55,64 +52,40 @@ import pl.wavesoftware.wfirma.api.model.logic.ParametersType;
  *
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "contractorsType", propOrder = {
-    "contractor",
-    "parameters"
+@XmlType(name = "orType", propOrder = {
+    "condition"
 })
-public class ContractorsType implements ApiModules.ApiModule {
+public class Or {
 
     @XmlElement(required = true)
-    protected List<ContractorType> contractor;
-
-    @XmlElement(required = false)
-    protected ParametersType parameters;
+    protected List<Condition> condition;
 
     /**
-     * Gets the value of the contractor property.
+     * Gets the value of the condition property.
      *
      * <p>
      * This accessor method returns a reference to the live list, not a snapshot. Therefore any modification you make to
      * the returned list will be present inside the JAXB object. This is why there is not a <CODE>set</CODE> method for
-     * the contractor property.
+     * the condition property.
      *
      * <p>
      * For example, to add a new item, do as follows:
      * <pre>
-     *    getContractor().add(newItem);
+     *    getCondition().add(newItem);
      * </pre>
      *
      *
      * <p>
-     * Objects of the following type(s) are allowed in the list {@link ContractorType }
+     * Objects of the following type(s) are allowed in the list {@link Condition }
      *
      *
-     * @return a list of contractors
+     * @return list of condition
      */
-    public List<ContractorType> getContractor() {
-        if (contractor == null) {
-            contractor = new ArrayList<>();
+    public List<Condition> getCondition() {
+        if (condition == null) {
+            condition = new ArrayList<>();
         }
-        return this.contractor;
-    }
-
-    /**
-     * Gets the value of the parameters property.
-     *
-     * @return possible object is {@link ParametersType }
-     *
-     */
-    public ParametersType getParameters() {
-        return parameters;
-    }
-
-    /**
-     * Sets the value of the parameters property.
-     *
-     * @param value allowed object is {@link ParametersType }
-     *
-     */
-    public void setParameters(ParametersType value) {
-        this.parameters = value;
+        return this.condition;
     }
 
 }

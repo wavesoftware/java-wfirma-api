@@ -31,11 +31,11 @@ import org.custommonkey.xmlunit.XMLUnit;
 import org.junit.Before;
 import org.junit.Test;
 import org.xml.sax.SAXException;
-import pl.wavesoftware.wfirma.api.model.logic.AndType;
+import pl.wavesoftware.wfirma.api.model.logic.And;
 import pl.wavesoftware.wfirma.api.model.logic.LogicalOperator;
 import pl.wavesoftware.wfirma.api.model.logic.ObjectFactory;
-import pl.wavesoftware.wfirma.api.model.logic.OrType;
-import pl.wavesoftware.wfirma.api.model.logic.ParametersType;
+import pl.wavesoftware.wfirma.api.model.logic.Or;
+import pl.wavesoftware.wfirma.api.model.logic.Parameters;
 
 import static org.custommonkey.xmlunit.XMLAssert.assertXMLEqual;
 import static org.unitils.reflectionassert.ReflectionAssert.*;
@@ -63,9 +63,9 @@ public class JaxbMarshallerTest {
         return s.hasNext() ? s.next() : "";
     }
 
-    private ParametersType sampleParameters() {
+    private Parameters sampleParameters() {
         ObjectFactory factory = new ObjectFactory();
-        ParametersType params = factory.createParametersType();
+        Parameters params = factory.createParametersType();
         params.setPage(2);
         params.setLimit(10);
         params.setOrder(factory.createOrderType());
@@ -74,8 +74,8 @@ public class JaxbMarshallerTest {
         params.getOrder().getAsc().add("surname");
         params.getOrder().getDesc().add("count");
         params.getOrder().getDesc().add("modfied");
-        OrType or = factory.createOrType();
-        AndType and = factory.createAndType();
+        Or or = factory.createOrType();
+        And and = factory.createAndType();
         params.getConditions().getOr().add(or);
         params.getConditions().getAnd().add(and);
         or.getCondition().add(factory.createConditionType("name", LogicalOperator.LIKE, "test"));
@@ -90,8 +90,8 @@ public class JaxbMarshallerTest {
      */
     @Test
     public void testMarshal() throws SAXException, IOException {
-        JaxbMarshaller<ParametersType> instance = new JaxbMarshaller(ParametersType.class);
-        ParametersType params = sampleParameters();
+        JaxbMarshaller<Parameters> instance = new JaxbMarshaller(Parameters.class);
+        Parameters params = sampleParameters();
         String result = instance.marshal(params);
         assertXMLEqual("comparing test xml to control xml", expectedXml, result);
     }
@@ -101,18 +101,18 @@ public class JaxbMarshallerTest {
      */
     @Test
     public void testUnmarshal() {
-        JaxbMarshaller<ParametersType> instance = new JaxbMarshaller(ParametersType.class);
-        ParametersType expResult = sampleParameters();
-        ParametersType result = instance.unmarshal(expectedXml);
+        JaxbMarshaller<Parameters> instance = new JaxbMarshaller(Parameters.class);
+        Parameters expResult = sampleParameters();
+        Parameters result = instance.unmarshal(expectedXml);
         assertReflectionEquals(expResult, result);
     }
 
     @Test
     public void test2Way() {
-        JaxbMarshaller<ParametersType> instance = new JaxbMarshaller(ParametersType.class);
-        ParametersType input = sampleParameters();
+        JaxbMarshaller<Parameters> instance = new JaxbMarshaller(Parameters.class);
+        Parameters input = sampleParameters();
         String xml = instance.marshal(input);
-        ParametersType output = instance.unmarshal(xml);
+        Parameters output = instance.unmarshal(xml);
         assertReflectionEquals(input, output);
     }
 

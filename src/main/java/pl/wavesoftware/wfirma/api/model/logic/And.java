@@ -21,44 +21,69 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+package pl.wavesoftware.wfirma.api.model.logic;
 
-package pl.wavesoftware.wfirma.api.model.structure;
-
+import java.util.ArrayList;
+import java.util.List;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
-import pl.wavesoftware.wfirma.api.model.contractors.ContractorsType;
 
 /**
  * <p>
- * Java class for parametersType complex type.
+ * Java class for andType complex type.
  *
  * <p>
  * The following schema fragment specifies the expected content contained within this class.
  *
  * <pre>
- * &lt;complexType name="apiType">
+ * &lt;complexType name="andType">
  *   &lt;complexContent>
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
- *         &lt;element name="contractors" type="{}contractorsType"/>
+ *         &lt;element name="condition" type="{}conditionType" maxOccurs="unbounded"/>
  *       &lt;/sequence>
  *     &lt;/restriction>
  *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
- *
- *
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "apiType", propOrder = {
-    "contractors"
+@XmlType(name = "andType", propOrder = {
+    "condition"
 })
-@XmlRootElement(name = "api")
-public class ApiType {
+public class And {
 
-    @XmlElement(required = false, nillable = true)
-    private ContractorsType contractors;
+    @XmlElement(required = true)
+    protected List<Condition> condition;
+
+    /**
+     * Gets the value of the condition property.
+     *
+     * <p>
+     * This accessor method returns a reference to the live list, not a snapshot. Therefore any modification you make to
+     * the returned list will be present inside the JAXB object. This is why there is not a <CODE>set</CODE> method for
+     * the condition property.
+     *
+     * <p>
+     * For example, to add a new item, do as follows:
+     * <pre>
+     *    getCondition().add(newItem);
+     * </pre>
+     *
+     *
+     * <p>
+     * Objects of the following type(s) are allowed in the list {@link Condition }
+     *
+     *
+     * @return a conditions
+     */
+    public List<Condition> getCondition() {
+        if (condition == null) {
+            condition = new ArrayList<>();
+        }
+        return this.condition;
+    }
+
 }

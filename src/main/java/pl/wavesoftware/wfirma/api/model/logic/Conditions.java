@@ -57,13 +57,13 @@ import javax.xml.bind.annotation.XmlType;
     "or",
     "and"
 })
-public class ConditionsType {
+public class Conditions {
 
     @XmlElement(required = true)
-    protected List<OrType> or;
+    protected List<Or> or;
 
     @XmlElement(required = true)
-    protected List<AndType> and;
+    protected List<And> and;
 
     /**
      * Gets the value of the or property.
@@ -81,12 +81,12 @@ public class ConditionsType {
      *
      *
      * <p>
-     * Objects of the following type(s) are allowed in the list {@link OrType }
+     * Objects of the following type(s) are allowed in the list {@link Or }
      *
      *
      * @return or(s)
      */
-    public List<OrType> getOr() {
+    public List<Or> getOr() {
         if (or == null) {
             or = new ArrayList<>();
         }
@@ -109,12 +109,12 @@ public class ConditionsType {
      *
      *
      * <p>
-     * Objects of the following type(s) are allowed in the list {@link AndType }
+     * Objects of the following type(s) are allowed in the list {@link And }
      *
      *
      * @return and(s)
      */
-    public List<AndType> getAnd() {
+    public List<And> getAnd() {
         if (and == null) {
             and = new ArrayList<>();
         }

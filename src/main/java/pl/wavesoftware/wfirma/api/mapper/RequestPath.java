@@ -30,10 +30,20 @@ package pl.wavesoftware.wfirma.api.mapper;
  */
 public class RequestPath {
 
-    String path;
+    private String path;
 
     public RequestPath(String path) {
         this.path = path;
+    }
+
+    public String getCorrectedPath() {
+        String corrected;
+        if ("/".equals(this.path.substring(0, 1))) {
+            corrected = this.path;
+        } else {
+            corrected = "/" + this.path;
+        }
+        return corrected;
     }
 
     public static RequestPath fromString(String path) {

@@ -147,7 +147,7 @@ import javax.xml.bind.annotation.XmlType;
     "companyAccount",
     "invoiceDescription"
 })
-public class ContractorType {
+public class Contractor {
 
     protected int id;
 
@@ -234,13 +234,13 @@ public class ContractorType {
     protected int provider;
 
     @XmlElement(name = "translation_language", required = false)
-    protected ContractorType.TranslationLanguage translationLanguage;
+    protected Contractor.TranslationLanguage translationLanguage;
 
     @XmlElement(name = "company_account", required = false)
-    protected ContractorType.CompanyAccount companyAccount;
+    protected Contractor.CompanyAccount companyAccount;
 
     @XmlElement(name = "invoice_description", required = false)
-    protected ContractorType.InvoiceDescription invoiceDescription;
+    protected Contractor.InvoiceDescription invoiceDescription;
 
     /**
      * Gets the value of the id property.
@@ -816,7 +816,7 @@ public class ContractorType {
      * @return possible object is {@link ContractorType.TranslationLanguage }
      *
      */
-    public ContractorType.TranslationLanguage getTranslationLanguage() {
+    public Contractor.TranslationLanguage getTranslationLanguage() {
         return translationLanguage;
     }
 
@@ -826,7 +826,7 @@ public class ContractorType {
      * @param value allowed object is {@link ContractorType.TranslationLanguage }
      *
      */
-    public void setTranslationLanguage(ContractorType.TranslationLanguage value) {
+    public void setTranslationLanguage(Contractor.TranslationLanguage value) {
         this.translationLanguage = value;
     }
 
@@ -836,7 +836,7 @@ public class ContractorType {
      * @return possible object is {@link ContractorType.CompanyAccount }
      *
      */
-    public ContractorType.CompanyAccount getCompanyAccount() {
+    public Contractor.CompanyAccount getCompanyAccount() {
         return companyAccount;
     }
 
@@ -846,7 +846,7 @@ public class ContractorType {
      * @param value allowed object is {@link ContractorType.CompanyAccount }
      *
      */
-    public void setCompanyAccount(ContractorType.CompanyAccount value) {
+    public void setCompanyAccount(Contractor.CompanyAccount value) {
         this.companyAccount = value;
     }
 
@@ -856,7 +856,7 @@ public class ContractorType {
      * @return possible object is {@link ContractorType.InvoiceDescription }
      *
      */
-    public ContractorType.InvoiceDescription getInvoiceDescription() {
+    public Contractor.InvoiceDescription getInvoiceDescription() {
         return invoiceDescription;
     }
 
@@ -866,7 +866,7 @@ public class ContractorType {
      * @param value allowed object is {@link ContractorType.InvoiceDescription }
      *
      */
-    public void setInvoiceDescription(ContractorType.InvoiceDescription value) {
+    public void setInvoiceDescription(Contractor.InvoiceDescription value) {
         this.invoiceDescription = value;
     }
 

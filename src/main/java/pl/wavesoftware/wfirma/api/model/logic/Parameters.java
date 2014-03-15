@@ -26,23 +26,25 @@ package pl.wavesoftware.wfirma.api.model.logic;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
 /**
  * <p>
- * Java class for conditionType complex type.
+ * Java class for parametersType complex type.
  *
  * <p>
  * The following schema fragment specifies the expected content contained within this class.
  *
  * <pre>
- * &lt;complexType name="conditionType">
+ * &lt;complexType name="parametersType">
  *   &lt;complexContent>
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
- *         &lt;element name="field" type="{http://www.w3.org/2001/XMLSchema}string"/>
- *         &lt;element name="operator" type="{}logicalOperator"/>
- *         &lt;element name="value" type="{http://www.w3.org/2001/XMLSchema}string"/>
+ *         &lt;element name="conditions" type="{}conditionsType"/>
+ *         &lt;element name="order" type="{}orderType"/>
+ *         &lt;element name="page" type="{http://www.w3.org/2001/XMLSchema}int"/>
+ *         &lt;element name="limit" type="{http://www.w3.org/2001/XMLSchema}int"/>
  *       &lt;/sequence>
  *     &lt;/restriction>
  *   &lt;/complexContent>
@@ -52,80 +54,99 @@ import javax.xml.bind.annotation.XmlType;
  *
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "conditionType", propOrder = {
-    "field",
-    "operator",
-    "value"
+@XmlType(name = "parametersType", propOrder = {
+    "conditions",
+    "order",
+    "page",
+    "limit"
 })
-public class ConditionType {
+@XmlRootElement(name = "parameters")
+public class Parameters {
 
     @XmlElement(required = true)
-    protected String field;
+    protected Conditions conditions = new Conditions();
 
     @XmlElement(required = true)
-    protected LogicalOperator operator;
+    protected Order order;
 
-    @XmlElement(required = true)
-    protected String value;
+    protected int page;
+
+    protected int limit;
 
     /**
-     * Gets the value of the field property.
+     * Gets the value of the conditions property.
      *
-     * @return possible object is {@link String }
+     * @return possible object is {@link Conditions }
      *
      */
-    public String getField() {
-        return field;
+    public Conditions getConditions() {
+        return conditions;
     }
 
     /**
-     * Sets the value of the field property.
+     * Sets the value of the conditions property.
      *
-     * @param value allowed object is {@link String }
+     * @param value allowed object is {@link Conditions }
      *
      */
-    public void setField(String value) {
-        this.field = value;
+    public void setConditions(Conditions value) {
+        this.conditions = value;
     }
 
     /**
-     * Gets the value of the operator property.
+     * Gets the value of the order property.
      *
-     * @return possible object is {@link LogicalOperator }
+     * @return possible object is {@link Order }
      *
      */
-    public LogicalOperator getOperator() {
-        return operator;
+    public Order getOrder() {
+        return order;
     }
 
     /**
-     * Sets the value of the operator property.
+     * Sets the value of the order property.
      *
-     * @param value allowed object is {@link LogicalOperator }
+     * @param value allowed object is {@link Order }
      *
      */
-    public void setOperator(LogicalOperator value) {
-        this.operator = value;
+    public void setOrder(Order value) {
+        this.order = value;
     }
 
     /**
-     * Gets the value of the value property.
+     * Gets the value of the page property.
      *
-     * @return possible object is {@link String }
-     *
+     * @return a page
      */
-    public String getValue() {
-        return value;
+    public int getPage() {
+        return page;
     }
 
     /**
-     * Sets the value of the value property.
+     * Sets the value of the page property.
      *
-     * @param value allowed object is {@link String }
-     *
+     * @param page a page
      */
-    public void setValue(String value) {
-        this.value = value;
+    public void setPage(int page) {
+        this.page = page;
+    }
+
+    /**
+     * Gets the value of the limit property.
+     *
+     * @return a page limit
+     */
+    public int getLimit() {
+        return limit;
+    }
+
+    /**
+     * Sets the value of the limit property.
+     *
+     * @param limit a limit
+     */
+    public void setLimit(int limit) {
+        this.limit = limit;
     }
 
 }

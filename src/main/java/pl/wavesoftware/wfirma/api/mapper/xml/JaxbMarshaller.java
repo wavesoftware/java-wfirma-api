@@ -41,6 +41,11 @@ public class JaxbMarshaller<Type> {
 
     private final Class<Type> type;
 
+    public static <T> JaxbMarshaller<T> create(Class<T> cls) {
+        JaxbMarshaller<T> marshaller = new JaxbMarshaller<>(cls);
+        return marshaller;
+    }
+
     public JaxbMarshaller(Class<Type> cls) {
         this.type = cls;
     }
