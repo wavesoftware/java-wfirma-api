@@ -34,7 +34,7 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import pl.wavesoftware.wfirma.api.SimpleCredentials;
-import pl.wavesoftware.wfirma.api.model.AbstractFindRequest;
+import pl.wavesoftware.wfirma.api.model.AbstractParametrizedRequest;
 import pl.wavesoftware.wfirma.api.model.WFirmaException;
 import pl.wavesoftware.wfirma.api.model.WFirmaSercurityException;
 import pl.wavesoftware.wfirma.api.model.contractors.ContractorsFindRequest;
@@ -314,7 +314,7 @@ public class SimpleGatewayTest {
         cond.setValue("1112233444");
         and.getCondition().add(cond);
         conds.getAnd().add(and);
-        AbstractFindRequest findRequest = new ContractorsFindRequest(ContractorsFindRequest.Action.FIND, params);
+        AbstractParametrizedRequest findRequest = new ContractorsFindRequest(ContractorsFindRequest.Action.FIND, params);
         SimpleCredentials creds = new SimpleCredentials("login@example.org", "a-user-password");
         SimpleGateway instance = new SimpleGateway(creds, mockAddress);
         String result = instance.post(findRequest);

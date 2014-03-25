@@ -23,7 +23,7 @@
  */
 package pl.wavesoftware.wfirma.api.mapper;
 
-import pl.wavesoftware.wfirma.api.model.AbstractFindRequest;
+import pl.wavesoftware.wfirma.api.model.AbstractParametrizedRequest;
 import pl.wavesoftware.wfirma.api.model.WFirmaException;
 
 /**
@@ -53,5 +53,5 @@ public interface WFirmaGateway {
      * @return a string with a XML Response from WFirma
      * @throws WFirmaException if some error occured while fetching data
      */
-    String post(AbstractFindRequest findRequest) throws WFirmaException;
+    String post(AbstractParametrizedRequest findRequest) throws WFirmaException;
 }

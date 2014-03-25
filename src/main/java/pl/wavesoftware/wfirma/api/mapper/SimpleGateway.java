@@ -51,7 +51,7 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 import pl.wavesoftware.wfirma.api.SimpleCredentials;
-import pl.wavesoftware.wfirma.api.model.AbstractFindRequest;
+import pl.wavesoftware.wfirma.api.model.AbstractParametrizedRequest;
 import pl.wavesoftware.wfirma.api.model.WFirmaException;
 import pl.wavesoftware.wfirma.api.model.WFirmaSercurityException;
 
@@ -167,7 +167,7 @@ public class SimpleGateway implements WFirmaGateway {
 
     @Override
     @Nonnull
-    public String post(@Nonnull AbstractFindRequest findRequest) throws WFirmaException {
+    public String post(@Nonnull AbstractParametrizedRequest findRequest) throws WFirmaException {
         String request = findRequest.buildRequest();
         HttpPost post = new HttpPost(findRequest.getAddress().getCorrectedPath());
         try {

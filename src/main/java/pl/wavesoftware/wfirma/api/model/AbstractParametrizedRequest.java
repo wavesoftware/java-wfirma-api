@@ -32,11 +32,11 @@ import pl.wavesoftware.wfirma.api.model.logic.Parameters;
  *
  * @author Krzysztof Suszyński <krzysztof.suszynski@gmail.com>
  */
-public abstract class AbstractFindRequest implements WFirmaRequest, Parametrizable {
+public abstract class AbstractParametrizedRequest implements WFirmaRequest, Parametrizable {
 
     private final Parametrizable parametrizable;
 
-    public AbstractFindRequest(@Nonnull Parametrizable parametrizable) {
+    public AbstractParametrizedRequest(@Nonnull Parametrizable parametrizable) {
         this.parametrizable = parametrizable;
     }
 

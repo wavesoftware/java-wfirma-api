@@ -100,6 +100,12 @@
             <artifactId>slf4j-api</artifactId>
             <version>1.7.6</version>
         </dependency>
+        <dependency>
+            <groupId>com.google.code.findbugs</groupId>
+            <artifactId>jsr305</artifactId>
+            <version>2.0.1</version>
+            <type>jar</type>
+        </dependency>
 
         <!-- Tests -->
         <dependency>
@@ -149,10 +155,10 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>com.google.code.findbugs</groupId>
-            <artifactId>jsr305</artifactId>
-            <version>2.0.1</version>
-            <type>jar</type>
+            <groupId>org.assertj</groupId>
+            <artifactId>assertj-core</artifactId>
+            <version>1.6.0</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 </project>

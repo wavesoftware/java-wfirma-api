@@ -26,14 +26,14 @@ package pl.wavesoftware.wfirma.api.model.contractors;
 
 import pl.wavesoftware.wfirma.api.mapper.RequestPath;
 import pl.wavesoftware.wfirma.api.mapper.xml.JaxbMarshaller;
-import pl.wavesoftware.wfirma.api.model.AbstractFindRequest;
+import pl.wavesoftware.wfirma.api.model.AbstractParametrizedRequest;
 import pl.wavesoftware.wfirma.api.model.logic.Parameters;
 
 /**
  *
  * @author Krzysztof Suszyński <krzysztof.suszynski@wavesoftware.pl>
  */
-public class ContractorsFindRequest extends AbstractFindRequest {
+public class ContractorsFindRequest extends AbstractParametrizedRequest {
 
     private final RequestPath address;
 

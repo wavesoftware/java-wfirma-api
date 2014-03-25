@@ -34,7 +34,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import static pl.wavesoftware.util.RegexMatcher.matches;
 import pl.wavesoftware.wfirma.api.SimpleCredentials;
-import pl.wavesoftware.wfirma.api.model.AbstractFindRequest;
+import pl.wavesoftware.wfirma.api.model.AbstractParametrizedRequest;
 import pl.wavesoftware.wfirma.api.model.WFirmaException;
 import pl.wavesoftware.wfirma.api.model.WFirmaSercurityException;
 import pl.wavesoftware.wfirma.api.model.contractors.ContractorsFindRequest;
@@ -187,16 +187,9 @@ public class SimpleGatewayIT {
 
     @Test
     public void testPost() throws Exception {
-        Parameters params = new Parameters();
-        Conditions conds = params.getConditions();
-        And and = new And();
-        Condition cond = new Condition();
-        cond.setField("nip");
-        cond.setOperator(LogicalOperator.EQ);
-        cond.setValue("5272516453");
-        and.getCondition().add(cond);
-        conds.getAnd().add(and);
-        AbstractFindRequest findRequest = new ContractorsFindRequest(ContractorsFindRequest.Action.FIND, params);
+        AbstractParametrizedRequest addRequest = createAddRequest();
+        AbstractParametrizedRequest findRequest = createFindRequest();
+        AbstractParametrizedRequest deleteRequest = createDeleteRequest();
         SimpleCredentials creds = new SimpleCredentials(correctLogin, correctPassword);
         SimpleGateway instance = new SimpleGateway(creds);
         String result = instance.post(findRequest);
@@ -237,6 +230,29 @@ public class SimpleGatewayIT {
         assertThat(responseBuilder.toString(), matches(expResultAuth));
         prefs.putLong(key, current);
         prefs.flush();
+    }
+
+    private AbstractParametrizedRequest createFindRequest() {
+        Parameters params = new Parameters();
+        Conditions conds = params.getConditions();
+        And and = new And();
+        Condition cond = new Condition();
+        cond.setField("nip");
+        cond.setOperator(LogicalOperator.EQ);
+        cond.setValue("5272516453");
+        and.getCondition().add(cond);
+        conds.getAnd().add(and);
+        return new ContractorsFindRequest(ContractorsFindRequest.Action.FIND, params);
+    }
+
+    private AbstractParametrizedRequest createAddRequest() {
+        // FIXME: Not yet implemented!!!
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    private AbstractParametrizedRequest createDeleteRequest() {
+        // FIXME: Not yet implemented!!!
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
 }
