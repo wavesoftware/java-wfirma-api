@@ -18,6 +18,8 @@
     <properties>
         <netbeans.hint.license>mit</netbeans.hint.license>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <sonar.java.coveragePlugin>jacoco</sonar.java.coveragePlugin>
+        <sonar.dynamicAnalysis>reuseReports</sonar.dynamicAnalysis>
     </properties>
 
     <licenses>
@@ -33,6 +35,43 @@
         <developerConnection>scm:git:git@github.com:wavesoftware/java-wfirma-api.git</developerConnection>
         <url>https://github.com/wavesoftware/java-wfirma-api</url>
     </scm>
+    
+    <profiles>
+        <profile>
+            <id>ci</id>
+
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.jacoco</groupId>
+                        <artifactId>jacoco-maven-plugin</artifactId>
+                        <version>0.7.0.201403182114</version>
+
+                        <executions>
+                            <execution>
+                                <id>jacoco-initialize</id>
+                                <goals>
+                                    <goal>prepare-agent</goal>
+                                </goals>
+                            </execution>
+                            <execution>
+                                <id>jacoco-site</id>
+                                <phase>test</phase>
+                                <goals>
+                                    <goal>report</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                        <configuration>
+                            <includes>
+                                <include>pl/wavesoftware/**</include>
+                            </includes>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 
     <build>
         <plugins>
@@ -85,10 +124,10 @@
     </build>
 
     <dependencies>
-		<dependency>
-			<groupId>org.scribe</groupId>
-			<artifactId>scribe</artifactId>
-			<version>1.3.5</version>
+        <dependency>
+            <groupId>org.scribe</groupId>
+            <artifactId>scribe</artifactId>
+            <version>1.3.5</version>
         </dependency>
         <dependency>
             <groupId>org.apache.httpcomponents</groupId>
