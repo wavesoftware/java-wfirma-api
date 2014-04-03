@@ -27,18 +27,17 @@ package pl.wavesoftware.wfirma.api.mapper.xml;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Scanner;
+import static org.custommonkey.xmlunit.XMLAssert.assertXMLEqual;
 import org.custommonkey.xmlunit.XMLUnit;
 import org.junit.Before;
 import org.junit.Test;
+import static org.unitils.reflectionassert.ReflectionAssert.*;
 import org.xml.sax.SAXException;
 import pl.wavesoftware.wfirma.api.model.logic.And;
 import pl.wavesoftware.wfirma.api.model.logic.LogicalOperator;
 import pl.wavesoftware.wfirma.api.model.logic.ObjectFactory;
 import pl.wavesoftware.wfirma.api.model.logic.Or;
 import pl.wavesoftware.wfirma.api.model.logic.Parameters;
-
-import static org.custommonkey.xmlunit.XMLAssert.assertXMLEqual;
-import static org.unitils.reflectionassert.ReflectionAssert.*;
 
 /**
  *
@@ -90,7 +89,7 @@ public class JaxbMarshallerTest {
      */
     @Test
     public void testMarshal() throws SAXException, IOException {
-        JaxbMarshaller<Parameters> instance = new JaxbMarshaller(Parameters.class);
+        JaxbMarshaller<Parameters> instance = new JaxbMarshaller<>(Parameters.class);
         Parameters params = sampleParameters();
         String result = instance.marshal(params);
         assertXMLEqual("comparing test xml to control xml", expectedXml, result);
@@ -101,7 +100,7 @@ public class JaxbMarshallerTest {
      */
     @Test
     public void testUnmarshal() {
-        JaxbMarshaller<Parameters> instance = new JaxbMarshaller(Parameters.class);
+        JaxbMarshaller<Parameters> instance = new JaxbMarshaller<>(Parameters.class);
         Parameters expResult = sampleParameters();
         Parameters result = instance.unmarshal(expectedXml);
         assertReflectionEquals(expResult, result);
@@ -109,7 +108,7 @@ public class JaxbMarshallerTest {
 
     @Test
     public void test2Way() {
-        JaxbMarshaller<Parameters> instance = new JaxbMarshaller(Parameters.class);
+        JaxbMarshaller<Parameters> instance = new JaxbMarshaller<>(Parameters.class);
         Parameters input = sampleParameters();
         String xml = instance.marshal(input);
         Parameters output = instance.unmarshal(xml);

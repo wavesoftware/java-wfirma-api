@@ -149,7 +149,8 @@ import javax.xml.bind.annotation.XmlType;
 })
 public class Contractor {
 
-    protected int id;
+    @XmlElement(required = false)
+    protected Integer id;
 
     @XmlElement(required = false)
     protected String access;
@@ -205,25 +206,29 @@ public class Contractor {
     @XmlElement(required = false)
     protected String description;
 
-    protected int buyer;
+    @XmlElement(required = false)
+    protected Integer buyer;
 
-    protected int seller;
+    @XmlElement(required = false)
+    protected Integer seller;
 
-    @XmlElement(name = "discount_percent")
-    protected int discountPercent;
+    @XmlElement(name = "discount_percent", required = false)
+    protected Integer discountPercent;
 
-    @XmlElement(name = "payment_days")
-    protected int paymentDays;
+    @XmlElement(name = "payment_days", required = false)
+    protected Integer paymentDays;
 
     @XmlElement(name = "payment_method", required = false)
     protected String paymentMethod;
 
-    protected int remind;
+    @XmlElement(required = false)
+    protected Integer remind;
 
     @XmlElement(required = false)
     protected String tags;
 
-    protected int notes;
+    @XmlElement(required = false)
+    protected Integer notes;
 
     @XmlElement(required = false)
     protected String created;
@@ -231,7 +236,8 @@ public class Contractor {
     @XmlElement(required = false)
     protected String modified;
 
-    protected int provider;
+    @XmlElement(required = false)
+    protected Integer provider;
 
     @XmlElement(name = "translation_language", required = false)
     protected Contractor.TranslationLanguage translationLanguage;
@@ -246,7 +252,7 @@ public class Contractor {
      * Gets the value of the id property.
      *
      */
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
@@ -254,7 +260,7 @@ public class Contractor {
      * Sets the value of the id property.
      *
      */
-    public void setId(int value) {
+    public void setId(Integer value) {
         this.id = value;
     }
 

@@ -26,18 +26,22 @@ package pl.wavesoftware.wfirma.api.mapper;
 
 import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.*;
 import org.junit.Assume;
 import org.junit.Before;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import static pl.wavesoftware.util.RegexMatcher.matches;
 import pl.wavesoftware.wfirma.api.SimpleCredentials;
+import pl.wavesoftware.wfirma.api.mapper.xml.JaxbMarshaller;
 import pl.wavesoftware.wfirma.api.model.AbstractParametrizedRequest;
 import pl.wavesoftware.wfirma.api.model.WFirmaException;
 import pl.wavesoftware.wfirma.api.model.WFirmaSercurityException;
-import pl.wavesoftware.wfirma.api.model.contractors.ContractorsFindRequest;
+import pl.wavesoftware.wfirma.api.model.contractors.Api;
+import pl.wavesoftware.wfirma.api.model.contractors.Contractor;
+import pl.wavesoftware.wfirma.api.model.contractors.Contractors;
+import pl.wavesoftware.wfirma.api.model.contractors.ContractorsRequest;
 import pl.wavesoftware.wfirma.api.model.logic.And;
 import pl.wavesoftware.wfirma.api.model.logic.Condition;
 import pl.wavesoftware.wfirma.api.model.logic.Conditions;
@@ -62,6 +66,8 @@ public class SimpleGatewayIT {
 
     private String expResultPost;
 
+    private static final String EXAMPLE_NIP = "5272516453";
+
     @Before
     public void before() {
         correctLogin = System.getenv("WFIRMA_LOGIN");
@@ -81,13 +87,13 @@ public class SimpleGatewayIT {
         Assume.assumeFalse(passCond);
 
         path = "/companies/get";
-        expResultAuth = "<\\?xml version=\"1.0\" encoding=\"UTF-8\"\\?>\\s*"
+        expResultAuth = "<\\?xml version=\"1\\.0\" encoding=\"UTF-8\"\\?>\\s*"
                 + "<api>\\s*"
                 + "<status>\\s*"
                 + "<code>AUTH</code>\\s*"
                 + "</status>\\s*"
                 + "</api>\\s*";
-        expResultRe = "<\\?xml version=\"1.0\" encoding=\"UTF-8\"\\?>\\s*"
+        expResultRe = "<\\?xml version=\"1\\.0\" encoding=\"UTF-8\"\\?>\\s*"
                 + "<api>\\s*"
                 + "<companies>\\s*"
                 + "<company>\\s*"
@@ -104,19 +110,19 @@ public class SimpleGatewayIT {
                 + "<code>OK</code>\\s*"
                 + "</status>\\s*"
                 + "</api>\\s*";
-        expResultPost = "<\\?xml version=\"1.0\" encoding=\"UTF-8\"\\?>\\s*"
+        expResultPost = "<\\?xml version=\"1\\.0\" encoding=\"UTF-8\"\\?>\\s*"
                 + "<api>\\s*"
                 + "<contractors>\\s*"
                 + "<contractor>\\s*"
                 + "<id>\\d+</id>\\s*"
-                + "<tax_id_type>nip</tax_id_type>\\s*"
-                + "<name>Wave Software Krzysztof Suszyński</name>\\s*"
-                + "<altname>Wave Software Krzysztof Suszyński</altname>\\s*"
-                + "<nip>5272516453</nip>\\s*"
+                + "<tax_id_type>.*?</tax_id_type>\\s*"
+                + "<name>Wave Software</name>\\s*"
+                + "<altname>Wave Software</altname>\\s*"
+                + "<nip>" + EXAMPLE_NIP + "</nip>\\s*"
                 + "<regon></regon>\\s*"
-                + "<street>ul. Willowa 6</street>\\s*"
-                + "<zip>05-083</zip>\\s*"
-                + "<city>Zaborów</city>\\s*"
+                + "<street></street>\\s*"
+                + "<zip></zip>\\s*"
+                + "<city></city>\\s*"
                 + "<country>PL</country>\\s*"
                 + "<different_contact_address>0</different_contact_address>\\s*"
                 + "<contact_name></contact_name>\\s*"
@@ -131,13 +137,13 @@ public class SimpleGatewayIT {
                 + "<email></email>\\s*"
                 + "<url></url>\\s*"
                 + "<description></description>\\s*"
-                + "<buyer>1</buyer>\\s*"
-                + "<seller>1</seller>\\s*"
+                + "<buyer>\\d</buyer>\\s*"
+                + "<seller>\\d</seller>\\s*"
                 + "<discount_percent>\\d+.00</discount_percent>\\s*"
-                + "<payment_days>7</payment_days>\\s*"
+                + "<payment_days>\\d+</payment_days>\\s*"
                 + "<payment_method></payment_method>\\s*"
                 + "<account_number></account_number>\\s*"
-                + "<remind>1</remind>\\s*"
+                + "<remind>\\d</remind>\\s*"
                 + "<hash>[0-9a-f]+</hash>\\s*"
                 + "<tags></tags>\\s*"
                 + "<notes>0</notes>\\s*"
@@ -182,18 +188,43 @@ public class SimpleGatewayIT {
 
         String result = instance.get(RequestPath.fromString(path));
         assertNotNull(result);
-        assertThat(result, matches(expResultRe));
+        assertThat(result).matches(expResultRe);
     }
 
     @Test
     public void testPost() throws Exception {
         AbstractParametrizedRequest addRequest = createAddRequest();
         AbstractParametrizedRequest findRequest = createFindRequest();
-        AbstractParametrizedRequest deleteRequest = createDeleteRequest();
+        AbstractParametrizedRequest deleteRequest;
+
         SimpleCredentials creds = new SimpleCredentials(correctLogin, correctPassword);
         SimpleGateway instance = new SimpleGateway(creds);
-        String result = instance.post(findRequest);
-        assertThat(result, matches(expResultPost));
+
+        String result;
+        result = instance.post(findRequest);
+        Api api;
+        api = JaxbMarshaller.create(Api.class).unmarshal(result);
+        if (!api.getContractors().getContractor().isEmpty()) {
+            for (Contractor contractor : api.getContractors().getContractor()) {
+                deleteRequest = createDeleteRequest(contractor);
+                instance.post(deleteRequest);
+            }
+        }
+        result = instance.post(findRequest);
+        assertThat(result).doesNotContain(EXAMPLE_NIP);
+        result = instance.post(addRequest);
+        assertThat(result).isNotEmpty();
+        result = instance.post(findRequest);
+        assertThat(result).matches(expResultPost);
+        assertThat(result).contains(EXAMPLE_NIP);
+        api = JaxbMarshaller.create(Api.class).unmarshal(result);
+        deleteRequest = createDeleteRequest(api.getContractors().getContractor().iterator().next());
+        result = instance.post(deleteRequest);
+        assertThat(result).isNotEmpty();
+        assertThat(result).containsSequence("Kontrahent: ", " został usunięty.");
+        result = instance.post(findRequest);
+        assertThat(result).doesNotMatch(expResultPost);
+        assertThat(result).doesNotContain(EXAMPLE_NIP);
     }
 
     @Test
@@ -227,7 +258,7 @@ public class SimpleGatewayIT {
         } finally {
             instance.removeListener(listener);
         }
-        assertThat(responseBuilder.toString(), matches(expResultAuth));
+        assertThat(responseBuilder.toString()).matches(expResultAuth);
         prefs.putLong(key, current);
         prefs.flush();
     }
@@ -239,20 +270,25 @@ public class SimpleGatewayIT {
         Condition cond = new Condition();
         cond.setField("nip");
         cond.setOperator(LogicalOperator.EQ);
-        cond.setValue("5272516453");
+        cond.setValue(EXAMPLE_NIP);
         and.getCondition().add(cond);
         conds.getAnd().add(and);
-        return new ContractorsFindRequest(ContractorsFindRequest.Action.FIND, params);
+        return new ContractorsRequest(ContractorsRequest.Action.FIND, params);
     }
 
     private AbstractParametrizedRequest createAddRequest() {
-        // FIXME: Not yet implemented!!!
-        throw new UnsupportedOperationException("Not supported yet.");
+        Contractors contractors = new Contractors();
+        Contractor contractor = new Contractor();
+        contractors.getContractor().add(contractor);
+        contractor.setNip(EXAMPLE_NIP);
+        contractor.setName("Wave Software");
+        return new ContractorsRequest(ContractorsRequest.Action.ADD, contractors);
     }
 
-    private AbstractParametrizedRequest createDeleteRequest() {
-        // FIXME: Not yet implemented!!!
-        throw new UnsupportedOperationException("Not supported yet.");
+    private AbstractParametrizedRequest createDeleteRequest(Contractor contractor) {
+        Contractors contractors = new Contractors();
+        contractors.getContractor().add(contractor);
+        return new ContractorsRequest(ContractorsRequest.Action.DELETE, contractors);
     }
 
 }

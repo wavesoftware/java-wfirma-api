@@ -25,7 +25,7 @@
 package pl.wavesoftware.wfirma.api.model.contractors;
 
 import java.util.List;
-import static org.junit.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 import org.junit.Test;
 import pl.wavesoftware.wfirma.api.model.logic.Parameters;
 
@@ -42,7 +42,7 @@ public class ContractorsTypeTest {
     public void testGetContractor() {
         Contractors instance = new Contractors();
         List<Contractor> result = instance.getContractor();
-        assertEquals(0, result.size());
+        assertThat(result).isEmpty();
     }
 
     @Test
@@ -50,7 +50,7 @@ public class ContractorsTypeTest {
         Contractors instance = new Contractors();
         Parameters expResult = null;
         Parameters result = instance.getParameters();
-        assertEquals(expResult, result);
+        assertThat(result).isEqualTo(expResult);
     }
 
     @Test

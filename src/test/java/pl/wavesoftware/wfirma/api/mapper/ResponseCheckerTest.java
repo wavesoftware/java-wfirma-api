@@ -26,15 +26,14 @@ package pl.wavesoftware.wfirma.api.mapper;
 
 import java.util.Arrays;
 import java.util.Collection;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.fail;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 import pl.wavesoftware.wfirma.api.model.WFirmaException;
 import pl.wavesoftware.wfirma.api.model.WFirmaSercurityException;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
 
 /**
  *
@@ -61,7 +60,7 @@ public class ResponseCheckerTest {
             {"NOT FOUND", new WFirmaException("NOT FOUND")},
             {"FATAL", new WFirmaException("FATAL")},
             {"INPUT ERROR", new WFirmaException("INPUT ERROR")},
-            {"ERROR", new WFirmaException("ERROR")},
+            {"ERROR", new WFirmaException("ERROR - no error tags?!: javax.xml.xpath.XPathExpressionException")},
             {"OUT OF SERVICE", new WFirmaException("OUT OF SERVICE")},
             {"DENIED SCOPE REQUESTED", new WFirmaException("DENIED SCOPE REQUESTED")},
             {"UNKNOWN ERROR", new WFirmaException("Unknown status code: UNKNOWN ERROR")},};
@@ -84,14 +83,14 @@ public class ResponseCheckerTest {
         ResponseChecker instance = new ResponseChecker();
         if (thowable == null) {
             String result = instance.checkedForStatus(login, content);
-            assertEquals(content, result);
+            assertThat(result).isEqualTo(content);
         } else {
             try {
                 instance.checkedForStatus(login, content);
                 fail("Expected exception, but didn't thrown! => " + thowable);
             } catch (WFirmaException wfe) {
-                assertEquals(wfe.getClass(), thowable.getClass());
-                assertEquals(wfe.getLocalizedMessage(), thowable.getLocalizedMessage());
+                assertThat(thowable.getClass()).isEqualTo(wfe.getClass());
+                assertThat(thowable.getLocalizedMessage()).isEqualTo(wfe.getLocalizedMessage());
             }
         }
     }

@@ -21,7 +21,6 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-
 package pl.wavesoftware.wfirma.api.model.contractors;
 
 import pl.wavesoftware.wfirma.api.mapper.RequestPath;
@@ -33,30 +32,27 @@ import pl.wavesoftware.wfirma.api.model.logic.Parameters;
  *
  * @author Krzysztof Suszyński <krzysztof.suszynski@wavesoftware.pl>
  */
-public class ContractorsFindRequest extends AbstractParametrizedRequest {
+public class ContractorsRequest extends AbstractParametrizedRequest {
 
     private final RequestPath address;
 
     private Api api;
 
-    private ContractorsFindRequest(Action action, Api api) {
-        super(api.getContractors());
-        this.api = api;
-        String path = String.format("/contractors/%s", action.name().toLowerCase());
-        address = new RequestPath(path);
+    private Action action;
+
+    public ContractorsRequest(Action action, Contractors contractors) {
+        super(contractors);
+        this.api = new Api();
+        if (!action.isSingular()) {
+            api.setContractors(contractors);
+        }
+        address = action.getRequestPath(contractors);
+        this.action = action;
     }
 
-    public ContractorsFindRequest(Action action, Parameters parameters) {
-        this(action, new Api());
+    public ContractorsRequest(Action action, Parameters parameters) {
+        this(action, new Contractors());
         api.getContractors().setParameters(parameters);
-    }
-
-    public ContractorsFindRequest(Action action) {
-        this(action, new Api());
-    }
-
-    public ContractorsFindRequest() {
-        this(Action.FIND);
     }
 
     @Override
@@ -66,12 +62,25 @@ public class ContractorsFindRequest extends AbstractParametrizedRequest {
 
     @Override
     public String buildRequest() {
-        return JaxbMarshaller.create(Api.class).marshal(api);
+        return action.isSingular() ? "" : JaxbMarshaller.create(Api.class).marshal(api);
     }
 
     public enum Action {
 
-        FIND, GET
+        FIND, GET, ADD, EDIT, DELETE;
+
+        public RequestPath getRequestPath(Contractors contractors) {
+            StringBuilder path = new StringBuilder(String.format("/contractors/%s", name().toLowerCase()));
+            if (isSingular()) {
+                path.append("/");
+                path.append(contractors.getContractor().iterator().next().getId());
+            }
+            return new RequestPath(path.toString());
+        }
+
+        public boolean isSingular() {
+            return this == GET || this == DELETE;
+        }
     }
 
 }

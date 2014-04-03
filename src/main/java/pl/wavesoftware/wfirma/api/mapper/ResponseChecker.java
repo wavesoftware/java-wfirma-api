@@ -25,6 +25,7 @@
 package pl.wavesoftware.wfirma.api.mapper;
 
 import java.io.ByteArrayInputStream;
+import static java.util.Locale.US;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpression;
@@ -35,8 +36,6 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import pl.wavesoftware.wfirma.api.model.WFirmaException;
 import pl.wavesoftware.wfirma.api.model.WFirmaSercurityException;
-
-import static java.util.Locale.US;
 
 /**
  *
@@ -57,6 +56,7 @@ public class ResponseChecker {
             XPathFactory factory = XPathFactory.newInstance();
             XPath xpath = factory.newXPath();
             XPathExpression expr = xpath.compile("/api/status/code");
+            XPathExpression errors = xpath.compile("error");
             InputSource source = new InputSource();
             source.setByteStream(new ByteArrayInputStream(content.getBytes()));
             NodeList nodes = (NodeList) expr.evaluate(source, XPathConstants.NODESET);
@@ -71,13 +71,19 @@ public class ResponseChecker {
                 case "AUTH":
                     throw new WFirmaSercurityException("Auth failed for user: `%s`", login);
                 case "ACTION NOT FOUND":
-                case "NOT FOUND":
                 case "FATAL":
                 case "INPUT ERROR":
-                case "ERROR":
                 case "OUT OF SERVICE":
                 case "DENIED SCOPE REQUESTED":
+                case "NOT FOUND":
                     throw new WFirmaException(code);
+                case "ERROR":
+                    try {
+                        NodeList errorNodes = (NodeList) errors.evaluate(source, XPathConstants.NODESET);
+                        throw new WFirmaException("%s - %s", code, errorNodes);
+                    } catch (XPathExpressionException ex) {
+                        throw new WFirmaException("%s - %s: %s", code, "no error tags?!", ex);
+                    }
                 default:
                     throw new WFirmaException("Unknown status code: " + code);
             }
