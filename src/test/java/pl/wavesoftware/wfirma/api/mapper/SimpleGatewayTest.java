@@ -34,15 +34,17 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import pl.wavesoftware.wfirma.api.SimpleCredentials;
-import pl.wavesoftware.wfirma.api.model.AbstractParametrizedRequest;
+import pl.wavesoftware.wfirma.api.model.ApiModule;
 import pl.wavesoftware.wfirma.api.model.WFirmaException;
 import pl.wavesoftware.wfirma.api.model.WFirmaSercurityException;
-import pl.wavesoftware.wfirma.api.model.contractors.ContractorsRequest;
+import pl.wavesoftware.wfirma.api.model.contractors.Contractors;
 import pl.wavesoftware.wfirma.api.model.logic.And;
 import pl.wavesoftware.wfirma.api.model.logic.Condition;
 import pl.wavesoftware.wfirma.api.model.logic.Conditions;
 import pl.wavesoftware.wfirma.api.model.logic.LogicalOperator;
 import pl.wavesoftware.wfirma.api.model.logic.Parameters;
+import pl.wavesoftware.wfirma.api.model.requests.FindRequest;
+import pl.wavesoftware.wfirma.api.model.requests.GetRequest;
 
 /**
  *
@@ -67,8 +69,6 @@ public class SimpleGatewayTest {
 
     private static final String CONTENT_TYPE_TEXT_XML = "text/xml";
 
-    private String path;
-
     private String expResultAuth;
 
     private String expResult;
@@ -82,7 +82,8 @@ public class SimpleGatewayTest {
         SimpleCredentials creds = new SimpleCredentials("login@example.org", "a-user-password");
         SimpleGateway instance = new SimpleGateway(creds, mockAddress);
 
-        String result = instance.get(RequestPath.fromString(path));
+        GetRequest get = new GetRequest(ApiModule.COMPANIES);
+        String result = instance.get(get);
         assertThat(result).isNotNull();
         assertThat(result).isEqualTo(expResult);
 
@@ -90,7 +91,7 @@ public class SimpleGatewayTest {
         instance = new SimpleGateway(creds, mockAddress);
 
         try {
-            instance.get(RequestPath.fromString(path));
+            instance.get(get);
             fail("Expected to throw a WFirmaSercurityException for invalid auth");
         } catch (WFirmaSercurityException ex) {
             assertThat(ex.getLocalizedMessage()).isEqualTo("Auth failed for user: `login2@example.org`");
@@ -102,7 +103,8 @@ public class SimpleGatewayTest {
         SimpleCredentials creds = new SimpleCredentials("login@example.org", "a-user-password");
         SimpleGateway instance = new SimpleGateway(creds, mockAddress);
 
-        String result = instance.get(RequestPath.fromString(path));
+        GetRequest get = new GetRequest(ApiModule.COMPANIES);
+        String result = instance.get(get);
         assertThat(result).isNotNull();
         assertThat(result).isEqualTo(expResult);
 
@@ -110,7 +112,7 @@ public class SimpleGatewayTest {
         instance = new SimpleGateway(creds, mockAddress);
 
         try {
-            instance.get(RequestPath.fromString(path));
+            instance.get(get);
             fail("Expected to throw a WFirmaSercurityException for invalid auth");
         } catch (WFirmaSercurityException ex) {
             assertThat(ex.getLocalizedMessage()).isEqualTo("Auth failed for user: `login2@example.org`");
@@ -119,7 +121,6 @@ public class SimpleGatewayTest {
 
     @Before
     public void before() {
-        path = "/companies/get";
         expResultAuth = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
                 + "<api>\n"
                 + "    <status>\n"
@@ -235,14 +236,14 @@ public class SimpleGatewayTest {
                 + "</api>\n"
                 + "";
 
-        stubFor(get(urlEqualTo(path))
+        stubFor(get(urlEqualTo("/companies/get"))
                 .withHeader("Accept", equalTo(CONTENT_TYPE_TEXT_XML))
                 .withHeader("Authorization", equalTo("Basic bG9naW5AZXhhbXBsZS5vcmc6YS11c2VyLXBhc3N3b3Jk"))
                 .willReturn(aResponse()
                         .withStatus(200)
                         .withHeader("Content-Type", CONTENT_TYPE_TEXT_XML)
                         .withBody(expResult)));
-        stubFor(get(urlEqualTo(path))
+        stubFor(get(urlEqualTo("/companies/get"))
                 .withHeader("Accept", equalTo(CONTENT_TYPE_TEXT_XML))
                 .withHeader("Authorization", notMatching("Basic bG9naW5AZXhhbXBsZS5vcmc6YS11c2VyLXBhc3N3b3Jk"))
                 .willReturn(aResponse()
@@ -272,7 +273,8 @@ public class SimpleGatewayTest {
         SimpleCredentials creds = new SimpleCredentials("login@example.org", "a-user-password");
         SimpleGateway instance = new SimpleGateway(creds, mockAddress);
         instance.addListener(listener);
-        instance.get(RequestPath.fromString(path));
+        GetRequest get = new GetRequest(ApiModule.COMPANIES);
+        instance.get(get);
         assertThat(sb.toString()).isEqualTo(expResult);
     }
 
@@ -290,16 +292,17 @@ public class SimpleGatewayTest {
         SimpleGateway instance = new SimpleGateway(creds, mockAddress);
         instance.addListener(listener);
         instance.removeListener(listener);
-        instance.get(RequestPath.fromString(path));
+        GetRequest get = new GetRequest(ApiModule.COMPANIES);
+        instance.get(get);
         assertThat(sb.toString()).isEqualTo("");
     }
 
     @Test
     public void testGet() throws Exception {
-        RequestPath requestPath = RequestPath.fromString(path);
         SimpleCredentials creds = new SimpleCredentials("login@example.org", "a-user-password");
         SimpleGateway instance = new SimpleGateway(creds, mockAddress);
-        String result = instance.get(requestPath);
+        GetRequest get = new GetRequest(ApiModule.COMPANIES);
+        String result = instance.get(get);
         assertThat(result).isEqualTo(expResult);
     }
 
@@ -314,7 +317,7 @@ public class SimpleGatewayTest {
         cond.setValue("1112233444");
         and.getCondition().add(cond);
         conds.getAnd().add(and);
-        AbstractParametrizedRequest findRequest = new ContractorsRequest(ContractorsRequest.Action.FIND, params);
+        FindRequest<Contractors> findRequest = new FindRequest<>(ApiModule.CONTRACTORS, params, Contractors.class);
         SimpleCredentials creds = new SimpleCredentials("login@example.org", "a-user-password");
         SimpleGateway instance = new SimpleGateway(creds, mockAddress);
         String result = instance.post(findRequest);

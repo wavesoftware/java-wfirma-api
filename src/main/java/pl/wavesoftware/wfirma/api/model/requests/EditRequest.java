@@ -21,38 +21,44 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package pl.wavesoftware.wfirma.api.mapper;
 
+package pl.wavesoftware.wfirma.api.model.requests;
+
+import pl.wavesoftware.wfirma.api.mapper.RequestPath;
+import pl.wavesoftware.wfirma.api.mapper.xml.JaxbMarshaller;
+import pl.wavesoftware.wfirma.api.model.ApiEntityElement;
+import pl.wavesoftware.wfirma.api.model.ApiModule;
 import pl.wavesoftware.wfirma.api.model.PostRequest;
-import pl.wavesoftware.wfirma.api.model.Request;
-import pl.wavesoftware.wfirma.api.model.WFirmaException;
 
 /**
  *
  * @author Krzysztof Suszyński <krzysztof.suszynski@wavesoftware.pl>
+ * @param <T> a type of entity
  */
-public interface WFirmaGateway {
+public class EditRequest<T extends ApiEntityElement> implements PostRequest<T> {
 
-    /**
-     * Address of WFirma API2 gateway
-     */
-    String GATEWAY_ADDRESS = "https://api2.wfirma.pl";
+    private final T entity;
 
-    /**
-     * Fetches data from WFirma API2
-     *
-     * @param request a get request
-     * @return a string with a XML Response from WFirma
-     * @throws WFirmaException if some error occured while fetching data
-     */
-    String get(Request request) throws WFirmaException;
+    private final ApiModule module;
 
-    /**
-     * Fetches data from WFirma API2 by sending data with find request object
-     *
-     * @param request a post request
-     * @return a string with a XML Response from WFirma
-     * @throws WFirmaException if some error occured while fetching data
-     */
-    String post(PostRequest<?> request) throws WFirmaException;
+    public EditRequest(ApiModule module, T entity) {
+        this.entity = entity;
+        this.module = module;
+    }
+
+    @Override
+    public T getEntity() {
+        return entity;
+    }
+
+    @Override
+    public String getBody() {
+        return JaxbMarshaller.createFor(entity.getApi()).marshal(entity.getApi());
+    }
+
+    @Override
+    public RequestPath getAddress() {
+        return RequestPath.fromString(module.name().toLowerCase(), "edit");
+    }
+
 }

@@ -29,6 +29,8 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
+import pl.wavesoftware.wfirma.api.mapper.Api;
+import pl.wavesoftware.wfirma.api.model.ApiEntityElement;
 
 /**
  * <p>
@@ -56,10 +58,14 @@ import javax.xml.bind.annotation.XmlType;
     "contractors"
 })
 @XmlRootElement(name = "api")
-public class Api {
+public class ContractorsApi implements Api {
 
     @XmlElement(nillable = false)
-    private Contractors contractors = new Contractors();
+    private Contractors contractors;
+
+    public ContractorsApi() {
+        contractors = new Contractors(this);
+    }
 
     public Contractors getContractors() {
         return contractors;
@@ -67,6 +73,11 @@ public class Api {
 
     public void setContractors(Contractors contractors) {
         this.contractors = contractors;
+    }
+
+    @Override
+    public Class<? extends ApiEntityElement> getEntityClass() {
+        return Contractors.class;
     }
 
 }

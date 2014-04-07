@@ -21,66 +21,54 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package pl.wavesoftware.wfirma.api.model.contractors;
+
+package pl.wavesoftware.wfirma.api.model.requests;
 
 import pl.wavesoftware.wfirma.api.mapper.RequestPath;
 import pl.wavesoftware.wfirma.api.mapper.xml.JaxbMarshaller;
-import pl.wavesoftware.wfirma.api.model.AbstractParametrizedRequest;
+import pl.wavesoftware.wfirma.api.model.ApiEntityElement;
+import pl.wavesoftware.wfirma.api.model.ApiModule;
+import pl.wavesoftware.wfirma.api.model.Parametrizable;
+import pl.wavesoftware.wfirma.api.model.PostRequest;
 import pl.wavesoftware.wfirma.api.model.logic.Parameters;
 
 /**
  *
  * @author Krzysztof Suszyński <krzysztof.suszynski@wavesoftware.pl>
+ * @param <T> a type of this request
  */
-public class ContractorsRequest extends AbstractParametrizedRequest {
+public class FindRequest<T extends ApiEntityElement> implements PostRequest<T> {
 
-    private final RequestPath address;
+    private final ApiModule module;
 
-    private Api api;
+    private final T entity;
 
-    private Action action;
-
-    public ContractorsRequest(Action action, Contractors contractors) {
-        super(contractors);
-        this.api = new Api();
-        if (!action.isSingular()) {
-            api.setContractors(contractors);
+    public FindRequest(ApiModule module, Parameters parameters, Class<T> cls) {
+        this.module = module;
+        try {
+            this.entity = cls.newInstance();
+            if (entity instanceof Parametrizable) {
+                Parametrizable params = (Parametrizable) entity;
+                params.setParameters(parameters);
+            }
+        } catch (InstantiationException | IllegalAccessException ex) {
+            throw new IllegalArgumentException(ex);
         }
-        address = action.getRequestPath(contractors);
-        this.action = action;
-    }
-
-    public ContractorsRequest(Action action, Parameters parameters) {
-        this(action, new Contractors());
-        api.getContractors().setParameters(parameters);
     }
 
     @Override
     public RequestPath getAddress() {
-        return address;
+        return RequestPath.fromString(module.name().toLowerCase(), "find");
     }
 
     @Override
-    public String buildRequest() {
-        return action.isSingular() ? "" : JaxbMarshaller.create(Api.class).marshal(api);
+    public T getEntity() {
+        return entity;
     }
 
-    public enum Action {
-
-        FIND, GET, ADD, EDIT, DELETE;
-
-        public RequestPath getRequestPath(Contractors contractors) {
-            StringBuilder path = new StringBuilder(String.format("/contractors/%s", name().toLowerCase()));
-            if (isSingular()) {
-                path.append("/");
-                path.append(contractors.getContractor().iterator().next().getId());
-            }
-            return new RequestPath(path.toString());
-        }
-
-        public boolean isSingular() {
-            return this == GET || this == DELETE;
-        }
+    @Override
+    public String getBody() {
+        return JaxbMarshaller.createFor(entity.getApi()).marshal(entity.getApi());
     }
 
 }

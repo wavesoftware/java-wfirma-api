@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2014 Krzysztof Suszyński <krzysztof.suszynski@gmail.com>.
+ * Copyright 2014 Krzysztof Suszyński <krzysztof.suszynski@wavesoftware.pl>.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,30 +24,12 @@
 
 package pl.wavesoftware.wfirma.api.model;
 
-import javax.annotation.Nonnull;
-import pl.wavesoftware.wfirma.api.model.logic.Parameters;
-
+import pl.wavesoftware.wfirma.api.mapper.Api;
 
 /**
  *
- * @author Krzysztof Suszyński <krzysztof.suszynski@gmail.com>
+ * @author Krzysztof Suszyński <krzysztof.suszynski@wavesoftware.pl>
  */
-public abstract class AbstractParametrizedRequest implements WFirmaRequest, Parametrizable {
-
-    private final Parametrizable parametrizable;
-
-    public AbstractParametrizedRequest(@Nonnull Parametrizable parametrizable) {
-        this.parametrizable = parametrizable;
-    }
-
-    @Override
-    public Parameters getParameters() {
-        return parametrizable.getParameters();
-    }
-
-    @Override
-    public void setParameters(Parameters parameters) {
-        parametrizable.setParameters(parameters);
-    }
-
+public interface ApiEntityElement {
+    Api getApi();
 }

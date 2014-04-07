@@ -51,7 +51,8 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 import pl.wavesoftware.wfirma.api.SimpleCredentials;
-import pl.wavesoftware.wfirma.api.model.AbstractParametrizedRequest;
+import pl.wavesoftware.wfirma.api.model.PostRequest;
+import pl.wavesoftware.wfirma.api.model.Request;
 import pl.wavesoftware.wfirma.api.model.WFirmaException;
 import pl.wavesoftware.wfirma.api.model.WFirmaSercurityException;
 
@@ -120,8 +121,8 @@ public class SimpleGateway implements WFirmaGateway {
 
     @Override
     @Nonnull
-    public String get(@Nonnull RequestPath requestPath) throws WFirmaException {
-        HttpGet httpget = new HttpGet(requestPath.getCorrectedPath());
+    public String get(@Nonnull Request request) throws WFirmaException {
+        HttpGet httpget = new HttpGet(request.getAddress().getCorrectedPath());
         return get(httpget);
     }
 
@@ -167,11 +168,11 @@ public class SimpleGateway implements WFirmaGateway {
 
     @Override
     @Nonnull
-    public String post(@Nonnull AbstractParametrizedRequest findRequest) throws WFirmaException {
-        String request = findRequest.buildRequest();
-        HttpPost post = new HttpPost(findRequest.getAddress().getCorrectedPath());
+    public String post(@Nonnull PostRequest<?> request) throws WFirmaException {
+        String body = request.getBody();
+        HttpPost post = new HttpPost(request.getAddress().getCorrectedPath());
         try {
-            post.setEntity(new StringEntity(request));
+            post.setEntity(new StringEntity(body));
         } catch (UnsupportedEncodingException ex) {
             throw new RuntimeException(ex);
         }

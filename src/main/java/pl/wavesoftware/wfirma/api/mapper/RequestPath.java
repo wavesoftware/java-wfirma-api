@@ -30,7 +30,7 @@ package pl.wavesoftware.wfirma.api.mapper;
  */
 public class RequestPath {
 
-    private String path;
+    private final String path;
 
     public RequestPath(String path) {
         this.path = path;
@@ -46,7 +46,12 @@ public class RequestPath {
         return corrected;
     }
 
-    public static RequestPath fromString(String path) {
-        return new RequestPath(path);
+    public static RequestPath fromString(String... path) {
+        StringBuilder builder = new StringBuilder();
+        for (String onePath : path) {
+            builder.append("/");
+            builder.append(onePath);
+        }
+        return new RequestPath(builder.toString());
     }
 }

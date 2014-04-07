@@ -31,6 +31,7 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
+import pl.wavesoftware.wfirma.api.mapper.Api;
 
 /**
  *
@@ -43,6 +44,12 @@ public class JaxbMarshaller<Type> {
 
     public static <T> JaxbMarshaller<T> create(Class<T> cls) {
         JaxbMarshaller<T> marshaller = new JaxbMarshaller<>(cls);
+        return marshaller;
+    }
+
+    public static <T extends Api> JaxbMarshaller<T> createFor(T entity) {
+        @SuppressWarnings("unchecked")
+        JaxbMarshaller<T> marshaller = (JaxbMarshaller<T>) JaxbMarshaller.create(entity.getClass());
         return marshaller;
     }
 

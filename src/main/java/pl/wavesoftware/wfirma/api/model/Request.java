@@ -30,9 +30,13 @@ import pl.wavesoftware.wfirma.api.mapper.RequestPath;
  *
  * @author Krzysztof Suszyński <krzysztof.suszynski@gmail.com>
  */
-public interface WFirmaRequest {
+public interface Request {
 
+    /**
+     * Gets a target address
+     *
+     * @return a target address
+     */
     RequestPath getAddress();
 
-    String buildRequest();
 }

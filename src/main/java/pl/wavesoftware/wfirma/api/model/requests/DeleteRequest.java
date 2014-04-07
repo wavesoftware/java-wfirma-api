@@ -21,38 +21,31 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package pl.wavesoftware.wfirma.api.mapper;
 
-import pl.wavesoftware.wfirma.api.model.PostRequest;
+package pl.wavesoftware.wfirma.api.model.requests;
+
+import pl.wavesoftware.wfirma.api.mapper.RequestPath;
+import pl.wavesoftware.wfirma.api.model.ApiModule;
 import pl.wavesoftware.wfirma.api.model.Request;
-import pl.wavesoftware.wfirma.api.model.WFirmaException;
 
 /**
  *
  * @author Krzysztof Suszyński <krzysztof.suszynski@wavesoftware.pl>
  */
-public interface WFirmaGateway {
+public class DeleteRequest implements Request {
 
-    /**
-     * Address of WFirma API2 gateway
-     */
-    String GATEWAY_ADDRESS = "https://api2.wfirma.pl";
+    private final ApiModule module;
 
-    /**
-     * Fetches data from WFirma API2
-     *
-     * @param request a get request
-     * @return a string with a XML Response from WFirma
-     * @throws WFirmaException if some error occured while fetching data
-     */
-    String get(Request request) throws WFirmaException;
+    private final Long wfirmaId;
 
-    /**
-     * Fetches data from WFirma API2 by sending data with find request object
-     *
-     * @param request a post request
-     * @return a string with a XML Response from WFirma
-     * @throws WFirmaException if some error occured while fetching data
-     */
-    String post(PostRequest<?> request) throws WFirmaException;
+    public DeleteRequest(ApiModule module, Long wfirmaId) {
+        this.module = module;
+        this.wfirmaId = wfirmaId;
+    }
+
+    @Override
+    public RequestPath getAddress() {
+        return RequestPath.fromString(module.name().toLowerCase(), "delete", wfirmaId.toString());
+    }
+
 }

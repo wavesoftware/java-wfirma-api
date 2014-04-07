@@ -27,6 +27,8 @@ package pl.wavesoftware.wfirma.api.model.contractors;
 import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 import org.junit.Test;
+import pl.wavesoftware.wfirma.api.mapper.Api;
+import pl.wavesoftware.wfirma.api.model.ApiEntityElement;
 import pl.wavesoftware.wfirma.api.model.logic.Parameters;
 
 /**
@@ -35,19 +37,28 @@ import pl.wavesoftware.wfirma.api.model.logic.Parameters;
  */
 public class ContractorsTypeTest {
 
+    private final Api api;
+
     public ContractorsTypeTest() {
+        api = new Api() {
+
+            @Override
+            public Class<? extends ApiEntityElement> getEntityClass() {
+                return Contractors.class;
+            }
+        };
     }
 
     @Test
     public void testGetContractor() {
-        Contractors instance = new Contractors();
+        Contractors instance = new Contractors(api);
         List<Contractor> result = instance.getContractor();
         assertThat(result).isEmpty();
     }
 
     @Test
     public void testGetParameters() {
-        Contractors instance = new Contractors();
+        Contractors instance = new Contractors(api);
         Parameters expResult = null;
         Parameters result = instance.getParameters();
         assertThat(result).isEqualTo(expResult);
@@ -55,9 +66,16 @@ public class ContractorsTypeTest {
 
     @Test
     public void testSetParameters() {
-        Parameters value = null;
-        Contractors instance = new Contractors();
+        Parameters value = new Parameters();
+        Contractors instance = new Contractors(api);
         instance.setParameters(value);
+        assertThat(instance.getParameters()).isEqualTo(value);
+    }
+
+    @Test
+    public void testGetApi() {
+        Contractors instance = new Contractors(api);
+        assertThat(instance.getApi()).isEqualTo(api);
     }
 
 }

@@ -21,38 +21,17 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+
 package pl.wavesoftware.wfirma.api.mapper;
 
-import pl.wavesoftware.wfirma.api.model.PostRequest;
-import pl.wavesoftware.wfirma.api.model.Request;
-import pl.wavesoftware.wfirma.api.model.WFirmaException;
+import pl.wavesoftware.wfirma.api.model.ApiEntityElement;
 
 /**
  *
  * @author Krzysztof Suszyński <krzysztof.suszynski@wavesoftware.pl>
  */
-public interface WFirmaGateway {
+public interface Api {
 
-    /**
-     * Address of WFirma API2 gateway
-     */
-    String GATEWAY_ADDRESS = "https://api2.wfirma.pl";
+    Class<? extends ApiEntityElement> getEntityClass();
 
-    /**
-     * Fetches data from WFirma API2
-     *
-     * @param request a get request
-     * @return a string with a XML Response from WFirma
-     * @throws WFirmaException if some error occured while fetching data
-     */
-    String get(Request request) throws WFirmaException;
-
-    /**
-     * Fetches data from WFirma API2 by sending data with find request object
-     *
-     * @param request a post request
-     * @return a string with a XML Response from WFirma
-     * @throws WFirmaException if some error occured while fetching data
-     */
-    String post(PostRequest<?> request) throws WFirmaException;
 }

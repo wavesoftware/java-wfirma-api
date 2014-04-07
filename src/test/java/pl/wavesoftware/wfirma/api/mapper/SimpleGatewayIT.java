@@ -35,26 +35,28 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pl.wavesoftware.wfirma.api.SimpleCredentials;
 import pl.wavesoftware.wfirma.api.mapper.xml.JaxbMarshaller;
-import pl.wavesoftware.wfirma.api.model.AbstractParametrizedRequest;
+import pl.wavesoftware.wfirma.api.model.ApiModule;
+import pl.wavesoftware.wfirma.api.model.Request;
 import pl.wavesoftware.wfirma.api.model.WFirmaException;
 import pl.wavesoftware.wfirma.api.model.WFirmaSercurityException;
-import pl.wavesoftware.wfirma.api.model.contractors.Api;
 import pl.wavesoftware.wfirma.api.model.contractors.Contractor;
 import pl.wavesoftware.wfirma.api.model.contractors.Contractors;
-import pl.wavesoftware.wfirma.api.model.contractors.ContractorsRequest;
+import pl.wavesoftware.wfirma.api.model.contractors.ContractorsApi;
 import pl.wavesoftware.wfirma.api.model.logic.And;
 import pl.wavesoftware.wfirma.api.model.logic.Condition;
 import pl.wavesoftware.wfirma.api.model.logic.Conditions;
 import pl.wavesoftware.wfirma.api.model.logic.LogicalOperator;
 import pl.wavesoftware.wfirma.api.model.logic.Parameters;
+import pl.wavesoftware.wfirma.api.model.requests.AddRequest;
+import pl.wavesoftware.wfirma.api.model.requests.DeleteRequest;
+import pl.wavesoftware.wfirma.api.model.requests.FindRequest;
+import pl.wavesoftware.wfirma.api.model.requests.GetRequest;
 
 /**
  *
  * @author Krzysztof Suszyński <krzysztof.suszynski@wavesoftware.pl>
  */
 public class SimpleGatewayIT {
-
-    private String path;
 
     private String expResultAuth;
 
@@ -86,7 +88,6 @@ public class SimpleGatewayIT {
         }
         Assume.assumeFalse(passCond);
 
-        path = "/companies/get";
         expResultAuth = "<\\?xml version=\"1\\.0\" encoding=\"UTF-8\"\\?>\\s*"
                 + "<api>\\s*"
                 + "<status>\\s*"
@@ -186,28 +187,29 @@ public class SimpleGatewayIT {
         SimpleCredentials creds = new SimpleCredentials(correctLogin, correctPassword);
         SimpleGateway instance = new SimpleGateway(creds);
 
-        String result = instance.get(RequestPath.fromString(path));
+        Request get = new GetRequest(ApiModule.COMPANIES);
+        String result = instance.get(get);
         assertNotNull(result);
         assertThat(result).matches(expResultRe);
     }
 
     @Test
     public void testPost() throws Exception {
-        AbstractParametrizedRequest addRequest = createAddRequest();
-        AbstractParametrizedRequest findRequest = createFindRequest();
-        AbstractParametrizedRequest deleteRequest;
+        AddRequest<Contractors> addRequest = createAddRequest();
+        FindRequest<Contractors> findRequest = createFindRequest();
+        DeleteRequest deleteRequest;
 
         SimpleCredentials creds = new SimpleCredentials(correctLogin, correctPassword);
         SimpleGateway instance = new SimpleGateway(creds);
 
         String result;
         result = instance.post(findRequest);
-        Api api;
-        api = JaxbMarshaller.create(Api.class).unmarshal(result);
+        ContractorsApi api;
+        api = JaxbMarshaller.create(ContractorsApi.class).unmarshal(result);
         if (!api.getContractors().getContractor().isEmpty()) {
             for (Contractor contractor : api.getContractors().getContractor()) {
                 deleteRequest = createDeleteRequest(contractor);
-                instance.post(deleteRequest);
+                instance.get(deleteRequest);
             }
         }
         result = instance.post(findRequest);
@@ -217,9 +219,9 @@ public class SimpleGatewayIT {
         result = instance.post(findRequest);
         assertThat(result).matches(expResultPost);
         assertThat(result).contains(EXAMPLE_NIP);
-        api = JaxbMarshaller.create(Api.class).unmarshal(result);
+        api = JaxbMarshaller.create(ContractorsApi.class).unmarshal(result);
         deleteRequest = createDeleteRequest(api.getContractors().getContractor().iterator().next());
-        result = instance.post(deleteRequest);
+        result = instance.get(deleteRequest);
         assertThat(result).isNotEmpty();
         assertThat(result).containsSequence("Kontrahent: ", " został usunięty.");
         result = instance.post(findRequest);
@@ -251,7 +253,8 @@ public class SimpleGatewayIT {
         };
         instance.addListener(listener);
         try {
-            instance.get(RequestPath.fromString(path));
+            Request get = new GetRequest(ApiModule.COMPANIES);
+            instance.get(get);
             fail("Expected to throw a WFirmaSercurityException for invalid auth");
         } catch (WFirmaSercurityException ex) {
             assertEquals("Auth failed for user: `non-existing-login-2@example.org`", ex.getLocalizedMessage());
@@ -263,7 +266,7 @@ public class SimpleGatewayIT {
         prefs.flush();
     }
 
-    private AbstractParametrizedRequest createFindRequest() {
+    private FindRequest<Contractors> createFindRequest() {
         Parameters params = new Parameters();
         Conditions conds = params.getConditions();
         And and = new And();
@@ -273,22 +276,22 @@ public class SimpleGatewayIT {
         cond.setValue(EXAMPLE_NIP);
         and.getCondition().add(cond);
         conds.getAnd().add(and);
-        return new ContractorsRequest(ContractorsRequest.Action.FIND, params);
+        return new FindRequest<>(ApiModule.CONTRACTORS, params, Contractors.class);
     }
 
-    private AbstractParametrizedRequest createAddRequest() {
-        Contractors contractors = new Contractors();
+    private AddRequest<Contractors> createAddRequest() {
+        ContractorsApi api = new ContractorsApi();
+        Contractors contractors = new Contractors(api);
+        api.setContractors(contractors);
         Contractor contractor = new Contractor();
         contractors.getContractor().add(contractor);
         contractor.setNip(EXAMPLE_NIP);
         contractor.setName("Wave Software");
-        return new ContractorsRequest(ContractorsRequest.Action.ADD, contractors);
+        return new AddRequest<>(ApiModule.CONTRACTORS, contractors);
     }
 
-    private AbstractParametrizedRequest createDeleteRequest(Contractor contractor) {
-        Contractors contractors = new Contractors();
-        contractors.getContractor().add(contractor);
-        return new ContractorsRequest(ContractorsRequest.Action.DELETE, contractors);
+    private DeleteRequest createDeleteRequest(Contractor contractor) {
+        return new DeleteRequest(ApiModule.CONTRACTORS, contractor.getId().longValue());
     }
 
 }

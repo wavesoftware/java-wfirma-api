@@ -28,7 +28,10 @@ import java.util.List;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
+import pl.wavesoftware.wfirma.api.mapper.Api;
+import pl.wavesoftware.wfirma.api.model.ApiEntityElement;
 import pl.wavesoftware.wfirma.api.model.Parametrizable;
 import pl.wavesoftware.wfirma.api.model.logic.Parameters;
 
@@ -59,7 +62,19 @@ import pl.wavesoftware.wfirma.api.model.logic.Parameters;
     "contractor",
     "parameters"
 })
-public class Contractors implements Parametrizable {
+public class Contractors implements Parametrizable, ApiEntityElement {
+
+    @XmlTransient
+    private final Api api;
+
+    public Contractors(Api api) {
+        this.api = api;
+    }
+
+    public Contractors() {
+        api = new ContractorsApi();
+        setApi((ContractorsApi) api);
+    }
 
     @XmlElement(required = true)
     protected List<Contractor> contractor;
@@ -115,6 +130,15 @@ public class Contractors implements Parametrizable {
     @Override
     public void setParameters(Parameters value) {
         this.parameters = value;
+    }
+
+    @Override
+    public Api getApi() {
+        return api;
+    }
+
+    private void setApi(ContractorsApi contractorsApi) {
+        contractorsApi.setContractors(this);
     }
 
 }
