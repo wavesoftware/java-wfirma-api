@@ -628,7 +628,7 @@ public class Contractor {
      * Gets the value of the buyer property.
      *
      */
-    public int getBuyer() {
+    public Integer getBuyer() {
         return buyer;
     }
 
@@ -636,7 +636,7 @@ public class Contractor {
      * Sets the value of the buyer property.
      *
      */
-    public void setBuyer(int value) {
+    public void setBuyer(Integer value) {
         this.buyer = value;
     }
 
@@ -644,7 +644,7 @@ public class Contractor {
      * Gets the value of the seller property.
      *
      */
-    public int getSeller() {
+    public Integer getSeller() {
         return seller;
     }
 
@@ -652,7 +652,7 @@ public class Contractor {
      * Sets the value of the seller property.
      *
      */
-    public void setSeller(int value) {
+    public void setSeller(Integer value) {
         this.seller = value;
     }
 
@@ -660,7 +660,7 @@ public class Contractor {
      * Gets the value of the discountPercent property.
      *
      */
-    public int getDiscountPercent() {
+    public Integer getDiscountPercent() {
         return discountPercent;
     }
 
@@ -668,7 +668,7 @@ public class Contractor {
      * Sets the value of the discountPercent property.
      *
      */
-    public void setDiscountPercent(int value) {
+    public void setDiscountPercent(Integer value) {
         this.discountPercent = value;
     }
 
@@ -676,7 +676,7 @@ public class Contractor {
      * Gets the value of the paymentDays property.
      *
      */
-    public int getPaymentDays() {
+    public Integer getPaymentDays() {
         return paymentDays;
     }
 
@@ -684,7 +684,7 @@ public class Contractor {
      * Sets the value of the paymentDays property.
      *
      */
-    public void setPaymentDays(int value) {
+    public void setPaymentDays(Integer value) {
         this.paymentDays = value;
     }
 
@@ -712,7 +712,7 @@ public class Contractor {
      * Gets the value of the remind property.
      *
      */
-    public int getRemind() {
+    public Integer getRemind() {
         return remind;
     }
 
@@ -720,7 +720,7 @@ public class Contractor {
      * Sets the value of the remind property.
      *
      */
-    public void setRemind(int value) {
+    public void setRemind(Integer value) {
         this.remind = value;
     }
 
@@ -748,7 +748,7 @@ public class Contractor {
      * Gets the value of the notes property.
      *
      */
-    public int getNotes() {
+    public Integer getNotes() {
         return notes;
     }
 
@@ -756,7 +756,7 @@ public class Contractor {
      * Sets the value of the notes property.
      *
      */
-    public void setNotes(int value) {
+    public void setNotes(Integer value) {
         this.notes = value;
     }
 
@@ -804,7 +804,7 @@ public class Contractor {
      * Gets the value of the provider property.
      *
      */
-    public int getProvider() {
+    public Integer getProvider() {
         return provider;
     }
 
@@ -812,7 +812,7 @@ public class Contractor {
      * Sets the value of the provider property.
      *
      */
-    public void setProvider(int value) {
+    public void setProvider(Integer value) {
         this.provider = value;
     }
 

@@ -111,6 +111,15 @@ public class Contractors implements Parametrizable, ApiEntityElement {
     }
 
     /**
+     * Sets the value of the contractor property.
+     *
+     * @param contractors a list of contractors to set
+     */
+    public void setContractor(List<Contractor> contractors) {
+        this.contractor = contractors;
+    }
+
+    /**
      * Gets the value of the parameters property.
      *
      * @return possible object is {@link Parameters }

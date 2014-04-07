@@ -78,4 +78,52 @@ public class ContractorsTypeTest {
         assertThat(instance.getApi()).isEqualTo(api);
     }
 
+//    @Test
+//    public void testDepth() {
+//        Contractors instance = new Contractors(api);
+//        Contractor contractor = new Contractor();
+//        instance.getContractor().add(contractor);
+//        assertThat(instance.getContractor().iterator().next()).isEqualTo(contractor);
+//        contractor.setAccess("a");
+//        assertThat(contractor.getAccess()).isEqualTo("a");
+//        contractor.setAltname("b");
+//        assertThat(contractor.getAltname()).isEqualTo("b");
+//        contractor.setBuyer(123);
+//        assertThat(contractor.getBuyer()).isEqualTo(123);
+//        contractor.setCity("c");
+//        assertThat(contractor.getCity()).isEqualTo("c");
+//        contractor.setCompanyAccount(new Contractor.CompanyAccount());
+//        contractor.getCompanyAccount().setId(234);
+//        assertThat(contractor.getCompanyAccount().getId()).isEqualTo(234);
+//        contractor.setContactCity("d");
+//        assertThat(contractor.getContactCity()).isEqualTo("d");
+//        contractor.setContactName("e");
+//        assertThat(contractor.getContactName()).isEqualTo("e");
+//        contractor.setContactPerson("f");
+//        assertThat(contractor.getContactPerson()).isEqualTo("f");
+//        contractor.setContactStreet("g");
+//        assertThat(contractor.getContactStreet()).isEqualTo("g");
+//        contractor.setContactZip("h");
+//        assertThat(contractor.getContactZip()).isEqualTo("h");
+//        contractor.setCreated("j");
+//        assertThat(contractor.getCreated()).isEqualTo("j");
+//        contractor.setDescription("k");
+//        assertThat(contractor.getDescription()).isEqualTo("j");
+//        contractor.setDiscountPercent(345);
+//        assertThat(contractor.getDiscountPercent()).isEqualTo(345);
+//        contractor.setEmail("l");
+//        assertThat(contractor.getEmail()).isEqualTo("l");
+//        contractor.setFax("m");
+//        assertThat(contractor.getFax()).isEqualTo("m");
+//        contractor.setId(456);
+//        assertThat(contractor.getId()).isEqualTo(456);
+//        contractor.setInvoiceDescription(new Contractor.InvoiceDescription());
+//        contractor.getInvoiceDescription().setId(567);
+//        assertThat(contractor.getInvoiceDescription().getId()).isEqualTo(567);
+//        contractor.setModified("n");
+//        assertThat(contractor.getModified()).isEqualTo("m");
+//        contractor.set("j");
+//        assertThat(contractor.getCreated()).isEqualTo("j");
+//    }
+
 }
