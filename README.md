@@ -1,11 +1,11 @@
-WFirma - Java API
-=================
+Java SDK for WFirma API
+=======================
 
-[![Build Status](https://travis-ci.org/wavesoftware/java-wfirma-api.png)](https://travis-ci.org/wavesoftware/java-wfirma-api)
+[![Build Status](https://travis-ci.org/wavesoftware/java-wfirma-api.png)](https://travis-ci.org/wavesoftware/java-wfirma-api) [![Coverage Status](https://coveralls.io/repos/wavesoftware/java-wfirma-api/badge.png?branch=master)](https://coveralls.io/r/wavesoftware/java-wfirma-api?branch=master)
 
 ## Work in progress, not ready to be used! ##
 
-A java SDK for WFirma API2
+A Java SDK for WFirma API2
 
 ### Maven ###
 
