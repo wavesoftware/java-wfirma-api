@@ -24,11 +24,43 @@
 
 package pl.wavesoftware.wfirma.api.model;
 
+import java.util.EnumMap;
+import java.util.Map;
+import pl.wavesoftware.wfirma.api.model.contractors.Contractors;
+
 /**
  *
  * @author Krzysztof Suszyński <krzysztof.suszynski@wavesoftware.pl>
  */
 public enum ApiModule {
 
-    CONTRACTORS, COMPANIES
+    CONTRACTORS, COMPANIES;
+
+    private static final EnumMap<ApiModule, Class<? extends ApiEntityElement>> MAP = new EnumMap<>(ApiModule.class);
+
+    static {
+        MAP.put(CONTRACTORS, Contractors.class);
+    }
+
+    public <T extends ApiEntityElement> Class<T> getEntityClass() {
+        if (MAP.containsKey(this)) {
+            @SuppressWarnings("unchecked")
+            Class<T> ret = (Class<T>) MAP.get(this);
+            return ret;
+        } else {
+            String msg = String.format("The enum `%s.%s` does not have a implementation class!",
+                    this.getClass().getName(), this.name());
+            throw new UnsupportedOperationException(msg);
+        }
+    }
+
+    public static ApiModule getModuleFor(ApiEntityElement entity) {
+        for (Map.Entry<ApiModule, Class<? extends ApiEntityElement>> entry : MAP.entrySet()) {
+            if (entry.getValue().equals(entity.getClass())) {
+                return entry.getKey();
+            }
+        }
+        throw new UnsupportedOperationException(
+                String.format("Class `%s` is not supported in enum `ApiModule`", entity.getClass().getName()));
+    }
 }

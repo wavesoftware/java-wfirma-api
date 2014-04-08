@@ -43,17 +43,22 @@ public class FindRequest<T extends ApiEntityElement> implements PostRequest<T> {
 
     private final T entity;
 
-    public FindRequest(ApiModule module, Parameters parameters, Class<T> cls) {
+    public FindRequest(ApiModule module, Parameters parameters) {
         this.module = module;
         try {
+            Class<T> cls = module.getEntityClass();
             this.entity = cls.newInstance();
-            if (entity instanceof Parametrizable) {
+            if (entity instanceof Parametrizable && parameters != null) {
                 Parametrizable params = (Parametrizable) entity;
                 params.setParameters(parameters);
             }
         } catch (InstantiationException | IllegalAccessException ex) {
             throw new IllegalArgumentException(ex);
         }
+    }
+
+    public FindRequest(ApiModule module) {
+        this(module, null);
     }
 
     @Override

@@ -36,21 +36,16 @@ public class GetRequest implements Request {
 
     private final ApiModule module;
 
-    private Long wfirmaId = null;
+    private final Long wfirmaId;
 
     public GetRequest(ApiModule module, Long wfirmaId) {
-        this(module);
-        this.wfirmaId = wfirmaId;
-    }
-
-    public GetRequest(ApiModule module) {
         this.module = module;
+        this.wfirmaId = wfirmaId;
     }
 
     @Override
     public RequestPath getAddress() {
-        return wfirmaId == null ? RequestPath.fromString(module.name().toLowerCase(), "get")
-                : RequestPath.fromString(module.name().toLowerCase(), "get", wfirmaId.toString());
+        return RequestPath.fromString(module.name().toLowerCase(), "get", wfirmaId.toString());
     }
 
 }

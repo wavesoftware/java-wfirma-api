@@ -187,7 +187,7 @@ public class SimpleGatewayIT {
         SimpleCredentials creds = new SimpleCredentials(correctLogin, correctPassword);
         SimpleGateway instance = new SimpleGateway(creds);
 
-        Request get = new GetRequest(ApiModule.COMPANIES);
+        Request get = new GetRequest(ApiModule.COMPANIES, 1L);
         String result = instance.get(get);
         assertNotNull(result);
         assertThat(result).matches(expResultRe);
@@ -253,7 +253,7 @@ public class SimpleGatewayIT {
         };
         instance.addListener(listener);
         try {
-            Request get = new GetRequest(ApiModule.COMPANIES);
+            Request get = new GetRequest(ApiModule.COMPANIES, 2L);
             instance.get(get);
             fail("Expected to throw a WFirmaSercurityException for invalid auth");
         } catch (WFirmaSercurityException ex) {
@@ -276,7 +276,7 @@ public class SimpleGatewayIT {
         cond.setValue(EXAMPLE_NIP);
         and.getCondition().add(cond);
         conds.getAnd().add(and);
-        return new FindRequest<>(ApiModule.CONTRACTORS, params, Contractors.class);
+        return new FindRequest<>(ApiModule.CONTRACTORS, params);
     }
 
     private AddRequest<Contractors> createAddRequest() {
@@ -287,7 +287,7 @@ public class SimpleGatewayIT {
         contractors.getContractor().add(contractor);
         contractor.setNip(EXAMPLE_NIP);
         contractor.setName("Wave Software");
-        return new AddRequest<>(ApiModule.CONTRACTORS, contractors);
+        return new AddRequest<>(contractors);
     }
 
     private DeleteRequest createDeleteRequest(Contractor contractor) {

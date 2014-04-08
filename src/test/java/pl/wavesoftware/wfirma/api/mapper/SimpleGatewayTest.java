@@ -85,7 +85,7 @@ public class SimpleGatewayTest {
         assertThat(new SimpleGateway(creds)).isNotNull();
         SimpleGateway instance = new SimpleGateway(creds, mockAddress);
 
-        GetRequest get = new GetRequest(ApiModule.COMPANIES);
+        GetRequest get = new GetRequest(ApiModule.COMPANIES, 1L);
         String result = instance.get(get);
         assertThat(result).isNotNull();
         assertThat(result).isEqualTo(expResult);
@@ -106,7 +106,7 @@ public class SimpleGatewayTest {
         SimpleCredentials creds = new SimpleCredentials("login@example.org", "a-user-password");
         SimpleGateway instance = new SimpleGateway(creds, mockAddress);
 
-        GetRequest get = new GetRequest(ApiModule.COMPANIES);
+        GetRequest get = new GetRequest(ApiModule.COMPANIES, 1L);
         String result = instance.get(get);
         assertThat(result).isNotNull();
         assertThat(result).isEqualTo(expResult);
@@ -124,7 +124,7 @@ public class SimpleGatewayTest {
 
     @Test
     public void testFetchWithAuthFail2() throws WFirmaException {
-        GetRequest get = new GetRequest(ApiModule.CONTRACTORS);
+        GetRequest get = new GetRequest(ApiModule.CONTRACTORS, 1L);
         SimpleCredentials creds = new SimpleCredentials("login2@example.org", "invalid-password");
         SimpleGateway instance = new SimpleGateway(creds, mockAddress);
 
@@ -138,7 +138,7 @@ public class SimpleGatewayTest {
 
     @Test
     public void testFetchWithConnectionFail() throws WFirmaException {
-        GetRequest get = new GetRequest(ApiModule.COMPANIES);
+        FindRequest<Contractors> get = new FindRequest<>(ApiModule.CONTRACTORS);
         SimpleCredentials creds = new SimpleCredentials("login@example.org", "a-user-password");
         SimpleGateway instance = new SimpleGateway(creds, URI.create("http://localhost:" + (PORT - 1)));
 
@@ -152,8 +152,7 @@ public class SimpleGatewayTest {
 
     @Test
     public void testFetchWithFatalFail() throws WFirmaException {
-        Parameters paramaters = new Parameters();
-        FindRequest<Contractors> get = new FindRequest<>(ApiModule.CONTRACTORS, paramaters, Contractors.class);
+        FindRequest<Contractors> get = new FindRequest<>(ApiModule.CONTRACTORS);
         SimpleCredentials creds = new SimpleCredentials("login@example.org", "fatal-error");
         SimpleGateway instance = new SimpleGateway(creds, mockAddress);
 
@@ -304,21 +303,21 @@ public class SimpleGatewayTest {
                 + "</api>\n"
                 + "";
 
-        stubFor(get(urlEqualTo("/companies/get"))
+        stubFor(get(urlEqualTo("/companies/get/1"))
                 .withHeader("Accept", equalTo(CONTENT_TYPE_TEXT_XML))
                 .withHeader("Authorization", equalTo("Basic bG9naW5AZXhhbXBsZS5vcmc6YS11c2VyLXBhc3N3b3Jk"))
                 .willReturn(aResponse()
                         .withStatus(200)
                         .withHeader("Content-Type", CONTENT_TYPE_TEXT_XML)
                         .withBody(expResult)));
-        stubFor(get(urlEqualTo("/companies/get"))
+        stubFor(get(urlEqualTo("/companies/get/1"))
                 .withHeader("Accept", equalTo(CONTENT_TYPE_TEXT_XML))
                 .withHeader("Authorization", notMatching("Basic bG9naW5AZXhhbXBsZS5vcmc6YS11c2VyLXBhc3N3b3Jk"))
                 .willReturn(aResponse()
                         .withStatus(200)
                         .withHeader("Content-Type", CONTENT_TYPE_TEXT_XML)
                         .withBody(expResultAuth)));
-        stubFor(get(urlEqualTo("/contractors/get"))
+        stubFor(get(urlEqualTo("/contractors/get/1"))
                 .withHeader("Accept", equalTo(CONTENT_TYPE_TEXT_XML))
                 .withHeader("Authorization", notMatching("Basic bG9naW5AZXhhbXBsZS5vcmc6YS11c2VyLXBhc3N3b3Jk"))
                 .willReturn(aResponse()
@@ -355,7 +354,7 @@ public class SimpleGatewayTest {
         SimpleCredentials creds = new SimpleCredentials("login@example.org", "a-user-password");
         SimpleGateway instance = new SimpleGateway(creds, mockAddress);
         instance.addListener(listener);
-        GetRequest get = new GetRequest(ApiModule.COMPANIES);
+        GetRequest get = new GetRequest(ApiModule.COMPANIES, 1L);
         instance.get(get);
         assertThat(sb.toString()).isEqualTo(expResult);
     }
@@ -374,7 +373,7 @@ public class SimpleGatewayTest {
         SimpleGateway instance = new SimpleGateway(creds, mockAddress);
         instance.addListener(listener);
         instance.removeListener(listener);
-        GetRequest get = new GetRequest(ApiModule.COMPANIES);
+        GetRequest get = new GetRequest(ApiModule.COMPANIES, 1L);
         instance.get(get);
         assertThat(sb.toString()).isEqualTo("");
     }
@@ -383,7 +382,7 @@ public class SimpleGatewayTest {
     public void testGet() throws Exception {
         SimpleCredentials creds = new SimpleCredentials("login@example.org", "a-user-password");
         SimpleGateway instance = new SimpleGateway(creds, mockAddress);
-        GetRequest get = new GetRequest(ApiModule.COMPANIES);
+        GetRequest get = new GetRequest(ApiModule.COMPANIES, 1L);
         String result = instance.get(get);
         assertThat(result).isEqualTo(expResult);
     }
@@ -399,7 +398,7 @@ public class SimpleGatewayTest {
         cond.setValue("1112233444");
         and.getCondition().add(cond);
         conds.getAnd().add(and);
-        FindRequest<Contractors> findRequest = new FindRequest<>(ApiModule.CONTRACTORS, params, Contractors.class);
+        FindRequest<Contractors> findRequest = new FindRequest<>(ApiModule.CONTRACTORS, params);
         SimpleCredentials creds = new SimpleCredentials("login@example.org", "a-user-password");
         SimpleGateway instance = new SimpleGateway(creds, mockAddress);
         String result = instance.post(findRequest);
