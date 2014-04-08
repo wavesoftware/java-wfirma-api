@@ -903,13 +903,13 @@ public class Contractor {
     })
     public static class CompanyAccount {
 
-        protected int id;
+        protected Integer id;
 
         /**
          * Gets the value of the id property.
          *
          */
-        public int getId() {
+        public Integer getId() {
             return id;
         }
 
@@ -917,7 +917,7 @@ public class Contractor {
          * Sets the value of the id property.
          *
          */
-        public void setId(int value) {
+        public void setId(Integer value) {
             this.id = value;
         }
 
@@ -1002,13 +1002,13 @@ public class Contractor {
     })
     public static class TranslationLanguage {
 
-        protected int id;
+        protected Integer id;
 
         /**
          * Gets the value of the id property.
          *
          */
-        public int getId() {
+        public Integer getId() {
             return id;
         }
 
@@ -1016,7 +1016,7 @@ public class Contractor {
          * Sets the value of the id property.
          *
          */
-        public void setId(int value) {
+        public void setId(Integer value) {
             this.id = value;
         }
 

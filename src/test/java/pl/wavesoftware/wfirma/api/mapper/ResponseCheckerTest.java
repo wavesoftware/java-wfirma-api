@@ -42,33 +42,58 @@ import pl.wavesoftware.wfirma.api.model.WFirmaSercurityException;
 @RunWith(Parameterized.class)
 public class ResponseCheckerTest {
 
-    private final String code;
+    private static final String INVALID_INPUT_PHP = "<html><h1>PHP Error: Internal Server Error</h1></html>";
 
     private final Throwable thowable;
 
-    private final String couse;
+    private final String input;
 
-    public ResponseCheckerTest(String label, String code, Throwable thowable, String couse) {
-        this.code = code;
+    public ResponseCheckerTest(String label, String input, Throwable thowable) {
+        this.input = input;
         this.thowable = thowable;
-        this.couse = couse;
+    }
+
+    private static String in(String code) {
+        return in(code, null);
+    }
+
+    private static String in(String code, String couse) {
+        String template = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+                + "<api>\n"
+                + "    <status>\n"
+                + "        <code>%s</code>\n"
+                + "    </status>\n%s"
+                + "</api>";
+        String couseIn = couse == null ? ""
+                : String.format(
+                        "    <errors>\n"
+                        + "        <error>\n"
+                        + "            <message>%s</message>\n"
+                        + "        </error>\n"
+                        + "    </errors>\n", couse);
+
+        return String.format(template, code, couseIn);
     }
 
     @Parameters(name = "{0}")
     public static Collection<Object[]> data() {
         Object[][] data = new Object[][]{
-            {"OK", "OK", null, null},
-            {"AUTH", "AUTH", new WFirmaSercurityException("Auth failed for user: `test-user`"), null},
-            {"ACTION NOT FOUND", "ACTION NOT FOUND", new WFirmaException("ACTION NOT FOUND"), null},
-            {"NOT FOUND", "NOT FOUND", new WFirmaException("NOT FOUND"), null},
-            {"FATAL", "FATAL", new WFirmaException("FATAL"), null},
-            {"INPUT ERROR", "INPUT ERROR", new WFirmaException("INPUT ERROR"), null},
-            {"ERROR", "ERROR", new WFirmaException("ERROR: no error tags?!"),
-                null},
-            {"ERROR WITH CAUSE", "ERROR", new WFirmaException("ERROR: [a couse]"), "a couse"},
-            {"OUT OF SERVICE", "OUT OF SERVICE", new WFirmaException("OUT OF SERVICE"), null},
-            {"DENIED SCOPE REQUESTED", "DENIED SCOPE REQUESTED", new WFirmaException("DENIED SCOPE REQUESTED"), null},
-            {"UNKNOWN ERROR", "UNKNOWN ERROR", new WFirmaException("Unknown status code: UNKNOWN ERROR"), null}};
+            {"OK", in("OK"), null},
+            {"AUTH", in("AUTH"), new WFirmaSercurityException("Auth failed for user: `test-user`")},
+            {"ACTION NOT FOUND", in("ACTION NOT FOUND"), new WFirmaException("ACTION NOT FOUND")},
+            {"NOT FOUND", in("NOT FOUND"), new WFirmaException("NOT FOUND")},
+            {"FATAL", in("FATAL"), new WFirmaException("FATAL")},
+            {"INPUT ERROR", in("INPUT ERROR"), new WFirmaException("INPUT ERROR")},
+            {"ERROR", in("ERROR"), new WFirmaException("ERROR: no error tags?!")},
+            {"ERROR WITH CAUSE", in("ERROR", "a couse"), new WFirmaException("ERROR: [a couse]")},
+            {"OUT OF SERVICE", in("OUT OF SERVICE"), new WFirmaException("OUT OF SERVICE")},
+            {"DENIED SCOPE REQUESTED", in("DENIED SCOPE REQUESTED"), new WFirmaException("DENIED SCOPE REQUESTED")},
+            {"UNKNOWN ERROR", in("UNKNOWN ERROR"), new WFirmaException("Unknown status code: UNKNOWN ERROR")},
+            {"Invalid input PHP", INVALID_INPUT_PHP, new IllegalStateException("Invalid WFirma output: "
+                + "<html><h1>PHP Error: Internal Server Error</h1></html>")},
+            {"Invalid input - xml error", "<api>\n←", new IllegalStateException("Invalid WFirma output: "
+                + "XML document structures must start and end within the same entity.")}
+        };
         return Arrays.asList(data);
     }
 
@@ -78,31 +103,17 @@ public class ResponseCheckerTest {
     @Test
     public void testCheckedForStatus() throws WFirmaException {
         String login = "test-user";
-        String template = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
-                + "<api>\n"
-                + "    <status>\n"
-                + "        <code>%s</code>\n"
-                + "    </status>\n%s"
-                + "</api>";
-        String cause = couse == null ? ""
-                : String.format(
-                        "    <errors>\n"
-                        + "        <error>\n"
-                        + "            <message>%s</message>\n"
-                        + "        </error>\n"
-                        + "    </errors>\n", couse);
-        String content = String.format(template, code, cause);
         ResponseChecker instance = new ResponseChecker();
         if (thowable == null) {
-            String result = instance.checkedForStatus(login, content);
-            assertThat(result).isEqualTo(content);
+            String result = instance.checkedForStatus(login, input);
+            assertThat(result).isEqualTo(input);
         } else {
             try {
-                instance.checkedForStatus(login, content);
+                instance.checkedForStatus(login, input);
                 fail("Expected exception, but didn't thrown! => " + thowable);
-            } catch (WFirmaException wfe) {
-                assertThat(wfe.getClass()).isEqualTo(thowable.getClass());
-                assertThat(wfe.getLocalizedMessage()).isEqualTo(thowable.getLocalizedMessage());
+            } catch (WFirmaException | IllegalStateException | UnsupportedOperationException ex) {
+                assertThat(ex.getClass()).isEqualTo(thowable.getClass());
+                assertThat(ex.getLocalizedMessage()).isEqualTo(thowable.getLocalizedMessage());
             }
         }
     }

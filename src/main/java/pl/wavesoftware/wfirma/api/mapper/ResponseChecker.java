@@ -98,7 +98,7 @@ public class ResponseChecker {
                     throw new WFirmaException("Unknown status code: " + code);
             }
         } catch (XPathExpressionException ex) {
-            throw new UnsupportedOperationException("Invalid WFirma output: "
+            throw new IllegalStateException("Invalid WFirma output: "
                     + ex.getCause().getLocalizedMessage(), ex);
         } catch (IOException ex) {
             throw new UnsupportedOperationException("Invalid WFirma output: "

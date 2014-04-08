@@ -27,9 +27,7 @@ package pl.wavesoftware.wfirma.api.model.contractors;
 import com.openpojo.reflection.PojoClass;
 import com.openpojo.reflection.impl.PojoClassFactory;
 import com.openpojo.validation.PojoValidator;
-import com.openpojo.validation.affirm.Affirm;
 import com.openpojo.validation.rule.impl.GetterMustExistRule;
-import com.openpojo.validation.rule.impl.NoNestedClassRule;
 import com.openpojo.validation.rule.impl.NoPrimitivesRule;
 import com.openpojo.validation.rule.impl.NoPublicFieldsRule;
 import com.openpojo.validation.rule.impl.NoStaticExceptFinalRule;
@@ -37,39 +35,51 @@ import com.openpojo.validation.rule.impl.SetterMustExistRule;
 import com.openpojo.validation.test.impl.GetterTester;
 import com.openpojo.validation.test.impl.SetterTester;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import static org.assertj.core.api.Assertions.assertThat;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.Parameterized;
+import org.junit.runners.Parameterized.Parameters;
 
 /**
  *
  * @author Krzysztof Suszyński <krzysztof.suszynski@wavesoftware.pl>
  */
+@RunWith(Parameterized.class)
 public class ContractorsTest {
 
-    // Configured for expectation, so we know when a class gets added or removed.
-    private static final int EXPECTED_COUNT = 3;
+    private final PojoClass pojoClass;
 
-    private List<PojoClass> pojoClasses;
+    private final PojoValidator pojoValidator;
 
-    private PojoValidator pojoValidator;
+    @Parameters(name = "{0}")
+    public static Collection<Object[]> data() {
+        Class<?>[] classes = new Class<?>[]{Contractor.class, Contractor.CompanyAccount.class,
+            Contractor.InvoiceDescription.class, Contractor.TranslationLanguage.class, Contractors.class,
+            ContractorsApi.class};
+        List<Object[]> ret = new ArrayList<>();
+        for (Class<?> cls : classes) {
+            ret.add(new Object[]{cls.getSimpleName(), PojoClassFactory.getPojoClass(cls)});
+        }
+        return ret;
+    }
+
+    public ContractorsTest(String label, PojoClass pojoClass) {
+        this.pojoClass = pojoClass;
+        pojoValidator = new PojoValidator();
+    }
 
     @Before
-    public void setup() {
-        pojoClasses = new ArrayList<>();
-        pojoClasses.add(PojoClassFactory.getPojoClass(Contractor.class));
-        pojoClasses.add(PojoClassFactory.getPojoClass(Contractors.class));
-        pojoClasses.add(PojoClassFactory.getPojoClass(ContractorsApi.class));
-
-        pojoValidator = new PojoValidator();
-
+    public void before() {
         // Create Rules to validate structure for POJO_PACKAGE
         pojoValidator.addRule(new NoPublicFieldsRule());
         pojoValidator.addRule(new NoPrimitivesRule());
         pojoValidator.addRule(new NoStaticExceptFinalRule());
         pojoValidator.addRule(new GetterMustExistRule());
         pojoValidator.addRule(new SetterMustExistRule());
-        pojoValidator.addRule(new NoNestedClassRule());
 
         // Create Testers to validate behaviour for POJO_PACKAGE
         pojoValidator.addTester(new SetterTester());
@@ -77,15 +87,9 @@ public class ContractorsTest {
     }
 
     @Test
-    public void ensureExpectedPojoCount() {
-        Affirm.affirmEquals("Classes added / removed?", EXPECTED_COUNT, pojoClasses.size());
-    }
-
-    @Test
     public void testPojoStructureAndBehavior() {
-        for (PojoClass pojoClass : pojoClasses) {
-            pojoValidator.runValidation(pojoClass);
-        }
+        assertThat(pojoClass).isNotNull();
+        pojoValidator.runValidation(pojoClass);
     }
 
 }
