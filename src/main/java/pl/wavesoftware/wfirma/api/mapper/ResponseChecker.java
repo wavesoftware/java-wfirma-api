@@ -25,6 +25,10 @@
 package pl.wavesoftware.wfirma.api.mapper;
 
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 import static java.util.Locale.US;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
@@ -52,13 +56,14 @@ public class ResponseChecker {
      * @throws WFirmaException if status was other then `OK`
      */
     public String checkedForStatus(String login, String content) throws WFirmaException {
-        try {
+        try (InputStream in1 = new ByteArrayInputStream(content.getBytes());
+                InputStream in2 = new ByteArrayInputStream(content.getBytes())) {
             XPathFactory factory = XPathFactory.newInstance();
             XPath xpath = factory.newXPath();
             XPathExpression expr = xpath.compile("/api/status/code");
-            XPathExpression errors = xpath.compile("error");
+            XPathExpression errors = xpath.compile("//error/message");
             InputSource source = new InputSource();
-            source.setByteStream(new ByteArrayInputStream(content.getBytes()));
+            source.setByteStream(in1);
             NodeList nodes = (NodeList) expr.evaluate(source, XPathConstants.NODESET);
             if (nodes.getLength() != 1) {
                 throw new IllegalStateException("Invalid WFirma output: " + content);
@@ -78,17 +83,26 @@ public class ResponseChecker {
                 case "NOT FOUND":
                     throw new WFirmaException(code);
                 case "ERROR":
-                    try {
-                        NodeList errorNodes = (NodeList) errors.evaluate(source, XPathConstants.NODESET);
-                        throw new WFirmaException("%s - %s", code, errorNodes);
-                    } catch (XPathExpressionException ex) {
-                        throw new WFirmaException("%s - %s: %s", code, "no error tags?!", ex);
+                    source = new InputSource();
+                    source.setByteStream(in2);
+                    NodeList errorNodes = (NodeList) errors.evaluate(source, XPathConstants.NODESET);
+                    List<String> errorsStr = new ArrayList<>();
+                    for (int i = 0; i < errorNodes.getLength(); i++) {
+                        errorsStr.add(errorNodes.item(i).getTextContent());
                     }
+                    if (errorsStr.isEmpty()) {
+                        throw new WFirmaException("%s: %s", code, "no error tags?!");
+                    }
+                    throw new WFirmaException("%s: %s", code, errorsStr);
                 default:
                     throw new WFirmaException("Unknown status code: " + code);
             }
         } catch (XPathExpressionException ex) {
-            throw new UnsupportedOperationException("Invalid WFirma output: " + ex.getLocalizedMessage(), ex);
+            throw new UnsupportedOperationException("Invalid WFirma output: "
+                    + ex.getCause().getLocalizedMessage(), ex);
+        } catch (IOException ex) {
+            throw new UnsupportedOperationException("Invalid WFirma output: "
+                    + ex.getLocalizedMessage(), ex);
         }
     }
 

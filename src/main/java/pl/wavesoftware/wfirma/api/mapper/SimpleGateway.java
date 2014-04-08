@@ -24,8 +24,8 @@
 
 package pl.wavesoftware.wfirma.api.mapper;
 
+import com.google.common.base.Charsets;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.nio.charset.Charset;
 import java.util.HashSet;
@@ -171,11 +171,7 @@ public class SimpleGateway implements WFirmaGateway {
     public String post(@Nonnull PostRequest<?> request) throws WFirmaException {
         String body = request.getBody();
         HttpPost post = new HttpPost(request.getAddress().getCorrectedPath());
-        try {
-            post.setEntity(new StringEntity(body));
-        } catch (UnsupportedEncodingException ex) {
-            throw new RuntimeException(ex);
-        }
+        post.setEntity(new StringEntity(body, Charsets.UTF_8));
         return get(post);
     }
 

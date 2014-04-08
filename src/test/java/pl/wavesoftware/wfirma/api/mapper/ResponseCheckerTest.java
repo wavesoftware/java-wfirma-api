@@ -46,24 +46,29 @@ public class ResponseCheckerTest {
 
     private final Throwable thowable;
 
-    public ResponseCheckerTest(String code, Throwable thowable) {
+    private final String couse;
+
+    public ResponseCheckerTest(String label, String code, Throwable thowable, String couse) {
         this.code = code;
         this.thowable = thowable;
+        this.couse = couse;
     }
 
     @Parameters(name = "{0}")
     public static Collection<Object[]> data() {
         Object[][] data = new Object[][]{
-            {"OK", null},
-            {"AUTH", new WFirmaSercurityException("Auth failed for user: `test-user`")},
-            {"ACTION NOT FOUND", new WFirmaException("ACTION NOT FOUND")},
-            {"NOT FOUND", new WFirmaException("NOT FOUND")},
-            {"FATAL", new WFirmaException("FATAL")},
-            {"INPUT ERROR", new WFirmaException("INPUT ERROR")},
-            {"ERROR", new WFirmaException("ERROR - no error tags?!: javax.xml.xpath.XPathExpressionException")},
-            {"OUT OF SERVICE", new WFirmaException("OUT OF SERVICE")},
-            {"DENIED SCOPE REQUESTED", new WFirmaException("DENIED SCOPE REQUESTED")},
-            {"UNKNOWN ERROR", new WFirmaException("Unknown status code: UNKNOWN ERROR")},};
+            {"OK", "OK", null, null},
+            {"AUTH", "AUTH", new WFirmaSercurityException("Auth failed for user: `test-user`"), null},
+            {"ACTION NOT FOUND", "ACTION NOT FOUND", new WFirmaException("ACTION NOT FOUND"), null},
+            {"NOT FOUND", "NOT FOUND", new WFirmaException("NOT FOUND"), null},
+            {"FATAL", "FATAL", new WFirmaException("FATAL"), null},
+            {"INPUT ERROR", "INPUT ERROR", new WFirmaException("INPUT ERROR"), null},
+            {"ERROR", "ERROR", new WFirmaException("ERROR: no error tags?!"),
+                null},
+            {"ERROR WITH CAUSE", "ERROR", new WFirmaException("ERROR: [a couse]"), "a couse"},
+            {"OUT OF SERVICE", "OUT OF SERVICE", new WFirmaException("OUT OF SERVICE"), null},
+            {"DENIED SCOPE REQUESTED", "DENIED SCOPE REQUESTED", new WFirmaException("DENIED SCOPE REQUESTED"), null},
+            {"UNKNOWN ERROR", "UNKNOWN ERROR", new WFirmaException("Unknown status code: UNKNOWN ERROR"), null}};
         return Arrays.asList(data);
     }
 
@@ -77,9 +82,16 @@ public class ResponseCheckerTest {
                 + "<api>\n"
                 + "    <status>\n"
                 + "        <code>%s</code>\n"
-                + "    </status>\n"
+                + "    </status>\n%s"
                 + "</api>";
-        String content = String.format(template, code);
+        String cause = couse == null ? ""
+                : String.format(
+                        "    <errors>\n"
+                        + "        <error>\n"
+                        + "            <message>%s</message>\n"
+                        + "        </error>\n"
+                        + "    </errors>\n", couse);
+        String content = String.format(template, code, cause);
         ResponseChecker instance = new ResponseChecker();
         if (thowable == null) {
             String result = instance.checkedForStatus(login, content);
@@ -89,8 +101,8 @@ public class ResponseCheckerTest {
                 instance.checkedForStatus(login, content);
                 fail("Expected exception, but didn't thrown! => " + thowable);
             } catch (WFirmaException wfe) {
-                assertThat(thowable.getClass()).isEqualTo(wfe.getClass());
-                assertThat(thowable.getLocalizedMessage()).isEqualTo(wfe.getLocalizedMessage());
+                assertThat(wfe.getClass()).isEqualTo(thowable.getClass());
+                assertThat(wfe.getLocalizedMessage()).isEqualTo(thowable.getLocalizedMessage());
             }
         }
     }

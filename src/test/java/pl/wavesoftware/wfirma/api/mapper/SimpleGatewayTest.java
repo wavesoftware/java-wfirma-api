@@ -29,6 +29,8 @@ import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.URI;
+import mockit.Deencapsulation;
+import org.apache.http.HttpHost;
 import static org.assertj.core.api.Assertions.*;
 import org.junit.Before;
 import org.junit.Rule;
@@ -80,6 +82,7 @@ public class SimpleGatewayTest {
     @Test
     public void testFetch() throws WFirmaException {
         SimpleCredentials creds = new SimpleCredentials("login@example.org", "a-user-password");
+        assertThat(new SimpleGateway(creds)).isNotNull();
         SimpleGateway instance = new SimpleGateway(creds, mockAddress);
 
         GetRequest get = new GetRequest(ApiModule.COMPANIES);
@@ -116,6 +119,71 @@ public class SimpleGatewayTest {
             fail("Expected to throw a WFirmaSercurityException for invalid auth");
         } catch (WFirmaSercurityException ex) {
             assertThat(ex.getLocalizedMessage()).isEqualTo("Auth failed for user: `login2@example.org`");
+        }
+    }
+
+    @Test
+    public void testFetchWithAuthFail2() throws WFirmaException {
+        GetRequest get = new GetRequest(ApiModule.CONTRACTORS);
+        SimpleCredentials creds = new SimpleCredentials("login2@example.org", "invalid-password");
+        SimpleGateway instance = new SimpleGateway(creds, mockAddress);
+
+        try {
+            instance.get(get);
+            fail("Expected to throw a WFirmaSercurityException for invalid auth");
+        } catch (WFirmaSercurityException ex) {
+            assertThat(ex.getLocalizedMessage()).isEqualTo("Auth failed for user: `login2@example.org`");
+        }
+    }
+
+    @Test
+    public void testFetchWithConnectionFail() throws WFirmaException {
+        GetRequest get = new GetRequest(ApiModule.COMPANIES);
+        SimpleCredentials creds = new SimpleCredentials("login@example.org", "a-user-password");
+        SimpleGateway instance = new SimpleGateway(creds, URI.create("http://localhost:" + (PORT - 1)));
+
+        try {
+            instance.get(get);
+            fail("Expected to throw a WFirmaException for connection fail");
+        } catch (WFirmaException ex) {
+            assertThat(ex.getLocalizedMessage()).contains("Connect to localhost:", "failed:");
+        }
+    }
+
+    @Test
+    public void testFetchWithFatalFail() throws WFirmaException {
+        Parameters paramaters = new Parameters();
+        FindRequest<Contractors> get = new FindRequest<>(ApiModule.CONTRACTORS, paramaters, Contractors.class);
+        SimpleCredentials creds = new SimpleCredentials("login@example.org", "fatal-error");
+        SimpleGateway instance = new SimpleGateway(creds, mockAddress);
+
+        try {
+            instance.get(get);
+            fail("Expected to throw a WFirmaException for connection fail");
+        } catch (WFirmaException ex) {
+            assertThat(ex.getLocalizedMessage()).isEqualTo("Connection error: 500 - Internal Server Error");
+        }
+    }
+
+    @Test
+    public void testGetTargetHost() {
+        SimpleCredentials creds = new SimpleCredentials("login@example.org", "a-user-password");
+        SimpleGateway instance = new SimpleGateway(creds, URI.create("http://localhost"));
+        HttpHost host = (HttpHost) Deencapsulation.invoke(instance, "getTargetHost");
+        assertThat(host.getPort()).isEqualTo(80);
+
+        instance = new SimpleGateway(creds, URI.create("https://localhost"));
+        host = (HttpHost) Deencapsulation.invoke(instance, "getTargetHost");
+        assertThat(host.getPort()).isEqualTo(443);
+
+        instance = new SimpleGateway(creds, URI.create("ajp://localhost"));
+        try {
+            Deencapsulation.invoke(instance, "getTargetHost");
+            fail("Expected to throw a WFirmaException for invalid scheme");
+        } catch (Exception ex) {
+            assertThat(ex).isExactlyInstanceOf(RuntimeException.class);
+            assertThat(ex.getLocalizedMessage()).contains(
+                    "Unsupported URI scheme: ajp, supporting only: `http` and `https`");
         }
     }
 
@@ -250,6 +318,20 @@ public class SimpleGatewayTest {
                         .withStatus(200)
                         .withHeader("Content-Type", CONTENT_TYPE_TEXT_XML)
                         .withBody(expResultAuth)));
+        stubFor(get(urlEqualTo("/contractors/get"))
+                .withHeader("Accept", equalTo(CONTENT_TYPE_TEXT_XML))
+                .withHeader("Authorization", notMatching("Basic bG9naW5AZXhhbXBsZS5vcmc6YS11c2VyLXBhc3N3b3Jk"))
+                .willReturn(aResponse()
+                        .withStatus(403)
+                        .withHeader("Content-Type", CONTENT_TYPE_TEXT_XML)
+                        .withBody(expResultAuth)));
+        stubFor(get(urlEqualTo("/contractors/find"))
+                .withHeader("Accept", equalTo(CONTENT_TYPE_TEXT_XML))
+                .withHeader("Authorization", notMatching("Basic bG9naW5AZXhhbXBsZS5vcmc6YS11c2VyLXBhc3N3b3Jk"))
+                .willReturn(aResponse()
+                        .withStatus(500)
+                        .withHeader("Content-Type", CONTENT_TYPE_TEXT_XML)
+                        .withBody("")));
         stubFor(post(urlEqualTo("/contractors/find"))
                 .withRequestBody(equalTo(contractorsFindBody))
                 .withHeader("Accept", equalTo(CONTENT_TYPE_TEXT_XML))
