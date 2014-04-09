@@ -41,9 +41,14 @@ public class AddRequest<T extends ApiEntityElement> implements PostRequest<T> {
 
     private final T entity;
 
-    public AddRequest(T entity) {
+    private AddRequest(T entity) {
         this.module = ApiModule.getModuleFor(entity);
         this.entity = entity;
+    }
+
+    public static <T extends ApiEntityElement> AddRequest<T> create(T entity) {
+        AddRequest<T> obj = new AddRequest<>(entity);
+        return obj;
     }
 
     @Override

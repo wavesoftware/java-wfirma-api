@@ -49,7 +49,7 @@ public class FindRequestTest {
         cond.setValue("Coca%");
         and.getCondition().add(cond);
         parameters.getConditions().getAnd().add(and);
-        FindRequest instance = new FindRequest(ApiModule.CONTRACTORS, parameters);
+        FindRequest<Contractors> instance = new FindRequest<>(ApiModule.CONTRACTORS, parameters);
         String result = instance.getAddress().getCorrectedPath();
         assertThat(result).isEqualTo("/contractors/find");
     }
@@ -64,7 +64,7 @@ public class FindRequestTest {
         cond.setValue("Coca%");
         and.getCondition().add(cond);
         parameters.getConditions().getAnd().add(and);
-        FindRequest instance = new FindRequest(ApiModule.CONTRACTORS, parameters);
+        FindRequest<Contractors> instance = new FindRequest<>(ApiModule.CONTRACTORS, parameters);
         Object result = instance.getEntity();
         assertThat(result).isExactlyInstanceOf(Contractors.class);
     }
@@ -79,7 +79,7 @@ public class FindRequestTest {
         cond.setValue("Coca%");
         and.getCondition().add(cond);
         parameters.getConditions().getAnd().add(and);
-        FindRequest instance = new FindRequest(ApiModule.CONTRACTORS, parameters);
+        FindRequest<Contractors> instance = new FindRequest<>(ApiModule.CONTRACTORS, parameters);
         String result = instance.getBody();
         assertThat(result).isEqualTo("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n"
                 + "<api>\n"
@@ -103,7 +103,7 @@ public class FindRequestTest {
 
     @Test(expected = UnsupportedOperationException.class)
     public void testExceptionOnUnimplementd() {
-        new FindRequest(ApiModule.COMPANIES);
+        assertThat(new FindRequest<Contractors>(ApiModule.COMPANIES)).isNotNull();
     }
 
 }

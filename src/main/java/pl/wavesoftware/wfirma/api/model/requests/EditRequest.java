@@ -41,9 +41,14 @@ public class EditRequest<T extends ApiEntityElement> implements PostRequest<T> {
 
     private final ApiModule module;
 
-    public EditRequest(T entity) {
+    private EditRequest(T entity) {
         this.entity = entity;
         this.module = ApiModule.getModuleFor(entity);
+    }
+
+    public static <T extends ApiEntityElement> EditRequest<T> create(T entity) {
+        EditRequest<T> obj = new EditRequest<>(entity);
+        return obj;
     }
 
     @Override

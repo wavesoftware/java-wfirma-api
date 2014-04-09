@@ -287,7 +287,7 @@ public class SimpleGatewayIT {
         contractors.getContractor().add(contractor);
         contractor.setNip(EXAMPLE_NIP);
         contractor.setName("Wave Software");
-        return new AddRequest<>(contractors);
+        return AddRequest.create(contractors);
     }
 
     private DeleteRequest createDeleteRequest(Contractor contractor) {

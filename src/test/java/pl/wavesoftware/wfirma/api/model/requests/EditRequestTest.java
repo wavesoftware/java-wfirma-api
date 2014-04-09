@@ -39,7 +39,7 @@ public class EditRequestTest {
     public void testGetEntity() {
         Contractors contractors = new Contractors();
         contractors.getContractor().add(new Contractor());
-        EditRequest instance = new EditRequest(contractors);
+        EditRequest<Contractors> instance = EditRequest.create(contractors);
         Object result = instance.getEntity();
         assertThat(result).isEqualTo(contractors);
     }
@@ -50,7 +50,7 @@ public class EditRequestTest {
         contractor.setId(456);
         Contractors contractors = new Contractors();
         contractors.getContractor().add(contractor);
-        EditRequest instance = new EditRequest(contractors);
+        EditRequest<Contractors> instance = EditRequest.create(contractors);
         String result = instance.getBody();
         assertThat(result).isEqualTo("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n"
                 + "<api>\n"
@@ -66,7 +66,7 @@ public class EditRequestTest {
     public void testGetAddress() {
         Contractors contractors = new Contractors();
         contractors.getContractor().add(new Contractor());
-        EditRequest instance = new EditRequest(contractors);
+        EditRequest<Contractors> instance = EditRequest.create(contractors);
         String result = instance.getAddress().getCorrectedPath();
         assertThat(result).isEqualTo("/contractors/edit");
     }

@@ -39,7 +39,7 @@ public class AddRequestTest {
     public void testGetAddress() {
         Contractors contractors = new Contractors();
         contractors.getContractor().add(new Contractor());
-        AddRequest instance = new AddRequest(contractors);
+        AddRequest<Contractors> instance = AddRequest.create(contractors);
         String result = instance.getAddress().getCorrectedPath();
         assertThat(result).isEqualTo("/contractors/add");
     }
@@ -48,7 +48,7 @@ public class AddRequestTest {
     public void testGetBody() {
         Contractors contractors = new Contractors();
         contractors.getContractor().add(new Contractor());
-        AddRequest instance = new AddRequest(contractors);
+        AddRequest<Contractors> instance = AddRequest.create(contractors);
         String result = instance.getBody();
         assertThat(result).isEqualTo("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n"
                 + "<api>\n"
@@ -62,7 +62,7 @@ public class AddRequestTest {
     public void testGetEntity() {
         Contractors contractors = new Contractors();
         contractors.getContractor().add(new Contractor());
-        AddRequest instance = new AddRequest(contractors);
+        AddRequest<Contractors> instance = AddRequest.create(contractors);
         Object result = instance.getEntity();
         assertThat(result).isEqualTo(contractors);
     }
