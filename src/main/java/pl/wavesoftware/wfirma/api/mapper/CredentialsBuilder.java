@@ -52,18 +52,36 @@ public final class CredentialsBuilder {
         this.credentials = credentials;
     }
 
+    /**
+     * Getter for login
+     * @return a login
+     */
     public String getLogin() {
         return login;
     }
 
+    /**
+     * A getter for password
+     * @return
+     */
     public String getPassword() {
         return password;
     }
 
+    /**
+     * Builder for OAuth method
+     * @param credentials a OAuth credentials
+     * @return a builder
+     */
     public static CredentialsBuilder from(final OAuthCredentials credentials) {
         return new CredentialsBuilder(credentials);
     }
 
+    /**
+     * Builder for simple method
+     * @param credentials a simple credentials
+     * @return a builder
+     */
     public static CredentialsBuilder from(final SimpleCredentials credentials) {
         return new CredentialsBuilder(credentials);
     }

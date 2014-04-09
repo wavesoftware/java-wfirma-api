@@ -7,12 +7,12 @@
         <version>9</version>
     </parent>
     <groupId>pl.wavesoftware</groupId>
-    <artifactId>java-wfirma-api</artifactId>
+    <artifactId>wfirma-api2-sdk</artifactId>
     <version>0.1.0-SNAPSHOT</version>
     <packaging>jar</packaging>
 
-    <name>WFirma - Java API</name>
-    <description>A java SDK for WFirma API2</description>
+    <name>A Java SDK for WFirma API2</name>
+    <description>A Java SDK for WFirma API2</description>
     <url>http://doc.wfirma.pl</url>
 
     <properties>

@@ -24,15 +24,18 @@
 
 package pl.wavesoftware.wfirma.api.mapper.xml;
 
+import static org.custommonkey.xmlunit.XMLAssert.assertXMLEqual;
+import static org.unitils.reflectionassert.ReflectionAssert.assertReflectionEquals;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Scanner;
-import static org.custommonkey.xmlunit.XMLAssert.assertXMLEqual;
+
 import org.custommonkey.xmlunit.XMLUnit;
 import org.junit.Before;
 import org.junit.Test;
-import static org.unitils.reflectionassert.ReflectionAssert.*;
 import org.xml.sax.SAXException;
+
 import pl.wavesoftware.wfirma.api.model.logic.And;
 import pl.wavesoftware.wfirma.api.model.logic.LogicalOperator;
 import pl.wavesoftware.wfirma.api.model.logic.ObjectFactory;
@@ -58,8 +61,10 @@ public class JaxbMarshallerTest {
     }
 
     private String read(InputStream stream) {
-        Scanner s = new Scanner(stream).useDelimiter("\\A");
-        return s.hasNext() ? s.next() : "";
+    	try (Scanner scanner = new Scanner(stream)) {
+	        scanner.useDelimiter("\\A");
+	        return scanner.hasNext() ? scanner.next() : "";
+    	}
     }
 
     private Parameters sampleParameters() {

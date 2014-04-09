@@ -32,12 +32,20 @@ import pl.wavesoftware.wfirma.api.model.Credentials;
  */
 public class APIContext {
 
-    private Credentials credentials;
+    private final Credentials credentials;
 
+    /**
+     * Constructor with OAuth
+     * @param credentials a OAth credentials
+     */
     public APIContext(OAuthCredentials credentials) {
         this.credentials = credentials;
     }
 
+    /**
+     * Constructor with Simple method
+     * @param credentials a simple credentials
+     */
     public APIContext(SimpleCredentials credentials) {
         this.credentials = credentials;
     }
