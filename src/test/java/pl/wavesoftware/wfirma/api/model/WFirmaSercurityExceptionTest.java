@@ -35,21 +35,21 @@ public class WFirmaSercurityExceptionTest {
 
     @Test
     public void testCreate1() {
-        WFirmaSercurityException exception = new WFirmaSercurityException("int `%d` and bool: `%s`", 5, true);
+        WFirmaSecurityException exception = new WFirmaSecurityException("int `%d` and bool: `%s`", 5, true);
         assertThat(exception.getLocalizedMessage()).isEqualTo("int `5` and bool: `true`");
     }
 
     @Test
     public void testCreate2() {
         IllegalArgumentException argumentException = new IllegalArgumentException("Original");
-        WFirmaSercurityException exception = new WFirmaSercurityException(argumentException);
+        WFirmaSecurityException exception = new WFirmaSecurityException(argumentException);
         assertThat(exception.getLocalizedMessage()).isEqualTo("java.lang.IllegalArgumentException: Original");
     }
 
     @Test
     public void testCreate3() {
         IllegalArgumentException argumentException = new IllegalArgumentException("Original");
-        WFirmaSercurityException exception = new WFirmaSercurityException(argumentException,
+        WFirmaSecurityException exception = new WFirmaSecurityException(argumentException,
                 "Embed here int `%d` and bool: `%s`", 5, true);
         assertThat(exception.getLocalizedMessage()).isEqualTo("Embed here int `5` and bool: `true`");
     }

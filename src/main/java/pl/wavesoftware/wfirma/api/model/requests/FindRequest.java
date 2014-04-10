@@ -82,4 +82,9 @@ public class FindRequest<T extends ApiEntityElement> implements PostRequest<T> {
         return JaxbMarshaller.createFor(entity.getApi()).marshal(entity.getApi());
     }
 
+    @Override
+    public Class<? extends ApiEntityElement> getEntityClass() {
+        return entity.getClass();
+    }
+
 }

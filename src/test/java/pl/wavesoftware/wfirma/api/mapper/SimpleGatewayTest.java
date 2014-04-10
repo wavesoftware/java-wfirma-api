@@ -38,7 +38,7 @@ import org.junit.Test;
 import pl.wavesoftware.wfirma.api.SimpleCredentials;
 import pl.wavesoftware.wfirma.api.model.ApiModule;
 import pl.wavesoftware.wfirma.api.model.WFirmaException;
-import pl.wavesoftware.wfirma.api.model.WFirmaSercurityException;
+import pl.wavesoftware.wfirma.api.model.WFirmaSecurityException;
 import pl.wavesoftware.wfirma.api.model.contractors.Contractors;
 import pl.wavesoftware.wfirma.api.model.logic.And;
 import pl.wavesoftware.wfirma.api.model.logic.Condition;
@@ -96,7 +96,7 @@ public class SimpleGatewayTest {
         try {
             instance.get(get);
             fail("Expected to throw a WFirmaSercurityException for invalid auth");
-        } catch (WFirmaSercurityException ex) {
+        } catch (WFirmaSecurityException ex) {
             assertThat(ex.getLocalizedMessage()).isEqualTo("Auth failed for user: `login2@example.org`");
         }
     }
@@ -117,7 +117,7 @@ public class SimpleGatewayTest {
         try {
             instance.get(get);
             fail("Expected to throw a WFirmaSercurityException for invalid auth");
-        } catch (WFirmaSercurityException ex) {
+        } catch (WFirmaSecurityException ex) {
             assertThat(ex.getLocalizedMessage()).isEqualTo("Auth failed for user: `login2@example.org`");
         }
     }
@@ -131,7 +131,7 @@ public class SimpleGatewayTest {
         try {
             instance.get(get);
             fail("Expected to throw a WFirmaSercurityException for invalid auth");
-        } catch (WFirmaSercurityException ex) {
+        } catch (WFirmaSecurityException ex) {
             assertThat(ex.getLocalizedMessage()).isEqualTo("Auth failed for user: `login2@example.org`");
         }
     }

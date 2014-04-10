@@ -73,4 +73,9 @@ public class AddRequest<T extends ApiEntityElement> implements PostRequest<T> {
         return entity;
     }
 
+    @Override
+    public Class<? extends ApiEntityElement> getEntityClass() {
+        return entity.getClass();
+    }
+
 }

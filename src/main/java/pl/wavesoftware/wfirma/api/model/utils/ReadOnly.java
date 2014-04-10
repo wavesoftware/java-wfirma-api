@@ -22,38 +22,19 @@
  * THE SOFTWARE.
  */
 
-package pl.wavesoftware.wfirma.api.model.companies;
+package pl.wavesoftware.wfirma.api.model.utils;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import org.junit.Test;
+import static java.lang.annotation.ElementType.*;
+import java.lang.annotation.Retention;
+import static java.lang.annotation.RetentionPolicy.RUNTIME;
+import java.lang.annotation.Target;
 
 /**
  *
  * @author Krzysztof Suszyński <krzysztof.suszynski@wavesoftware.pl>
  */
-public class CompaniesGetIdTest {
-
-    @Test
-    public void testGetId() {
-        Companies companies = new Companies();
-        Company company = new Company();
-        company.setId(67L);
-        companies.getCompany().add(company);
-        assertThat(companies.getId()).isEqualTo(67L);
-    }
-
-    @Test(expected = IllegalStateException.class)
-    public void testGetIdWithError() {
-        Companies companies = new Companies();
-        Company company = new Company();
-        companies.getCompany().add(company);
-        assertThat(companies.getId()).isEqualTo(67L);
-    }
-
-    @Test(expected = IllegalStateException.class)
-    public void testGetIdWithError2() {
-        Companies companies = new Companies();
-        assertThat(companies.getId()).isEqualTo(67L);
-    }
+@Retention(RUNTIME)
+@Target(FIELD)
+public @interface ReadOnly {
 
 }

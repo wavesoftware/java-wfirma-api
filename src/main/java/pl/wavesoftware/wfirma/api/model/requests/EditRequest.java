@@ -41,8 +41,11 @@ public class EditRequest<T extends ApiEntityElement> implements PostRequest<T> {
 
     private final ApiModule module;
 
-    private EditRequest(T entity) {
+    private final Long wFirmaId;
+
+    private EditRequest(T entity, Long wFirmaId) {
         this.entity = entity;
+        this.wFirmaId = wFirmaId;
         this.module = ApiModule.getModuleFor(entity);
     }
 
@@ -51,10 +54,11 @@ public class EditRequest<T extends ApiEntityElement> implements PostRequest<T> {
      *
      * @param <T> a type of entity
      * @param entity a entity
+     * @param wFirmaId a WFirma ID
      * @return a request
      */
-    public static <T extends ApiEntityElement> EditRequest<T> create(T entity) {
-        EditRequest<T> obj = new EditRequest<>(entity);
+    public static <T extends ApiEntityElement> EditRequest<T> create(T entity, Long wFirmaId) {
+        EditRequest<T> obj = new EditRequest<>(entity, wFirmaId);
         return obj;
     }
 
@@ -70,7 +74,12 @@ public class EditRequest<T extends ApiEntityElement> implements PostRequest<T> {
 
     @Override
     public RequestPath getAddress() {
-        return RequestPath.fromString(module.name().toLowerCase(), "edit", entity.getId().toString());
+        return RequestPath.fromString(module.name().toLowerCase(), "edit", wFirmaId.toString());
+    }
+
+    @Override
+    public Class<? extends ApiEntityElement> getEntityClass() {
+        return entity.getClass();
     }
 
 }

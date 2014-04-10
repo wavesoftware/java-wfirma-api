@@ -39,7 +39,7 @@ public class EditRequestTest {
     public void testGetEntity() {
         Contractors contractors = new Contractors();
         contractors.getContractor().add(new Contractor());
-        EditRequest<Contractors> instance = EditRequest.create(contractors);
+        EditRequest<Contractors> instance = EditRequest.create(contractors, 45L);
         Object result = instance.getEntity();
         assertThat(result).isEqualTo(contractors);
     }
@@ -47,16 +47,16 @@ public class EditRequestTest {
     @Test
     public void testGetBody() {
         Contractor contractor = new Contractor();
-        contractor.setId(456L);
+        contractor.setName("It will be 456L");
         Contractors contractors = new Contractors();
         contractors.getContractor().add(contractor);
-        EditRequest<Contractors> instance = EditRequest.create(contractors);
+        EditRequest<Contractors> instance = EditRequest.create(contractors, 456L);
         String result = instance.getBody();
         assertThat(result).isEqualTo("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n"
                 + "<api>\n"
                 + "    <contractors>\n"
                 + "        <contractor>\n"
-                + "            <id>456</id>\n"
+                + "            <name>It will be 456L</name>\n"
                 + "        </contractor>\n"
                 + "    </contractors>\n"
                 + "</api>\n");
@@ -65,28 +65,10 @@ public class EditRequestTest {
     @Test
     public void testGetAddress() {
         Contractor contractor = new Contractor();
-        contractor.setId(17L);
+        contractor.setAccess("tak");
         Contractors contractors = new Contractors();
         contractors.getContractor().add(contractor);
-        EditRequest<Contractors> instance = EditRequest.create(contractors);
-        String result = instance.getAddress().getCorrectedPath();
-        assertThat(result).isEqualTo("/contractors/edit/17");
-    }
-
-    @Test(expected = IllegalStateException.class)
-    public void testGetAddressWithError1() {
-        Contractor contractor = new Contractor();
-        Contractors contractors = new Contractors();
-        contractors.getContractor().add(contractor);
-        EditRequest<Contractors> instance = EditRequest.create(contractors);
-        String result = instance.getAddress().getCorrectedPath();
-        assertThat(result).isEqualTo("/contractors/edit/17");
-    }
-
-    @Test(expected = IllegalStateException.class)
-    public void testGetAddressWithError2() {
-        Contractors contractors = new Contractors();
-        EditRequest<Contractors> instance = EditRequest.create(contractors);
+        EditRequest<Contractors> instance = EditRequest.create(contractors, 17L);
         String result = instance.getAddress().getCorrectedPath();
         assertThat(result).isEqualTo("/contractors/edit/17");
     }

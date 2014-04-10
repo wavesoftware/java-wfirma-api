@@ -28,7 +28,7 @@ package pl.wavesoftware.wfirma.api.model;
  *
  * @author Krzysztof Suszyński <krzysztof.suszynski@wavesoftware.pl>
  */
-public class WFirmaSercurityException extends WFirmaException {
+public class WFirmaSecurityException extends WFirmaException {
 
     private static final long serialVersionUID = 1L;
 
@@ -38,7 +38,7 @@ public class WFirmaSercurityException extends WFirmaException {
      * @param format a format of exception
      * @param params a objects to be embedded into exception
      */
-    public WFirmaSercurityException(String format, Object... params) {
+    public WFirmaSecurityException(String format, Object... params) {
         super(format, params);
     }
 
@@ -49,7 +49,7 @@ public class WFirmaSercurityException extends WFirmaException {
      * @param format a format of exception
      * @param params a objects to be embedded into exception
      */
-    public WFirmaSercurityException(Throwable cause, String format, Object... params) {
+    public WFirmaSecurityException(Throwable cause, String format, Object... params) {
         super(cause, format, params);
     }
 
@@ -58,7 +58,7 @@ public class WFirmaSercurityException extends WFirmaException {
      *
      * @param cause a cause of this exception
      */
-    public WFirmaSercurityException(Throwable cause) {
+    public WFirmaSecurityException(Throwable cause) {
         super(cause);
     }
 

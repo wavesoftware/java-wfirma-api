@@ -33,7 +33,7 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 import pl.wavesoftware.wfirma.api.model.WFirmaException;
-import pl.wavesoftware.wfirma.api.model.WFirmaSercurityException;
+import pl.wavesoftware.wfirma.api.model.WFirmaSecurityException;
 
 /**
  *
@@ -79,7 +79,7 @@ public class ResponseCheckerTest {
     public static Collection<Object[]> data() {
         Object[][] data = new Object[][]{
             {"OK", in("OK"), null},
-            {"AUTH", in("AUTH"), new WFirmaSercurityException("Auth failed for user: `test-user`")},
+            {"AUTH", in("AUTH"), new WFirmaSecurityException("Auth failed for user: `test-user`")},
             {"ACTION NOT FOUND", in("ACTION NOT FOUND"), new WFirmaException("ACTION NOT FOUND")},
             {"NOT FOUND", in("NOT FOUND"), new WFirmaException("NOT FOUND")},
             {"FATAL", in("FATAL"), new WFirmaException("FATAL")},

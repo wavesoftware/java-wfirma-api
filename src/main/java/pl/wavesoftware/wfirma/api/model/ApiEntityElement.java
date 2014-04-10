@@ -38,11 +38,4 @@ public interface ApiEntityElement {
      * @return a API element root
      */
     Api getApi();
-
-    /**
-     * Gets a id of a entity
-     *
-     * @return a ID of WFirma
-     */
-    Long getId();
 }

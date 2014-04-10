@@ -54,7 +54,8 @@ import pl.wavesoftware.wfirma.api.SimpleCredentials;
 import pl.wavesoftware.wfirma.api.model.PostRequest;
 import pl.wavesoftware.wfirma.api.model.Request;
 import pl.wavesoftware.wfirma.api.model.WFirmaException;
-import pl.wavesoftware.wfirma.api.model.WFirmaSercurityException;
+import pl.wavesoftware.wfirma.api.model.WFirmaSecurityException;
+import pl.wavesoftware.wfirma.api.model.validation.RequestValidator;
 
 /**
  *
@@ -135,6 +136,7 @@ class SimpleGateway implements WFirmaGateway {
     @Override
     @Nonnull
     public String get(@Nonnull Request request) throws WFirmaException {
+        new RequestValidator(request).validate();
         HttpGet httpget = new HttpGet(request.getAddress().getCorrectedPath());
         return get(httpget);
     }
@@ -171,7 +173,7 @@ class SimpleGateway implements WFirmaGateway {
                     throw new RuntimeException(ex);
                 }
             case 403:
-                throw new WFirmaSercurityException("Auth failed for user: `%s`", credentials.getLogin());
+                throw new WFirmaSecurityException("Auth failed for user: `%s`", credentials.getLogin());
             default:
                 StatusLine status = response.getStatusLine();
                 throw new WFirmaException("Connection error: %d - %s", status.getStatusCode(),
@@ -182,6 +184,7 @@ class SimpleGateway implements WFirmaGateway {
     @Override
     @Nonnull
     public String post(@Nonnull PostRequest<?> request) throws WFirmaException {
+        new RequestValidator(request).validate();
         String body = request.getBody();
         HttpPost post = new HttpPost(request.getAddress().getCorrectedPath());
         post.setEntity(new StringEntity(body, Charsets.UTF_8));

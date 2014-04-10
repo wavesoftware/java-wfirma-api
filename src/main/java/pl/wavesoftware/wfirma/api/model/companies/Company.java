@@ -29,6 +29,7 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import pl.wavesoftware.wfirma.api.mapper.xml.BooleanToIntegerAdapter;
+import pl.wavesoftware.wfirma.api.model.utils.ReadOnly;
 
 /**
  * <p>
@@ -65,25 +66,32 @@ import pl.wavesoftware.wfirma.api.mapper.xml.BooleanToIntegerAdapter;
 })
 public class Company {
 
+    @ReadOnly
     @XmlElement(required = false)
     protected Long id;
 
+    @ReadOnly
     @XmlElement(required = true)
     protected String name;
 
+    @ReadOnly
     @XmlElement(required = false)
     protected String altname;
 
+    @ReadOnly
     @XmlElement(required = false)
     protected String nip;
 
+    @ReadOnly
     @XmlJavaTypeAdapter(BooleanToIntegerAdapter.class)
     @XmlElement(required = false, name = "vat_payer")
     protected Boolean vatPayer;
 
+    @ReadOnly
     @XmlElement(required = false)
     protected String tax;
 
+    @ReadOnly
     @XmlJavaTypeAdapter(BooleanToIntegerAdapter.class)
     @XmlElement(required = false, name = "is_registered")
     private Boolean registered;

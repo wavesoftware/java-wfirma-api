@@ -36,7 +36,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import pl.wavesoftware.wfirma.api.model.WFirmaException;
-import pl.wavesoftware.wfirma.api.model.WFirmaSercurityException;
+import pl.wavesoftware.wfirma.api.model.WFirmaSecurityException;
 
 /**
  * @author Krzysztof Suszyński <krzysztof.suszynski@gmail.com>
@@ -68,7 +68,7 @@ public class ResponseChecker {
                 case "OK":
                     return content;
                 case "AUTH":
-                    throw new WFirmaSercurityException("Auth failed for user: `%s`", login);
+                    throw new WFirmaSecurityException("Auth failed for user: `%s`", login);
                 case "ACTION NOT FOUND":
                 case "FATAL":
                 case "INPUT ERROR":

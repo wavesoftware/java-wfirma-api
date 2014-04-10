@@ -38,7 +38,7 @@ import pl.wavesoftware.wfirma.api.mapper.xml.JaxbMarshaller;
 import pl.wavesoftware.wfirma.api.model.ApiModule;
 import pl.wavesoftware.wfirma.api.model.Request;
 import pl.wavesoftware.wfirma.api.model.WFirmaException;
-import pl.wavesoftware.wfirma.api.model.WFirmaSercurityException;
+import pl.wavesoftware.wfirma.api.model.WFirmaSecurityException;
 import pl.wavesoftware.wfirma.api.model.contractors.Contractor;
 import pl.wavesoftware.wfirma.api.model.contractors.Contractors;
 import pl.wavesoftware.wfirma.api.model.contractors.ContractorsApi;
@@ -256,7 +256,7 @@ public class SimpleGatewayIT {
             Request get = new GetRequest(ApiModule.COMPANIES, 2L);
             instance.get(get);
             fail("Expected to throw a WFirmaSercurityException for invalid auth");
-        } catch (WFirmaSercurityException ex) {
+        } catch (WFirmaSecurityException ex) {
             assertEquals("Auth failed for user: `non-existing-login-2@example.org`", ex.getLocalizedMessage());
         } finally {
             instance.removeListener(listener);

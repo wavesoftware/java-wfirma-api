@@ -27,6 +27,9 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+import pl.wavesoftware.wfirma.api.mapper.xml.BooleanToIntegerAdapter;
+import pl.wavesoftware.wfirma.api.model.utils.ReadOnly;
 
 /**
  * <p>
@@ -122,6 +125,7 @@ import javax.xml.bind.annotation.XmlType;
     "street",
     "zip",
     "city",
+    "differentContactAddress",
     "contactName",
     "contactStreet",
     "contactZip",
@@ -149,6 +153,7 @@ import javax.xml.bind.annotation.XmlType;
 })
 public class Contractor {
 
+    @ReadOnly
     @XmlElement(required = false)
     protected Long id;
 
@@ -175,6 +180,10 @@ public class Contractor {
 
     @XmlElement(required = false)
     protected String city;
+
+    @XmlJavaTypeAdapter(BooleanToIntegerAdapter.class)
+    @XmlElement(name = "different_contact_address", required = false)
+    protected Boolean differentContactAddress;
 
     @XmlElement(name = "contact_name", required = false)
     protected String contactName;
@@ -206,11 +215,13 @@ public class Contractor {
     @XmlElement(required = false)
     protected String description;
 
+    @XmlJavaTypeAdapter(BooleanToIntegerAdapter.class)
     @XmlElement(required = false)
-    protected Integer buyer;
+    protected Boolean buyer;
 
+    @XmlJavaTypeAdapter(BooleanToIntegerAdapter.class)
     @XmlElement(required = false)
-    protected Integer seller;
+    protected Boolean seller;
 
     @XmlElement(name = "discount_percent", required = false)
     protected Integer discountPercent;
@@ -227,12 +238,15 @@ public class Contractor {
     @XmlElement(required = false)
     protected String tags;
 
+    @ReadOnly
     @XmlElement(required = false)
     protected Integer notes;
 
+    @ReadOnly
     @XmlElement(required = false)
     protected String created;
 
+    @ReadOnly
     @XmlElement(required = false)
     protected String modified;
 
@@ -422,6 +436,24 @@ public class Contractor {
      */
     public void setCity(String value) {
         this.city = value;
+    }
+
+    /**
+     * Is diffrent contact address?
+     *
+     * @return true, if the contact address is diffrent
+     */
+    public Boolean isDifferentContactAddress() {
+        return differentContactAddress;
+    }
+
+    /**
+     * Sets if contact addres is diffrent
+     *
+     * @param value a setting for differentContactAddress property
+     */
+    public void setDifferentContactAddress(Boolean value) {
+        this.differentContactAddress = value;
     }
 
     /**
@@ -627,32 +659,35 @@ public class Contractor {
     /**
      * Gets the value of the buyer property.
      *
+     * @return is buyer?
      */
-    public Integer getBuyer() {
+    public Boolean isBuyer() {
         return buyer;
     }
 
     /**
      * Sets the value of the buyer property.
      *
+     * @param value a setting for buyer
      */
-    public void setBuyer(Integer value) {
+    public void setBuyer(Boolean value) {
         this.buyer = value;
     }
 
     /**
      * Gets the value of the seller property.
-     *
+     * @return is seller?
      */
-    public Integer getSeller() {
+    public Boolean isSeller() {
         return seller;
     }
 
     /**
      * Sets the value of the seller property.
      *
+     * @param value a setting for seller
      */
-    public void setSeller(Integer value) {
+    public void setSeller(Boolean value) {
         this.seller = value;
     }
 

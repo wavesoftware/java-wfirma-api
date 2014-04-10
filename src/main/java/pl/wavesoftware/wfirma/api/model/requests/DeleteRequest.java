@@ -25,6 +25,7 @@
 package pl.wavesoftware.wfirma.api.model.requests;
 
 import pl.wavesoftware.wfirma.api.mapper.RequestPath;
+import pl.wavesoftware.wfirma.api.model.ApiEntityElement;
 import pl.wavesoftware.wfirma.api.model.ApiModule;
 import pl.wavesoftware.wfirma.api.model.Request;
 
@@ -52,6 +53,11 @@ public class DeleteRequest implements Request {
     @Override
     public RequestPath getAddress() {
         return RequestPath.fromString(module.name().toLowerCase(), "delete", wfirmaId.toString());
+    }
+
+    @Override
+    public Class<? extends ApiEntityElement> getEntityClass() {
+        return module.getEntityClass();
     }
 
 }

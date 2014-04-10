@@ -24,10 +24,19 @@
 
 package pl.wavesoftware.wfirma.api.model;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.EnumMap;
+import java.util.List;
 import java.util.Map;
 import pl.wavesoftware.wfirma.api.model.companies.Companies;
 import pl.wavesoftware.wfirma.api.model.contractors.Contractors;
+import pl.wavesoftware.wfirma.api.model.requests.AddRequest;
+import pl.wavesoftware.wfirma.api.model.requests.DeleteRequest;
+import pl.wavesoftware.wfirma.api.model.requests.EditRequest;
+import pl.wavesoftware.wfirma.api.model.requests.FindRequest;
+import pl.wavesoftware.wfirma.api.model.requests.GetRequest;
 
 /**
  *
@@ -39,9 +48,36 @@ public enum ApiModule {
 
     private static final EnumMap<ApiModule, Class<? extends ApiEntityElement>> MAP = new EnumMap<>(ApiModule.class);
 
+    private static final EnumMap<ApiModule, Collection<Class<? extends Request>>> REQUESTS = new EnumMap<>(
+            ApiModule.class);
+
     static {
         MAP.put(CONTRACTORS, Contractors.class);
         MAP.put(COMPANIES, Companies.class);
+
+        REQUESTS.put(COMPANIES, make(GetRequest.class));
+        REQUESTS.put(CONTRACTORS, make(
+                GetRequest.class,
+                AddRequest.class,
+                FindRequest.class,
+                DeleteRequest.class,
+                EditRequest.class
+        ));
+    }
+
+    private static Collection<Class<? extends Request>> make(Class<? extends Request>... classes) {
+        List<Class<? extends Request>> out = new ArrayList<>();
+        out.addAll(Arrays.asList(classes));
+        return out;
+    }
+
+    /**
+     * Gets a collection of supported requests
+     *
+     * @return a list of supported request types
+     */
+    public Collection<Class<? extends Request>> getSupportedRequests() {
+        return REQUESTS.get(this);
     }
 
     /**
@@ -69,12 +105,22 @@ public enum ApiModule {
      * @return a enum module
      */
     public static ApiModule getModuleFor(ApiEntityElement entity) {
+        return ApiModule.getModuleFor(entity.getClass());
+    }
+
+    /**
+     * Gets a module for entity object
+     *
+     * @param cls a entity class
+     * @return a enum module
+     */
+    public static ApiModule getModuleFor(Class<? extends ApiEntityElement> cls) {
         for (Map.Entry<ApiModule, Class<? extends ApiEntityElement>> entry : MAP.entrySet()) {
-            if (entry.getValue().equals(entity.getClass())) {
+            if (entry.getValue().equals(cls)) {
                 return entry.getKey();
             }
         }
         throw new UnsupportedOperationException(
-                String.format("Class `%s` is not supported in enum `ApiModule`", entity.getClass().getName()));
+                String.format("Class `%s` is not supported in enum `ApiModule`", cls.getName()));
     }
 }

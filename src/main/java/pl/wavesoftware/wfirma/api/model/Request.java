@@ -39,4 +39,11 @@ public interface Request {
      */
     RequestPath getAddress();
 
+    /**
+     * Gets a entity class
+     *
+     * @return a entity class
+     */
+    Class<? extends ApiEntityElement> getEntityClass();
+
 }

@@ -28,6 +28,7 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
 import pl.wavesoftware.wfirma.api.mapper.Api;
 import pl.wavesoftware.wfirma.api.model.ApiEntityElement;
@@ -76,6 +77,7 @@ public class ContractorsApi implements Api {
     }
 
     @Override
+    @XmlTransient
     public Class<? extends ApiEntityElement> getEntityClass() {
         return Contractors.class;
     }
