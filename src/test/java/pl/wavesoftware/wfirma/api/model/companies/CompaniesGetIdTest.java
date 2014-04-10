@@ -22,44 +22,38 @@
  * THE SOFTWARE.
  */
 
-package pl.wavesoftware.wfirma.api.model;
+package pl.wavesoftware.wfirma.api.model.companies;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import org.junit.Test;
 
 /**
  *
  * @author Krzysztof Suszyński <krzysztof.suszynski@wavesoftware.pl>
  */
-public class WFirmaSercurityException extends WFirmaException {
+public class CompaniesGetIdTest {
 
-    private static final long serialVersionUID = 1L;
-
-    /**
-     * Constructor
-     *
-     * @param format a format of exception
-     * @param params a objects to be embedded into exception
-     */
-    public WFirmaSercurityException(String format, Object... params) {
-        super(format, params);
+    @Test
+    public void testGetId() {
+        Companies companies = new Companies();
+        Company company = new Company();
+        company.setId(67L);
+        companies.getCompany().add(company);
+        assertThat(companies.getId()).isEqualTo(67L);
     }
 
-    /**
-     * Constructor
-     *
-     * @param cause a cause of this exception
-     * @param format a format of exception
-     * @param params a objects to be embedded into exception
-     */
-    public WFirmaSercurityException(Throwable cause, String format, Object... params) {
-        super(cause, format, params);
+    @Test(expected = IllegalStateException.class)
+    public void testGetIdWithError() {
+        Companies companies = new Companies();
+        Company company = new Company();
+        companies.getCompany().add(company);
+        assertThat(companies.getId()).isEqualTo(67L);
     }
 
-    /**
-     * Constructor
-     *
-     * @param cause a cause of this exception
-     */
-    public WFirmaSercurityException(Throwable cause) {
-        super(cause);
+    @Test(expected = IllegalStateException.class)
+    public void testGetIdWithError2() {
+        Companies companies = new Companies();
+        assertThat(companies.getId()).isEqualTo(67L);
     }
 
 }

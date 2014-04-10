@@ -40,7 +40,7 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;complexContent>
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
- *         &lt;element name="id" type="{http://www.w3.org/2001/XMLSchema}int"/>
+ *         &lt;element name="id" type="{http://www.w3.org/2001/XMLSchema}long"/>
  *         &lt;element name="access" type="{http://www.w3.org/2001/XMLSchema}string"/>
  *         &lt;element name="name" type="{http://www.w3.org/2001/XMLSchema}string"/>
  *         &lt;element name="altname" type="{http://www.w3.org/2001/XMLSchema}string"/>
@@ -150,7 +150,7 @@ import javax.xml.bind.annotation.XmlType;
 public class Contractor {
 
     @XmlElement(required = false)
-    protected Integer id;
+    protected Long id;
 
     @XmlElement(required = false)
     protected String access;
@@ -252,7 +252,7 @@ public class Contractor {
      * Gets the value of the id property.
      *
      */
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
@@ -260,7 +260,7 @@ public class Contractor {
      * Sets the value of the id property.
      *
      */
-    public void setId(Integer value) {
+    public void setId(Long value) {
         this.id = value;
     }
 

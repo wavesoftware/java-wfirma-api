@@ -28,7 +28,7 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
-import pl.wavesoftware.wfirma.api.mapper.xml.BooleanToShortAdapter;
+import pl.wavesoftware.wfirma.api.mapper.xml.BooleanToIntegerAdapter;
 
 /**
  * <p>
@@ -42,7 +42,7 @@ import pl.wavesoftware.wfirma.api.mapper.xml.BooleanToShortAdapter;
  *   &lt;complexContent>
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
- *         &lt;element name="id" type="{http://www.w3.org/2001/XMLSchema}int"/>
+ *         &lt;element name="id" type="{http://www.w3.org/2001/XMLSchema}long"/>
  *         &lt;element name="access" type="{http://www.w3.org/2001/XMLSchema}string"/>
  *         &lt;element name="name" type="{http://www.w3.org/2001/XMLSchema}string"/>
  *         &lt;element name="altname" type="{http://www.w3.org/2001/XMLSchema}string"/>
@@ -56,16 +56,17 @@ import pl.wavesoftware.wfirma.api.mapper.xml.BooleanToShortAdapter;
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "companyType", propOrder = {
     "id",
-    "access",
     "name",
     "altname",
     "nip",
-    "vat_payer"
+    "vatPayer",
+    "tax",
+    "registered"
 })
 public class Company {
 
     @XmlElement(required = false)
-    protected Integer id;
+    protected Long id;
 
     @XmlElement(required = true)
     protected String name;
@@ -76,14 +77,14 @@ public class Company {
     @XmlElement(required = false)
     protected String nip;
 
-    @XmlJavaTypeAdapter(BooleanToShortAdapter.class)
+    @XmlJavaTypeAdapter(BooleanToIntegerAdapter.class)
     @XmlElement(required = false, name = "vat_payer")
     protected Boolean vatPayer;
 
     @XmlElement(required = false)
     protected String tax;
 
-    @XmlJavaTypeAdapter(BooleanToShortAdapter.class)
+    @XmlJavaTypeAdapter(BooleanToIntegerAdapter.class)
     @XmlElement(required = false, name = "is_registered")
     private Boolean registered;
 
@@ -92,7 +93,7 @@ public class Company {
      *
      * @return a ID property
      */
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
@@ -101,7 +102,7 @@ public class Company {
      *
      * @param value a setter for a ID property
      */
-    public void setId(Integer value) {
+    public void setId(Long value) {
         this.id = value;
     }
 

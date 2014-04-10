@@ -42,21 +42,41 @@ public class JaxbMarshaller<Type> {
 
     private final Class<Type> type;
 
+    /**
+     * Create a intance of marchaller
+     *
+     * @param <T> a type
+     * @param cls a class of type
+     * @return marshaller for type
+     */
     public static <T> JaxbMarshaller<T> create(Class<T> cls) {
         JaxbMarshaller<T> marshaller = new JaxbMarshaller<>(cls);
         return marshaller;
     }
 
+    /**
+     * Create a intance of marchaller
+     *
+     * @param <T> a type
+     * @param entity a entity object
+     * @return marshaller for type
+     */
     public static <T extends Api> JaxbMarshaller<T> createFor(T entity) {
         @SuppressWarnings("unchecked")
         JaxbMarshaller<T> marshaller = (JaxbMarshaller<T>) JaxbMarshaller.create(entity.getClass());
         return marshaller;
     }
 
-    public JaxbMarshaller(Class<Type> cls) {
+    private JaxbMarshaller(Class<Type> cls) {
         this.type = cls;
     }
 
+    /**
+     * Marshal a object to string
+     *
+     * @param object a object to marshal
+     * @return a string
+     */
     public String marshal(Type object) {
         try {
             JAXBContext jaxbContext = JAXBContext.newInstance(type);
@@ -76,6 +96,12 @@ public class JaxbMarshaller<Type> {
         }
     }
 
+    /**
+     * Unmarshal a string to object
+     *
+     * @param input a input string
+     * @return a object
+     */
     public Type unmarshal(String input) {
         try {
             JAXBContext jaxbContext = JAXBContext.newInstance(type);

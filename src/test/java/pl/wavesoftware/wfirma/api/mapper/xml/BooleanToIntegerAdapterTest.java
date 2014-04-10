@@ -22,44 +22,40 @@
  * THE SOFTWARE.
  */
 
-package pl.wavesoftware.wfirma.api.model;
+package pl.wavesoftware.wfirma.api.mapper.xml;
+
+import java.util.Random;
+import static org.assertj.core.api.Assertions.assertThat;
+import org.junit.Test;
 
 /**
  *
  * @author Krzysztof Suszyński <krzysztof.suszynski@wavesoftware.pl>
  */
-public class WFirmaSercurityException extends WFirmaException {
+public class BooleanToIntegerAdapterTest {
 
-    private static final long serialVersionUID = 1L;
-
-    /**
-     * Constructor
-     *
-     * @param format a format of exception
-     * @param params a objects to be embedded into exception
-     */
-    public WFirmaSercurityException(String format, Object... params) {
-        super(format, params);
+    @Test
+    public void testUnmarshal() throws Exception {
+        BooleanToIntegerAdapter instance = new BooleanToIntegerAdapter();
+        Boolean result = instance.unmarshal(1);
+        assertThat(result).isTrue();
+        result = instance.unmarshal(0);
+        assertThat(result).isFalse();
+        Random rand = new Random();
+        for (int i = 1; i <= 10; i++) {
+            int test = rand.nextInt(1000) + 1;
+            result = instance.unmarshal(test);
+            assertThat(result).isTrue();
+        }
     }
 
-    /**
-     * Constructor
-     *
-     * @param cause a cause of this exception
-     * @param format a format of exception
-     * @param params a objects to be embedded into exception
-     */
-    public WFirmaSercurityException(Throwable cause, String format, Object... params) {
-        super(cause, format, params);
-    }
-
-    /**
-     * Constructor
-     *
-     * @param cause a cause of this exception
-     */
-    public WFirmaSercurityException(Throwable cause) {
-        super(cause);
+    @Test
+    public void testMarshal() throws Exception {
+        BooleanToIntegerAdapter instance = new BooleanToIntegerAdapter();
+        Integer result = instance.marshal(Boolean.TRUE);
+        assertThat(result).isEqualTo(1);
+        result = instance.marshal(Boolean.FALSE);
+        assertThat(result).isEqualTo(0);
     }
 
 }

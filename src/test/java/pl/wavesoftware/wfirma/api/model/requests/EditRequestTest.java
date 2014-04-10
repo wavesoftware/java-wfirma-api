@@ -47,7 +47,7 @@ public class EditRequestTest {
     @Test
     public void testGetBody() {
         Contractor contractor = new Contractor();
-        contractor.setId(456);
+        contractor.setId(456L);
         Contractors contractors = new Contractors();
         contractors.getContractor().add(contractor);
         EditRequest<Contractors> instance = EditRequest.create(contractors);
@@ -64,11 +64,31 @@ public class EditRequestTest {
 
     @Test
     public void testGetAddress() {
+        Contractor contractor = new Contractor();
+        contractor.setId(17L);
         Contractors contractors = new Contractors();
-        contractors.getContractor().add(new Contractor());
+        contractors.getContractor().add(contractor);
         EditRequest<Contractors> instance = EditRequest.create(contractors);
         String result = instance.getAddress().getCorrectedPath();
-        assertThat(result).isEqualTo("/contractors/edit");
+        assertThat(result).isEqualTo("/contractors/edit/17");
+    }
+
+    @Test(expected = IllegalStateException.class)
+    public void testGetAddressWithError1() {
+        Contractor contractor = new Contractor();
+        Contractors contractors = new Contractors();
+        contractors.getContractor().add(contractor);
+        EditRequest<Contractors> instance = EditRequest.create(contractors);
+        String result = instance.getAddress().getCorrectedPath();
+        assertThat(result).isEqualTo("/contractors/edit/17");
+    }
+
+    @Test(expected = IllegalStateException.class)
+    public void testGetAddressWithError2() {
+        Contractors contractors = new Contractors();
+        EditRequest<Contractors> instance = EditRequest.create(contractors);
+        String result = instance.getAddress().getCorrectedPath();
+        assertThat(result).isEqualTo("/contractors/edit/17");
     }
 
 }

@@ -21,21 +21,21 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-
 package pl.wavesoftware.wfirma.api.mapper.xml;
-
-import static org.custommonkey.xmlunit.XMLAssert.assertXMLEqual;
-import static org.unitils.reflectionassert.ReflectionAssert.assertReflectionEquals;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Scanner;
-
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.custommonkey.xmlunit.XMLAssert.assertXMLEqual;
 import org.custommonkey.xmlunit.XMLUnit;
 import org.junit.Before;
 import org.junit.Test;
+import static org.unitils.reflectionassert.ReflectionAssert.assertReflectionEquals;
 import org.xml.sax.SAXException;
-
+import pl.wavesoftware.wfirma.api.model.companies.Companies;
+import pl.wavesoftware.wfirma.api.model.companies.CompaniesApi;
+import pl.wavesoftware.wfirma.api.model.companies.Company;
 import pl.wavesoftware.wfirma.api.model.logic.And;
 import pl.wavesoftware.wfirma.api.model.logic.LogicalOperator;
 import pl.wavesoftware.wfirma.api.model.logic.ObjectFactory;
@@ -61,10 +61,10 @@ public class JaxbMarshallerTest {
     }
 
     private String read(InputStream stream) {
-    	try (Scanner scanner = new Scanner(stream)) {
-	        scanner.useDelimiter("\\A");
-	        return scanner.hasNext() ? scanner.next() : "";
-    	}
+        try (Scanner scanner = new Scanner(stream)) {
+            scanner.useDelimiter("\\A");
+            return scanner.hasNext() ? scanner.next() : "";
+        }
     }
 
     private Parameters sampleParameters() {
@@ -94,7 +94,7 @@ public class JaxbMarshallerTest {
      */
     @Test
     public void testMarshal() throws SAXException, IOException {
-        JaxbMarshaller<Parameters> instance = new JaxbMarshaller<>(Parameters.class);
+        JaxbMarshaller<Parameters> instance = JaxbMarshaller.create(Parameters.class);
         Parameters params = sampleParameters();
         String result = instance.marshal(params);
         assertXMLEqual("comparing test xml to control xml", expectedXml, result);
@@ -105,7 +105,7 @@ public class JaxbMarshallerTest {
      */
     @Test
     public void testUnmarshal() {
-        JaxbMarshaller<Parameters> instance = new JaxbMarshaller<>(Parameters.class);
+        JaxbMarshaller<Parameters> instance = JaxbMarshaller.create(Parameters.class);
         Parameters expResult = sampleParameters();
         Parameters result = instance.unmarshal(expectedXml);
         assertReflectionEquals(expResult, result);
@@ -113,11 +113,64 @@ public class JaxbMarshallerTest {
 
     @Test
     public void test2Way() {
-        JaxbMarshaller<Parameters> instance = new JaxbMarshaller<>(Parameters.class);
+        JaxbMarshaller<Parameters> instance = JaxbMarshaller.create(Parameters.class);
         Parameters input = sampleParameters();
         String xml = instance.marshal(input);
         Parameters output = instance.unmarshal(xml);
         assertReflectionEquals(input, output);
+    }
+
+    @Test
+    public void testOnBooleanToIntegerAdapter() {
+        JaxbMarshaller<CompaniesApi> instance = JaxbMarshaller.create(CompaniesApi.class);
+        Companies companies = new Companies();
+        CompaniesApi api = CompaniesApi.class.cast(companies.getApi());
+        Company company = new Company();
+        company.setRegistered(Boolean.TRUE);
+        company.setVatPayer(false);
+        company.setName("Coca Cola");
+        company.setNip("123-45-67-890");
+        companies.getCompany().add(company);
+        String output = instance.marshal(api);
+        String expOutputFull = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n"
+                + "<api>\n"
+                + "    <companies>\n"
+                + "        <company>\n"
+                + "            <name>Coca Cola</name>\n"
+                + "            <nip>123-45-67-890</nip>\n"
+                + "            <vat_payer>0</vat_payer>\n"
+                + "            <is_registered>1</is_registered>\n"
+                + "        </company>\n"
+                + "    </companies>\n"
+                + "</api>\n";
+        assertThat(output).isEqualTo(expOutputFull);
+        CompaniesApi resultApi = instance.unmarshal(expOutputFull);
+        assertReflectionEquals(api, resultApi);
+        company = new Company();
+        company.setRegistered(true);
+        companies.getCompany().clear();
+        companies.getCompany().add(company);
+        output = instance.marshal(api);
+        assertThat(output).isEqualTo("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n"
+                + "<api>\n"
+                + "    <companies>\n"
+                + "        <company>\n"
+                + "            <is_registered>1</is_registered>\n"
+                + "        </company>\n"
+                + "    </companies>\n"
+                + "</api>\n");
+    }
+
+    @Test(expected = IllegalStateException.class)
+    public void testOnInvalidInputString() {
+        JaxbMarshaller<CompaniesApi> instance = JaxbMarshaller.create(CompaniesApi.class);
+        String expOutputFull = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n"
+                + "<apis>\n"
+                + "    <companies>\n"
+                + "        <company />\n"
+                + "    </companies>\n"
+                + "</apis>\n";
+        assertThat(instance.unmarshal(expOutputFull)).isNull();
     }
 
 }

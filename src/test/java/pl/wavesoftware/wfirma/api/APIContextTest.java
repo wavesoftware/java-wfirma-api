@@ -22,24 +22,23 @@
  * THE SOFTWARE.
  */
 
-package pl.wavesoftware.wfirma.api.mapper.xml;
+package pl.wavesoftware.wfirma.api;
 
-import javax.xml.bind.annotation.adapters.XmlAdapter;
+import static org.assertj.core.api.Assertions.assertThat;
+import org.junit.Test;
 
 /**
  *
  * @author Krzysztof Suszyński <krzysztof.suszynski@wavesoftware.pl>
  */
-public class BooleanToShortAdapter extends XmlAdapter<Short, Boolean> {
+public class APIContextTest {
 
-    @Override
-    public Boolean unmarshal(Short shortValue) throws Exception {
-        return shortValue != 0;
-    }
-
-    @Override
-    public Short marshal(Boolean booleanValue) throws Exception {
-        return Integer.valueOf(booleanValue ? 1 : 0).shortValue();
+    @Test
+    public void testCreate() {
+        APIContext context = new APIContext(new OAuthCredentials("key", "secret"));
+        assertThat(context).isNotNull();
+        context = new APIContext(new SimpleCredentials("login", "password"));
+        assertThat(context).isNotNull();
     }
 
 }

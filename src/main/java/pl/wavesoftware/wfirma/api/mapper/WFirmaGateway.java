@@ -23,6 +23,7 @@
  */
 package pl.wavesoftware.wfirma.api.mapper;
 
+import javax.annotation.Nonnull;
 import pl.wavesoftware.wfirma.api.model.PostRequest;
 import pl.wavesoftware.wfirma.api.model.Request;
 import pl.wavesoftware.wfirma.api.model.WFirmaException;
@@ -55,4 +56,18 @@ public interface WFirmaGateway {
      * @throws WFirmaException if some error occured while fetching data
      */
     String post(PostRequest<?> request) throws WFirmaException;
+
+    /**
+     * Adds listener for gateway
+     *
+     * @param listener a response listener
+     */
+    void addListener(@Nonnull ResponseListener listener);
+
+    /**
+     * Removes a response listener for gateway
+     *
+     * @param listener a response listener
+     */
+    void removeListener(@Nonnull ResponseListener listener);
 }

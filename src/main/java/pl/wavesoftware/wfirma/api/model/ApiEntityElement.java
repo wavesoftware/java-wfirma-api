@@ -31,5 +31,18 @@ import pl.wavesoftware.wfirma.api.mapper.Api;
  * @author Krzysztof Suszyński <krzysztof.suszynski@wavesoftware.pl>
  */
 public interface ApiEntityElement {
+
+    /**
+     * Gets a API for an entity element
+     *
+     * @return a API element root
+     */
     Api getApi();
+
+    /**
+     * Gets a id of a entity
+     *
+     * @return a ID of WFirma
+     */
+    Long getId();
 }

@@ -60,7 +60,7 @@ import pl.wavesoftware.wfirma.api.model.WFirmaSercurityException;
  *
  * @author Krzysztof Suszyński <krzysztof.suszynski@wavesoftware.pl>
  */
-public class SimpleGateway implements WFirmaGateway {
+class SimpleGateway implements WFirmaGateway {
 
     private final SimpleCredentials credentials;
 
@@ -70,20 +70,33 @@ public class SimpleGateway implements WFirmaGateway {
 
     private final Set<ResponseListener> listeners = new HashSet<>();
 
+    /**
+     * Constructor
+     *
+     * @param credentials a simple credentials
+     */
     public SimpleGateway(SimpleCredentials credentials) {
         this.credentials = credentials;
         gateway = URI.create(GATEWAY_ADDRESS);
     }
 
-    public SimpleGateway(SimpleCredentials credentials, URI gateway) {
+    /**
+     * A junit overwritable method
+     *
+     * @param credentials a simple credentials
+     * @param gateway a gateway address
+     */
+    protected SimpleGateway(SimpleCredentials credentials, URI gateway) {
         this.credentials = credentials;
         this.gateway = gateway;
     }
 
+    @Override
     public void addListener(@Nonnull ResponseListener listener) {
         listeners.add(listener);
     }
 
+    @Override
     public void removeListener(@Nonnull ResponseListener listener) {
         listeners.remove(listener);
     }

@@ -26,6 +26,7 @@ package pl.wavesoftware.wfirma.api.model;
 
 import java.util.EnumMap;
 import java.util.Map;
+import pl.wavesoftware.wfirma.api.model.companies.Companies;
 import pl.wavesoftware.wfirma.api.model.contractors.Contractors;
 
 /**
@@ -40,8 +41,15 @@ public enum ApiModule {
 
     static {
         MAP.put(CONTRACTORS, Contractors.class);
+        MAP.put(COMPANIES, Companies.class);
     }
 
+    /**
+     * Gets a entity class for enum
+     *
+     * @param <T> a type of class
+     * @return a class of entity
+     */
     public <T extends ApiEntityElement> Class<T> getEntityClass() {
         if (MAP.containsKey(this)) {
             @SuppressWarnings("unchecked")
@@ -54,6 +62,12 @@ public enum ApiModule {
         }
     }
 
+    /**
+     * Gets a module for entity object
+     *
+     * @param entity a entity object
+     * @return a enum module
+     */
     public static ApiModule getModuleFor(ApiEntityElement entity) {
         for (Map.Entry<ApiModule, Class<? extends ApiEntityElement>> entry : MAP.entrySet()) {
             if (entry.getValue().equals(entity.getClass())) {

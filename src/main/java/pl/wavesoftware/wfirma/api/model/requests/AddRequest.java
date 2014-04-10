@@ -46,6 +46,13 @@ public class AddRequest<T extends ApiEntityElement> implements PostRequest<T> {
         this.entity = entity;
     }
 
+    /**
+     * Creates a AddRequest for an entity
+     *
+     * @param <T> a type of entity
+     * @param entity a entity
+     * @return a request
+     */
     public static <T extends ApiEntityElement> AddRequest<T> create(T entity) {
         AddRequest<T> obj = new AddRequest<>(entity);
         return obj;

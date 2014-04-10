@@ -43,6 +43,12 @@ public class FindRequest<T extends ApiEntityElement> implements PostRequest<T> {
 
     private final T entity;
 
+    /**
+     * Constructor
+     *
+     * @param module a module of api
+     * @param parameters a parameters to find element
+     */
     public FindRequest(ApiModule module, Parameters parameters) {
         this.module = module;
         try {

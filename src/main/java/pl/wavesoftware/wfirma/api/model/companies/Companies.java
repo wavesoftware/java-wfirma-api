@@ -65,6 +65,18 @@ public class Companies implements Parametrizable, ApiEntityElement {
     @XmlTransient
     private final Api api;
 
+    @Override
+    public Long getId() {
+        if (getCompany().size() != 1) {
+            throw new IllegalStateException("Can't get ID for multiple elements!");
+        }
+        Long id = getCompany().iterator().next().getId();
+        if (id == null) {
+            throw new IllegalStateException("ID is not set!");
+        }
+        return id;
+    }
+
     public Companies(Api api) {
         this.api = api;
     }

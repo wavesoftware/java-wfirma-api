@@ -38,6 +38,12 @@ public class GetRequest implements Request {
 
     private final Long wfirmaId;
 
+    /**
+     * Constructor
+     *
+     * @param module a module of api
+     * @param wfirmaId a ID of wfirma
+     */
     public GetRequest(ApiModule module, Long wfirmaId) {
         this.module = module;
         this.wfirmaId = wfirmaId;

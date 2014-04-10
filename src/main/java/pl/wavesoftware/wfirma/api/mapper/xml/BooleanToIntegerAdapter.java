@@ -22,55 +22,24 @@
  * THE SOFTWARE.
  */
 
-package pl.wavesoftware.wfirma.api.model.requests;
+package pl.wavesoftware.wfirma.api.mapper.xml;
 
-import pl.wavesoftware.wfirma.api.mapper.RequestPath;
-import pl.wavesoftware.wfirma.api.mapper.xml.JaxbMarshaller;
-import pl.wavesoftware.wfirma.api.model.ApiEntityElement;
-import pl.wavesoftware.wfirma.api.model.ApiModule;
-import pl.wavesoftware.wfirma.api.model.PostRequest;
+import javax.xml.bind.annotation.adapters.XmlAdapter;
 
 /**
  *
  * @author Krzysztof Suszyński <krzysztof.suszynski@wavesoftware.pl>
- * @param <T> a type of entity
  */
-public class EditRequest<T extends ApiEntityElement> implements PostRequest<T> {
+public class BooleanToIntegerAdapter extends XmlAdapter<Integer, Boolean> {
 
-    private final T entity;
-
-    private final ApiModule module;
-
-    private EditRequest(T entity) {
-        this.entity = entity;
-        this.module = ApiModule.getModuleFor(entity);
-    }
-
-    /**
-     * Creates a EditRequest for an entity
-     *
-     * @param <T> a type of entity
-     * @param entity a entity
-     * @return a request
-     */
-    public static <T extends ApiEntityElement> EditRequest<T> create(T entity) {
-        EditRequest<T> obj = new EditRequest<>(entity);
-        return obj;
+    @Override
+    public Boolean unmarshal(Integer value) throws Exception {
+        return value != 0;
     }
 
     @Override
-    public T getEntity() {
-        return entity;
-    }
-
-    @Override
-    public String getBody() {
-        return JaxbMarshaller.createFor(entity.getApi()).marshal(entity.getApi());
-    }
-
-    @Override
-    public RequestPath getAddress() {
-        return RequestPath.fromString(module.name().toLowerCase(), "edit", entity.getId().toString());
+    public Integer marshal(Boolean booleanValue) throws Exception {
+        return booleanValue ? 1 : 0;
     }
 
 }

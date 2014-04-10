@@ -24,42 +24,34 @@
 
 package pl.wavesoftware.wfirma.api.model;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import org.junit.Test;
+
 /**
  *
  * @author Krzysztof Suszyński <krzysztof.suszynski@wavesoftware.pl>
  */
-public class WFirmaSercurityException extends WFirmaException {
+public class WFirmaSercurityExceptionTest {
 
-    private static final long serialVersionUID = 1L;
-
-    /**
-     * Constructor
-     *
-     * @param format a format of exception
-     * @param params a objects to be embedded into exception
-     */
-    public WFirmaSercurityException(String format, Object... params) {
-        super(format, params);
+    @Test
+    public void testCreate1() {
+        WFirmaSercurityException exception = new WFirmaSercurityException("int `%d` and bool: `%s`", 5, true);
+        assertThat(exception.getLocalizedMessage()).isEqualTo("int `5` and bool: `true`");
     }
 
-    /**
-     * Constructor
-     *
-     * @param cause a cause of this exception
-     * @param format a format of exception
-     * @param params a objects to be embedded into exception
-     */
-    public WFirmaSercurityException(Throwable cause, String format, Object... params) {
-        super(cause, format, params);
+    @Test
+    public void testCreate2() {
+        IllegalArgumentException argumentException = new IllegalArgumentException("Original");
+        WFirmaSercurityException exception = new WFirmaSercurityException(argumentException);
+        assertThat(exception.getLocalizedMessage()).isEqualTo("java.lang.IllegalArgumentException: Original");
     }
 
-    /**
-     * Constructor
-     *
-     * @param cause a cause of this exception
-     */
-    public WFirmaSercurityException(Throwable cause) {
-        super(cause);
+    @Test
+    public void testCreate3() {
+        IllegalArgumentException argumentException = new IllegalArgumentException("Original");
+        WFirmaSercurityException exception = new WFirmaSercurityException(argumentException,
+                "Embed here int `%d` and bool: `%s`", 5, true);
+        assertThat(exception.getLocalizedMessage()).isEqualTo("Embed here int `5` and bool: `true`");
     }
 
 }

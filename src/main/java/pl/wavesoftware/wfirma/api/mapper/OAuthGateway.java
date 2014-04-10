@@ -33,10 +33,15 @@ import pl.wavesoftware.wfirma.api.model.WFirmaException;
  *
  * @author Krzysztof Suszyński <krzysztof.suszynski@wavesoftware.pl>
  */
-public class OAuthGateway implements WFirmaGateway {
+class OAuthGateway implements WFirmaGateway {
 
     private OAuthCredentials credentials;
 
+    /**
+     * Getaway for OAuth
+     *
+     * @param credentials OAuth cerentials
+     */
     public OAuthGateway(OAuthCredentials credentials) {
         this.credentials = credentials;
     }
@@ -49,6 +54,18 @@ public class OAuthGateway implements WFirmaGateway {
 
     @Override
     public String post(PostRequest<?> request) throws WFirmaException {
+        // FIXME: Not yet implemented!!!
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public void addListener(ResponseListener listener) {
+        // FIXME: Not yet implemented!!!
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public void removeListener(ResponseListener listener) {
         // FIXME: Not yet implemented!!!
         throw new UnsupportedOperationException("Not supported yet.");
     }

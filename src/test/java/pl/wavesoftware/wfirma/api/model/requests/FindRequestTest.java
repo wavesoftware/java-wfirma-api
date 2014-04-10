@@ -27,6 +27,7 @@ package pl.wavesoftware.wfirma.api.model.requests;
 import static org.assertj.core.api.Assertions.assertThat;
 import org.junit.Test;
 import pl.wavesoftware.wfirma.api.model.ApiModule;
+import pl.wavesoftware.wfirma.api.model.companies.Companies;
 import pl.wavesoftware.wfirma.api.model.contractors.Contractors;
 import pl.wavesoftware.wfirma.api.model.logic.And;
 import pl.wavesoftware.wfirma.api.model.logic.Condition;
@@ -101,9 +102,8 @@ public class FindRequestTest {
                 + "</api>\n");
     }
 
-    @Test(expected = UnsupportedOperationException.class)
     public void testExceptionOnUnimplementd() {
-        assertThat(new FindRequest<Contractors>(ApiModule.COMPANIES)).isNotNull();
+        assertThat(new FindRequest<Companies>(ApiModule.COMPANIES)).isNotNull();
     }
 
 }

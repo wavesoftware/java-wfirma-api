@@ -32,6 +32,11 @@ import pl.wavesoftware.wfirma.api.model.ApiEntityElement;
  */
 public interface Api {
 
+    /**
+     * Gets a entity class for API
+     *
+     * @return a entity class
+     */
     Class<? extends ApiEntityElement> getEntityClass();
 
 }
