@@ -25,10 +25,14 @@ package pl.wavesoftware.wfirma.api.mapper.xml;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.GregorianCalendar;
+import java.util.List;
 import java.util.Scanner;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.custommonkey.xmlunit.XMLAssert.assertXMLEqual;
 import org.custommonkey.xmlunit.XMLUnit;
+import org.joda.money.CurrencyUnit;
+import org.joda.money.Money;
 import org.junit.Before;
 import org.junit.Test;
 import static org.unitils.reflectionassert.ReflectionAssert.assertReflectionEquals;
@@ -36,6 +40,10 @@ import org.xml.sax.SAXException;
 import pl.wavesoftware.wfirma.api.model.companies.Companies;
 import pl.wavesoftware.wfirma.api.model.companies.CompaniesApi;
 import pl.wavesoftware.wfirma.api.model.companies.Company;
+import pl.wavesoftware.wfirma.api.model.invoices.AbstractInvoice;
+import pl.wavesoftware.wfirma.api.model.invoices.Invoices;
+import pl.wavesoftware.wfirma.api.model.invoices.InvoicesApi;
+import pl.wavesoftware.wfirma.api.model.invoices.NormalInvoice;
 import pl.wavesoftware.wfirma.api.model.logic.And;
 import pl.wavesoftware.wfirma.api.model.logic.LogicalOperator;
 import pl.wavesoftware.wfirma.api.model.logic.ObjectFactory;
@@ -171,6 +179,64 @@ public class JaxbMarshallerTest {
                 + "    </companies>\n"
                 + "</apis>\n";
         assertThat(instance.unmarshal(expOutputFull)).isNull();
+    }
+
+    @Test
+    public void testMarshalUnMarshalInvoice() {
+        JaxbMarshaller<InvoicesApi> instance = JaxbMarshaller.create(InvoicesApi.class);
+        InvoicesApi api = new InvoicesApi();
+        Invoices invoices = new Invoices(api);
+        NormalInvoice invoice = new NormalInvoice();
+        GregorianCalendar cal = new GregorianCalendar(2014, 3, 11);
+        invoice.setId(13L);
+        invoice.setAlreadyPaid(Money.of(CurrencyUnit.USD, 932.00d));
+        invoice.setAlreadyPaidInitial(Money.of(CurrencyUnit.USD, 932.00d));
+        invoice.setRemaining(Money.of(CurrencyUnit.USD, 0d));
+        invoice.setTotal(Money.of(CurrencyUnit.USD, 932.00d));
+        invoice.setDate(cal.getTime());
+        invoice.setDay(11);
+        invoice.setDisposalDate(cal.getTime());
+        invoice.setDisposalDateEmpty(Boolean.TRUE);
+        invoice.setDisposalDateForm(AbstractInvoice.DisposalDateForm.month);
+        invoice.setMonth(4);
+        invoice.setNumber(3);
+        invoice.setYear(2014);
+        invoice.setSemiTemplateNumber("FV [number]/[year]");
+        invoice.setFullNumber("FV 3/2014");
+        invoices.getInvoice().add(invoice);
+        String result = instance.marshal(api);
+        String expected = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n"
+                + "<api>\n"
+                + "    <invoices>\n"
+                + "        <normalInvoiceType>\n"
+                + "            <id>13</id>\n"
+                + "            <type>normal</type>\n"
+                + "            <disposaldate_form>month</disposaldate_form>\n"
+                + "            <disposaldate_empty>1</disposaldate_empty>\n"
+                + "            <disposaldate>2014-04-11</disposaldate>\n"
+                + "            <date>2014-04-11</date>\n"
+                + "            <total>932.00</total>\n"
+                + "            <alreadypaid>932.00</alreadypaid>\n"
+                + "            <alreadypaid_initial>932.00</alreadypaid_initial>\n"
+                + "            <remaining>0.00</remaining>\n"
+                + "            <number>3</number>\n"
+                + "            <day>11</day>\n"
+                + "            <month>4</month>\n"
+                + "            <year>2014</year>\n"
+                + "            <semitemplatenumber>FV [number]/[year]</semitemplatenumber>\n"
+                + "            <fullnumber>FV 3/2014</fullnumber>\n"
+                + "        </normalInvoiceType>\n"
+                + "    </invoices>\n"
+                + "</api>\n";
+        assertThat(result).isEqualTo(expected);
+        InvoicesApi resultApi = instance.unmarshal(expected);
+        assertThat(resultApi).isNotNull();
+        List<AbstractInvoice> resultList = resultApi.getInvoices().getInvoice();
+        assertThat(resultList).isNotNull();
+        assertThat(resultList).hasSize(1);
+        AbstractInvoice resultInvoice = resultList.iterator().next();
+        assertThat(resultInvoice).isExactlyInstanceOf(NormalInvoice.class);
+        assertThat(resultInvoice).isEqualToComparingFieldByField(invoice);
     }
 
 }

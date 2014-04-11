@@ -21,44 +21,29 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package pl.wavesoftware.wfirma.api.model.contractors;
+package pl.wavesoftware.wfirma.api.mapper.xml;
 
-import com.openpojo.reflection.PojoClass;
-import com.openpojo.validation.PojoValidator;
-import java.util.Collection;
-import static org.assertj.core.api.Assertions.assertThat;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
-import org.junit.runners.Parameterized.Parameters;
-import pl.wavesoftware.wfirma.api.model.utils.PojoValidationFactory;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import javax.xml.bind.annotation.adapters.XmlAdapter;
 
 /**
  *
  * @author Krzysztof Suszyński <krzysztof.suszynski@wavesoftware.pl>
  */
-@RunWith(Parameterized.class)
-public class ContractorsTest {
+public class DateAdapter extends XmlAdapter<String, Date> {
 
-    private final PojoClass pojoClass;
+    private final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
-    private final PojoValidator pojoValidator = PojoValidationFactory.createPojoValidator();
-
-    @Parameters(name = "{0}")
-    public static Collection<Object[]> data() {
-        return PojoValidationFactory.createPojoClassList(Contractor.class, Contractor.CompanyAccount.class,
-                Contractor.InvoiceDescription.class, Contractor.TranslationLanguage.class, Contractors.class,
-                ContractorsApi.class);
+    @Override
+    public String marshal(Date date) {
+        return dateFormat.format(date);
     }
 
-    public ContractorsTest(String label, PojoClass pojoClass) {
-        this.pojoClass = pojoClass;
-    }
-
-    @Test
-    public void testPojoStructureAndBehavior() {
-        assertThat(pojoClass).isNotNull();
-        pojoValidator.runValidation(pojoClass);
+    @Override
+    public Date unmarshal(String input) throws ParseException {
+        return dateFormat.parse(input);
     }
 
 }

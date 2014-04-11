@@ -21,7 +21,6 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-
 package pl.wavesoftware.wfirma.api.model.requests;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -96,7 +95,7 @@ public class FindRequestTest {
                 + "                </and>\n"
                 + "            </conditions>\n"
                 + "            <page>0</page>\n"
-                + "            <limit>0</limit>\n"
+                + "            <limit>20</limit>\n"
                 + "        </parameters>\n"
                 + "    </contractors>\n"
                 + "</api>\n");

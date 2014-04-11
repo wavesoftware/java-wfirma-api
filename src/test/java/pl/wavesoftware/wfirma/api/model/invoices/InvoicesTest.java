@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package pl.wavesoftware.wfirma.api.model.contractors;
+package pl.wavesoftware.wfirma.api.model.invoices;
 
 import com.openpojo.reflection.PojoClass;
 import com.openpojo.validation.PojoValidator;
@@ -30,7 +30,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
-import org.junit.runners.Parameterized.Parameters;
 import pl.wavesoftware.wfirma.api.model.utils.PojoValidationFactory;
 
 /**
@@ -38,20 +37,22 @@ import pl.wavesoftware.wfirma.api.model.utils.PojoValidationFactory;
  * @author Krzysztof Suszyński <krzysztof.suszynski@wavesoftware.pl>
  */
 @RunWith(Parameterized.class)
-public class ContractorsTest {
+public class InvoicesTest {
 
     private final PojoClass pojoClass;
 
     private final PojoValidator pojoValidator = PojoValidationFactory.createPojoValidator();
 
-    @Parameters(name = "{0}")
+    @Parameterized.Parameters(name = "{0}")
     public static Collection<Object[]> data() {
-        return PojoValidationFactory.createPojoClassList(Contractor.class, Contractor.CompanyAccount.class,
-                Contractor.InvoiceDescription.class, Contractor.TranslationLanguage.class, Contractors.class,
-                ContractorsApi.class);
+        return PojoValidationFactory.createPojoClassList(
+                InvoicesApi.class,
+                Invoices.class,
+                NormalInvoice.class
+        );
     }
 
-    public ContractorsTest(String label, PojoClass pojoClass) {
+    public InvoicesTest(String label, PojoClass pojoClass) {
         this.pojoClass = pojoClass;
     }
 

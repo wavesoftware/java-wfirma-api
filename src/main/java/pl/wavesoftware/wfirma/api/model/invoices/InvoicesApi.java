@@ -21,28 +21,31 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package pl.wavesoftware.wfirma.api.model.logic;
 
-import java.util.ArrayList;
-import java.util.List;
+package pl.wavesoftware.wfirma.api.model.invoices;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
+import pl.wavesoftware.wfirma.api.mapper.Api;
+import pl.wavesoftware.wfirma.api.model.ApiEntityElement;
 
 /**
  * <p>
- * Java class for orType complex type.
+ * Java class for parametersType complex type.
  *
  * <p>
  * The following schema fragment specifies the expected content contained within this class.
  *
  * <pre>
- * &lt;complexType name="orType">
+ * &lt;complexType name="invoicesApiType">
  *   &lt;complexContent>
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
- *         &lt;element name="condition" type="{}conditionType" maxOccurs="unbounded"/>
+ *         &lt;element name="invoices" type="{}invoicesType"/>
  *       &lt;/sequence>
  *     &lt;/restriction>
  *   &lt;/complexContent>
@@ -52,43 +55,43 @@ import javax.xml.bind.annotation.XmlType;
  *
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "orType", propOrder = {
-    "condition"
+@XmlType(name = "invoicesApiType", propOrder = {
+    "invoices"
 })
-public class Or {
-
-    @XmlElement(required = true)
-    protected List<Condition> condition;
+@XmlRootElement(name = "api")
+public class InvoicesApi implements Api {
 
     /**
-     * Gets the value of the condition property.
-     *
-     * <p>
-     * This accessor method returns a reference to the live list, not a snapshot. Therefore any modification you make to the returned list
-     * will be present inside the JAXB object. This is why there is not a <CODE>set</CODE> method for the condition property.
-     *
-     * <p>
-     * For example, to add a new item, do as follows:
-     * <pre>
-     *    getCondition().add(newItem);
-     * </pre>
-     *
-     *
-     * <p>
-     * Objects of the following type(s) are allowed in the list {@link Condition }
-     *
-     *
-     * @return list of condition
+     * a invoices main element in api
      */
-    public List<Condition> getCondition() {
-        if (condition == null) {
-            condition = new ArrayList<>();
-        }
-        return this.condition;
+    @XmlElement(nillable = false)
+    private Invoices invoices;
+
+    /**
+     * Constructor
+     */
+    public InvoicesApi() {
+        invoices = new Invoices(this);
     }
 
-    public void setCondition(List<Condition> condition) {
-        this.condition = condition;
+    /**
+     * @return {@link  #invoices}
+     */
+    public Invoices getInvoices() {
+        return invoices;
+    }
+
+    /**
+     * @param invoices {@link #invoices}
+     */
+    public void setInvoices(Invoices invoices) {
+        this.invoices = invoices;
+    }
+
+    @Override
+    @XmlTransient
+    public Class<? extends ApiEntityElement> getEntityClass() {
+        return Invoices.class;
     }
 
 }

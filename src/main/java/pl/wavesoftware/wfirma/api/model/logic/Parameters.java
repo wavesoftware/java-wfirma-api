@@ -69,9 +69,11 @@ public class Parameters {
     @XmlElement(required = true)
     protected Order order;
 
-    protected int page;
+    @XmlElement(required = false)
+    protected Integer page = 0;
 
-    protected int limit;
+    @XmlElement(required = false)
+    protected Integer limit = 20;
 
     /**
      * Gets the value of the conditions property.
@@ -118,7 +120,7 @@ public class Parameters {
      *
      * @return a page
      */
-    public int getPage() {
+    public Integer getPage() {
         return page;
     }
 
@@ -127,7 +129,7 @@ public class Parameters {
      *
      * @param page a page
      */
-    public void setPage(int page) {
+    public void setPage(Integer page) {
         this.page = page;
     }
 
@@ -136,7 +138,7 @@ public class Parameters {
      *
      * @return a page limit
      */
-    public int getLimit() {
+    public Integer getLimit() {
         return limit;
     }
 
@@ -145,7 +147,7 @@ public class Parameters {
      *
      * @param limit a limit
      */
-    public void setLimit(int limit) {
+    public void setLimit(Integer limit) {
         this.limit = limit;
     }
 

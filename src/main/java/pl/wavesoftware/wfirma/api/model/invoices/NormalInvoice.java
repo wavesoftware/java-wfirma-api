@@ -21,44 +21,39 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package pl.wavesoftware.wfirma.api.model.contractors;
+package pl.wavesoftware.wfirma.api.model.invoices;
 
-import com.openpojo.reflection.PojoClass;
-import com.openpojo.validation.PojoValidator;
-import java.util.Collection;
-import static org.assertj.core.api.Assertions.assertThat;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
-import org.junit.runners.Parameterized.Parameters;
-import pl.wavesoftware.wfirma.api.model.utils.PojoValidationFactory;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlType;
+import pl.wavesoftware.wfirma.api.model.utils.ReadOnly;
 
 /**
  *
  * @author Krzysztof Suszyński <krzysztof.suszynski@wavesoftware.pl>
  */
-@RunWith(Parameterized.class)
-public class ContractorsTest {
+@XmlAccessorType(XmlAccessType.FIELD)
+@XmlType(name = "normalInvoiceType")
+public class NormalInvoice extends AbstractInvoice {
 
-    private final PojoClass pojoClass;
+    @ReadOnly
+    @XmlElement(required = false, name = "fullnumber")
+    private String fullNumber;
 
-    private final PojoValidator pojoValidator = PojoValidationFactory.createPojoValidator();
-
-    @Parameters(name = "{0}")
-    public static Collection<Object[]> data() {
-        return PojoValidationFactory.createPojoClassList(Contractor.class, Contractor.CompanyAccount.class,
-                Contractor.InvoiceDescription.class, Contractor.TranslationLanguage.class, Contractors.class,
-                ContractorsApi.class);
+    /**
+     * Constructor
+     */
+    public NormalInvoice() {
+        super(TypeOfInvoice.normal);
     }
 
-    public ContractorsTest(String label, PojoClass pojoClass) {
-        this.pojoClass = pojoClass;
+    public String getFullNumber() {
+        return fullNumber;
     }
 
-    @Test
-    public void testPojoStructureAndBehavior() {
-        assertThat(pojoClass).isNotNull();
-        pojoValidator.runValidation(pojoClass);
+    public void setFullNumber(String fullNumber) {
+        this.fullNumber = fullNumber;
     }
 
 }

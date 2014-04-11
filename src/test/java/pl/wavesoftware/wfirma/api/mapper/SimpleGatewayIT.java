@@ -21,7 +21,6 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-
 package pl.wavesoftware.wfirma.api.mapper;
 
 import java.util.prefs.BackingStoreException;
@@ -171,7 +170,7 @@ public class SimpleGatewayIT {
                 + "</shop_buyer>\\s*"
                 + "</contractor>\\s*"
                 + "<parameters>\\s*"
-                + "<limit>0</limit>\\s*"
+                + "<limit>\\d+</limit>\\s*"
                 + "<page>1</page>\\s*"
                 + "<total>1</total>\\s*"
                 + "</parameters>\\s*"

@@ -21,7 +21,6 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-
 package pl.wavesoftware.wfirma.api.mapper;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
@@ -297,7 +296,7 @@ public class SimpleGatewayTest {
                 + "                </and>\n"
                 + "            </conditions>\n"
                 + "            <page>0</page>\n"
-                + "            <limit>0</limit>\n"
+                + "            <limit>20</limit>\n"
                 + "        </parameters>\n"
                 + "    </contractors>\n"
                 + "</api>\n"

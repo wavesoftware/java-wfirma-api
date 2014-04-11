@@ -21,28 +21,17 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-
 package pl.wavesoftware.wfirma.api.model.companies;
 
 import com.openpojo.reflection.PojoClass;
-import com.openpojo.reflection.impl.PojoClassFactory;
 import com.openpojo.validation.PojoValidator;
-import com.openpojo.validation.rule.impl.GetterMustExistRule;
-import com.openpojo.validation.rule.impl.NoPrimitivesRule;
-import com.openpojo.validation.rule.impl.NoPublicFieldsRule;
-import com.openpojo.validation.rule.impl.NoStaticExceptFinalRule;
-import com.openpojo.validation.rule.impl.SetterMustExistRule;
-import com.openpojo.validation.test.impl.GetterTester;
-import com.openpojo.validation.test.impl.SetterTester;
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
+import pl.wavesoftware.wfirma.api.model.utils.PojoValidationFactory;
 
 /**
  *
@@ -53,39 +42,19 @@ public class CompaniesTest {
 
     private final PojoClass pojoClass;
 
-    private final PojoValidator pojoValidator;
+    private final PojoValidator pojoValidator = PojoValidationFactory.createPojoValidator();
 
     @Parameters(name = "{0}")
     public static Collection<Object[]> data() {
-        Class<?>[] classes = new Class<?>[]{
-            CompaniesApi.class,
-            Companies.class,
-            Company.class
-        };
-        List<Object[]> ret = new ArrayList<>();
-        for (Class<?> cls : classes) {
-            ret.add(new Object[]{cls.getSimpleName(), PojoClassFactory.getPojoClass(cls)});
-        }
-        return ret;
+        return PojoValidationFactory.createPojoClassList(
+                CompaniesApi.class,
+                Companies.class,
+                Company.class
+        );
     }
 
     public CompaniesTest(String label, PojoClass pojoClass) {
         this.pojoClass = pojoClass;
-        pojoValidator = new PojoValidator();
-    }
-
-    @Before
-    public void before() {
-        // Create Rules to validate structure for POJO_PACKAGE
-        pojoValidator.addRule(new NoPublicFieldsRule());
-        pojoValidator.addRule(new NoPrimitivesRule());
-        pojoValidator.addRule(new NoStaticExceptFinalRule());
-        pojoValidator.addRule(new GetterMustExistRule());
-        pojoValidator.addRule(new SetterMustExistRule());
-
-        // Create Testers to validate behaviour for POJO_PACKAGE
-        pojoValidator.addTester(new SetterTester());
-        pojoValidator.addTester(new GetterTester());
     }
 
     @Test

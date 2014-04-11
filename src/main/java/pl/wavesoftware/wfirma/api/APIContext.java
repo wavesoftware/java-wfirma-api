@@ -36,7 +36,7 @@ public class APIContext {
 
     /**
      * Constructor with OAuth
-     * @param credentials a OAth credentials
+     * @param credentials a OAuth credentials
      */
     public APIContext(OAuthCredentials credentials) {
         this.credentials = credentials;

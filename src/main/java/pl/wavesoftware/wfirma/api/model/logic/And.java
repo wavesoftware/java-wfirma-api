@@ -62,9 +62,8 @@ public class And {
      * Gets the value of the condition property.
      *
      * <p>
-     * This accessor method returns a reference to the live list, not a snapshot. Therefore any modification you make to
-     * the returned list will be present inside the JAXB object. This is why there is not a <CODE>set</CODE> method for
-     * the condition property.
+     * This accessor method returns a reference to the live list, not a snapshot. Therefore any modification you make to the returned list
+     * will be present inside the JAXB object. This is why there is not a <CODE>set</CODE> method for the condition property.
      *
      * <p>
      * For example, to add a new item, do as follows:
@@ -84,6 +83,10 @@ public class And {
             condition = new ArrayList<>();
         }
         return this.condition;
+    }
+
+    public void setCondition(List<Condition> condition) {
+        this.condition = condition;
     }
 
 }

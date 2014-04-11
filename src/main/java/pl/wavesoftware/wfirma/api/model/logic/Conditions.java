@@ -69,9 +69,8 @@ public class Conditions {
      * Gets the value of the or property.
      *
      * <p>
-     * This accessor method returns a reference to the live list, not a snapshot. Therefore any modification you make to
-     * the returned list will be present inside the JAXB object. This is why there is not a <CODE>set</CODE> method for
-     * the or property.
+     * This accessor method returns a reference to the live list, not a snapshot. Therefore any modification you make to the returned list
+     * will be present inside the JAXB object. This is why there is not a <CODE>set</CODE> method for the or property.
      *
      * <p>
      * For example, to add a new item, do as follows:
@@ -97,9 +96,8 @@ public class Conditions {
      * Gets the value of the and property.
      *
      * <p>
-     * This accessor method returns a reference to the live list, not a snapshot. Therefore any modification you make to
-     * the returned list will be present inside the JAXB object. This is why there is not a <CODE>set</CODE> method for
-     * the and property.
+     * This accessor method returns a reference to the live list, not a snapshot. Therefore any modification you make to the returned list
+     * will be present inside the JAXB object. This is why there is not a <CODE>set</CODE> method for the and property.
      *
      * <p>
      * For example, to add a new item, do as follows:
@@ -119,6 +117,14 @@ public class Conditions {
             and = new ArrayList<>();
         }
         return this.and;
+    }
+
+    public void setOr(List<Or> or) {
+        this.or = or;
+    }
+
+    public void setAnd(List<And> and) {
+        this.and = and;
     }
 
 }
