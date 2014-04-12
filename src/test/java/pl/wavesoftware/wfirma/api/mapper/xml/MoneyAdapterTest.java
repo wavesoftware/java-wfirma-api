@@ -34,6 +34,8 @@ import org.junit.Test;
  */
 public class MoneyAdapterTest {
 
+    private static final CurrencyUnit PLN = CurrencyUnit.of("PLN");
+
     /**
      * Test of unmarshal method, of class MoneyAdapter.
      */
@@ -42,25 +44,25 @@ public class MoneyAdapterTest {
         String input = "1932.01";
         MoneyAdapter instance = new MoneyAdapter();
         Money result = instance.unmarshal(input);
-        Money expected = Money.of(CurrencyUnit.USD, 1932.01d);
+        Money expected = Money.of(PLN, 1932.01d);
         assertThat(result).isEqualTo(expected);
 
         input = "0";
         instance = new MoneyAdapter();
         result = instance.unmarshal(input);
-        expected = Money.of(CurrencyUnit.USD, 0d);
+        expected = Money.of(PLN, 0d);
         assertThat(result).isEqualTo(expected);
 
         input = "0.00";
         instance = new MoneyAdapter();
         result = instance.unmarshal(input);
-        expected = Money.of(CurrencyUnit.USD, 0d);
+        expected = Money.of(PLN, 0d);
         assertThat(result).isEqualTo(expected);
 
         input = "0.01";
         instance = new MoneyAdapter();
         result = instance.unmarshal(input);
-        expected = Money.of(CurrencyUnit.USD, 0.01d);
+        expected = Money.of(PLN, 0.01d);
         assertThat(result).isEqualTo(expected);
     }
 
@@ -78,6 +80,11 @@ public class MoneyAdapterTest {
         instance = new MoneyAdapter();
         result = instance.marshal(money);
         assertThat(result).isEqualTo("54.00");
+
+        money = Money.of(PLN, 124.10d);
+        instance = new MoneyAdapter();
+        result = instance.marshal(money);
+        assertThat(result).isEqualTo("124.10");
     }
 
 }

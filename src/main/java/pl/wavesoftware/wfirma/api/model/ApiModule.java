@@ -32,6 +32,7 @@ import java.util.List;
 import java.util.Map;
 import pl.wavesoftware.wfirma.api.model.companies.Companies;
 import pl.wavesoftware.wfirma.api.model.contractors.Contractors;
+import pl.wavesoftware.wfirma.api.model.invoices.Invoices;
 import pl.wavesoftware.wfirma.api.model.requests.AddRequest;
 import pl.wavesoftware.wfirma.api.model.requests.DeleteRequest;
 import pl.wavesoftware.wfirma.api.model.requests.EditRequest;
@@ -44,7 +45,7 @@ import pl.wavesoftware.wfirma.api.model.requests.GetRequest;
  */
 public enum ApiModule {
 
-    CONTRACTORS, COMPANIES;
+    CONTRACTORS, COMPANIES, INVOICES;
 
     private static final EnumMap<ApiModule, Class<? extends ApiEntityElement>> MAP = new EnumMap<>(ApiModule.class);
 
@@ -54,9 +55,17 @@ public enum ApiModule {
     static {
         MAP.put(CONTRACTORS, Contractors.class);
         MAP.put(COMPANIES, Companies.class);
+        MAP.put(INVOICES, Invoices.class);
 
         REQUESTS.put(COMPANIES, make(GetRequest.class));
         REQUESTS.put(CONTRACTORS, make(
+                GetRequest.class,
+                AddRequest.class,
+                FindRequest.class,
+                DeleteRequest.class,
+                EditRequest.class
+        ));
+        REQUESTS.put(INVOICES, make(
                 GetRequest.class,
                 AddRequest.class,
                 FindRequest.class,

@@ -23,41 +23,27 @@
  */
 package pl.wavesoftware.wfirma.api.mapper.xml;
 
-import java.util.Locale;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import javax.xml.bind.annotation.adapters.XmlAdapter;
-import org.joda.money.CurrencyUnit;
-import org.joda.money.Money;
-import org.joda.money.format.GroupingStyle;
-import org.joda.money.format.MoneyAmountStyle;
-import org.joda.money.format.MoneyFormatter;
-import org.joda.money.format.MoneyFormatterBuilder;
-import org.joda.money.format.MoneyParseContext;
 
 /**
  *
  * @author Krzysztof Suszyński <krzysztof.suszynski@wavesoftware.pl>
  */
-public class MoneyAdapter extends XmlAdapter<String, Money> {
+public class DateWithTimeAdapter extends XmlAdapter<String, Date> {
 
-    private final MoneyFormatter formater;
+    private final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
-    public MoneyAdapter() {
-        MoneyFormatterBuilder builder = new MoneyFormatterBuilder();
-        formater = builder
-                .appendAmount(MoneyAmountStyle.of(Locale.US).withGroupingStyle(GroupingStyle.NONE))
-                .toFormatter();
+    @Override
+    public String marshal(Date date) {
+        return dateFormat.format(date);
     }
 
     @Override
-    public Money unmarshal(String input) {
-        MoneyParseContext ctx = formater.parse(input, 0);
-        ctx.setCurrency(CurrencyUnit.of("PLN"));
-        return ctx.toBigMoney().toMoney();
-    }
-
-    @Override
-    public String marshal(Money money) {
-        return formater.print(money);
+    public Date unmarshal(String input) throws ParseException {
+        return dateFormat.parse(input);
     }
 
 }

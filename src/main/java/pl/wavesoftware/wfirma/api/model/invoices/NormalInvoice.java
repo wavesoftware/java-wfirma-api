@@ -38,7 +38,7 @@ import pl.wavesoftware.wfirma.api.model.utils.ReadOnly;
 public class NormalInvoice extends AbstractInvoice {
 
     @ReadOnly
-    @XmlElement(required = false, name = "fullnumber")
+    @XmlElement(name = "fullnumber")
     private String fullNumber;
 
     /**

@@ -21,10 +21,10 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-
 package pl.wavesoftware.wfirma.api.model.validation;
 
 import com.google.common.base.Joiner;
+import static com.google.common.base.Preconditions.checkArgument;
 import com.google.common.primitives.Primitives;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -102,22 +102,26 @@ public class RequestValidator {
         EditRequest<?> edit = (EditRequest<?>) request;
         Object entity = edit.getEntity();
         try {
-            errs.addAll(validateNotReadOnly(entity));
+            errs.addAll(validateNotReadOnly(entity, entity.getClass()));
         } catch (IllegalArgumentException | IllegalAccessException ex) {
             throw new RuntimeException("Should not happend! Bug! " + ex.getLocalizedMessage(), ex);
         }
     }
 
-    private static Collection<String> validateNotReadOnly(Object entity) throws IllegalArgumentException, IllegalAccessException {
+    private static Collection<String> validateNotReadOnly(Object entity, Class<?> cls) throws IllegalArgumentException, IllegalAccessException {
+        checkArgument(cls.isAssignableFrom(entity.getClass()), "entity `%s` must be a instance of cls `%s`", entity, cls);
         Collection<String> out = new ArrayList<>();
-        for (Field field : entity.getClass().getDeclaredFields()) {
+        if (cls.getSuperclass() != null) {
+            out.addAll(validateNotReadOnly(entity, cls.getSuperclass()));
+        }
+        for (Field field : cls.getDeclaredFields()) {
             if (isNonEmptyCollection(field, entity)) {
                 boolean access = field.isAccessible();
                 field.setAccessible(true);
                 Collection<?> col = Collection.class.cast(field.get(entity));
                 field.setAccessible(access);
                 for (Object object : col) {
-                    out.addAll(validateNotReadOnly(object));
+                    out.addAll(validateNotReadOnly(object, object.getClass()));
                 }
             }
             ReadOnly annot = field.getAnnotation(ReadOnly.class);
@@ -145,7 +149,7 @@ public class RequestValidator {
         field.setAccessible(true);
         Collection<?> col = Collection.class.cast(field.get(entity));
         field.setAccessible(access);
-        if (col.isEmpty()) {
+        if (col == null || col.isEmpty()) {
             return false;
         }
         Object element = col.iterator().next();

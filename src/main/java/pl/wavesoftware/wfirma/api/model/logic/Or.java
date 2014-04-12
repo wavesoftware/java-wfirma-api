@@ -87,7 +87,7 @@ public class Or {
         return this.condition;
     }
 
-    public void setCondition(List<Condition> condition) {
+    protected void setCondition(List<Condition> condition) {
         this.condition = condition;
     }
 

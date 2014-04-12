@@ -25,6 +25,7 @@ package pl.wavesoftware.wfirma.api.mapper.xml;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Arrays;
 import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Scanner;
@@ -189,10 +190,13 @@ public class JaxbMarshallerTest {
         NormalInvoice invoice = new NormalInvoice();
         GregorianCalendar cal = new GregorianCalendar(2014, 3, 11);
         invoice.setId(13L);
-        invoice.setAlreadyPaid(Money.of(CurrencyUnit.USD, 932.00d));
-        invoice.setAlreadyPaidInitial(Money.of(CurrencyUnit.USD, 932.00d));
-        invoice.setRemaining(Money.of(CurrencyUnit.USD, 0d));
-        invoice.setTotal(Money.of(CurrencyUnit.USD, 932.00d));
+        CurrencyUnit pln = CurrencyUnit.of("PLN");
+        invoice.setAlreadyPaid(Money.of(pln, 932.00d));
+        invoice.setAlreadyPaidInitial(Money.of(pln, 932.00d));
+        invoice.setPaymentState(AbstractInvoice.PaymentState.unpaid);
+        invoice.setPaymentMethod(AbstractInvoice.PaymentMethod.payment_card);
+        invoice.setRemaining(Money.of(pln, 0d));
+        invoice.setTotal(Money.of(pln, 932.00d));
         invoice.setDate(cal.getTime());
         invoice.setDay(11);
         invoice.setDisposalDate(cal.getTime());
@@ -203,6 +207,7 @@ public class JaxbMarshallerTest {
         invoice.setYear(2014);
         invoice.setSemiTemplateNumber("FV [number]/[year]");
         invoice.setFullNumber("FV 3/2014");
+        invoice.setTags(Arrays.asList("fun", "new", "tags"));
         invoices.getInvoice().add(invoice);
         String result = instance.marshal(api);
         String expected = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n"
@@ -211,6 +216,8 @@ public class JaxbMarshallerTest {
                 + "        <normalInvoiceType>\n"
                 + "            <id>13</id>\n"
                 + "            <type>normal</type>\n"
+                + "            <paymentmethod>payment_card</paymentmethod>\n"
+                + "            <paymentstate>unpaid</paymentstate>\n"
                 + "            <disposaldate_form>month</disposaldate_form>\n"
                 + "            <disposaldate_empty>1</disposaldate_empty>\n"
                 + "            <disposaldate>2014-04-11</disposaldate>\n"
@@ -224,6 +231,7 @@ public class JaxbMarshallerTest {
                 + "            <month>4</month>\n"
                 + "            <year>2014</year>\n"
                 + "            <semitemplatenumber>FV [number]/[year]</semitemplatenumber>\n"
+                + "            <tags>(fun),(new),(tags)</tags>\n"
                 + "            <fullnumber>FV 3/2014</fullnumber>\n"
                 + "        </normalInvoiceType>\n"
                 + "    </invoices>\n"

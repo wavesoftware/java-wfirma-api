@@ -24,8 +24,11 @@
 package pl.wavesoftware.wfirma.api.model.validation;
 
 import java.util.Collection;
+import java.util.GregorianCalendar;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.failBecauseExceptionWasNotThrown;
+import org.joda.money.CurrencyUnit;
+import org.joda.money.Money;
 import org.junit.Test;
 import pl.wavesoftware.wfirma.api.model.ApiModule;
 import pl.wavesoftware.wfirma.api.model.WFirmaException;
@@ -33,6 +36,10 @@ import pl.wavesoftware.wfirma.api.model.companies.Companies;
 import pl.wavesoftware.wfirma.api.model.companies.Company;
 import pl.wavesoftware.wfirma.api.model.contractors.Contractor;
 import pl.wavesoftware.wfirma.api.model.contractors.Contractors;
+import pl.wavesoftware.wfirma.api.model.invoices.AbstractInvoice;
+import pl.wavesoftware.wfirma.api.model.invoices.Invoices;
+import pl.wavesoftware.wfirma.api.model.invoices.InvoicesApi;
+import pl.wavesoftware.wfirma.api.model.invoices.NormalInvoice;
 import pl.wavesoftware.wfirma.api.model.requests.EditRequest;
 import pl.wavesoftware.wfirma.api.model.requests.GetRequest;
 
@@ -104,6 +111,40 @@ public class RequestValidatorTest {
         RequestValidator instance = new RequestValidator(edit);
         Collection<String> errors = instance.getErrors();
         assertThat(errors).containsExactly("The `modified` property of `Contractor` is read only");
+    }
+
+    @Test
+    public void testGetErrorsOnReadOnly2() {
+        InvoicesApi api = new InvoicesApi();
+        Invoices invoices = new Invoices(api);
+        NormalInvoice invoice = new NormalInvoice();
+        GregorianCalendar cal = new GregorianCalendar(2014, 3, 11);
+        invoice.setAlreadyPaid(Money.of(CurrencyUnit.USD, 932.00d));
+        invoice.setAlreadyPaidInitial(Money.of(CurrencyUnit.USD, 932.00d));
+        invoice.setPaymentState(AbstractInvoice.PaymentState.paid);
+        invoice.setRemaining(Money.of(CurrencyUnit.USD, 0d));
+        invoice.setTotal(Money.of(CurrencyUnit.USD, 932.00d));
+        invoice.setDate(cal.getTime());
+        invoice.setDay(11);
+        invoice.setDisposalDate(cal.getTime());
+        invoice.setDisposalDateEmpty(Boolean.TRUE);
+        invoice.setDisposalDateForm(AbstractInvoice.DisposalDateForm.month);
+        invoice.setMonth(4);
+        invoice.setNumber(3);
+        invoice.setYear(2014);
+        invoice.setSemiTemplateNumber("FV [number]/[year]");
+        invoice.setFullNumber("FV 3/2014");
+        invoices.getInvoice().add(invoice);
+        EditRequest<Invoices> edit = EditRequest.create(invoices, 234L);
+        RequestValidator instance = new RequestValidator(edit);
+        Collection<String> errors = instance.getErrors();
+        assertThat(errors).containsExactly(
+                "The `paymentState` property of `NormalInvoice` is read only",
+                "The `total` property of `NormalInvoice` is read only",
+                "The `alreadyPaid` property of `NormalInvoice` is read only",
+                "The `remaining` property of `NormalInvoice` is read only",
+                "The `fullNumber` property of `NormalInvoice` is read only"
+        );
     }
 
 }

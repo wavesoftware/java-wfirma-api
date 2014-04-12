@@ -119,11 +119,11 @@ public class Order {
         return this.desc;
     }
 
-    public void setAsc(List<String> asc) {
+    protected void setAsc(List<String> asc) {
         this.asc = asc;
     }
 
-    public void setDesc(List<String> desc) {
+    protected void setDesc(List<String> desc) {
         this.desc = desc;
     }
 

@@ -40,7 +40,7 @@ import org.joda.money.Money;
  */
 public class PojoGettersSettersTester implements Tester {
 
-    private Random random = new Random();
+    private final Random random = new Random();
 
     @Override
     public void run(PojoClass pojoClass) {

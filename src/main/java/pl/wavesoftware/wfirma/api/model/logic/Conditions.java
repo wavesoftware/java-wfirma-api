@@ -119,11 +119,11 @@ public class Conditions {
         return this.and;
     }
 
-    public void setOr(List<Or> or) {
+    protected void setOr(List<Or> or) {
         this.or = or;
     }
 
-    public void setAnd(List<And> and) {
+    protected void setAnd(List<And> and) {
         this.and = and;
     }
 

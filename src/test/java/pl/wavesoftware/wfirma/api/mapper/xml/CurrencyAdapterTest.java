@@ -23,41 +23,40 @@
  */
 package pl.wavesoftware.wfirma.api.mapper.xml;
 
-import java.util.Locale;
-import javax.xml.bind.annotation.adapters.XmlAdapter;
+import static org.assertj.core.api.Assertions.assertThat;
 import org.joda.money.CurrencyUnit;
-import org.joda.money.Money;
-import org.joda.money.format.GroupingStyle;
-import org.joda.money.format.MoneyAmountStyle;
-import org.joda.money.format.MoneyFormatter;
-import org.joda.money.format.MoneyFormatterBuilder;
-import org.joda.money.format.MoneyParseContext;
+import org.junit.Test;
 
 /**
  *
  * @author Krzysztof Suszyński <krzysztof.suszynski@wavesoftware.pl>
  */
-public class MoneyAdapter extends XmlAdapter<String, Money> {
+public class CurrencyAdapterTest {
 
-    private final MoneyFormatter formater;
+    @Test
+    public void testUnmarshal() {
+        String input = "EUR";
+        CurrencyAdapter instance = new CurrencyAdapter();
+        CurrencyUnit result = instance.unmarshal(input);
+        assertThat(result).isEqualTo(CurrencyUnit.EUR);
 
-    public MoneyAdapter() {
-        MoneyFormatterBuilder builder = new MoneyFormatterBuilder();
-        formater = builder
-                .appendAmount(MoneyAmountStyle.of(Locale.US).withGroupingStyle(GroupingStyle.NONE))
-                .toFormatter();
+        input = "PLN";
+        instance = new CurrencyAdapter();
+        result = instance.unmarshal(input);
+        assertThat(result).isEqualTo(CurrencyUnit.ofCountry("PL"));
     }
 
-    @Override
-    public Money unmarshal(String input) {
-        MoneyParseContext ctx = formater.parse(input, 0);
-        ctx.setCurrency(CurrencyUnit.of("PLN"));
-        return ctx.toBigMoney().toMoney();
-    }
+    @Test
+    public void testMarshal() {
+        CurrencyUnit currency = CurrencyUnit.ofCountry("PL");
+        CurrencyAdapter instance = new CurrencyAdapter();
+        String result = instance.marshal(currency);
+        assertThat(result).isEqualTo("PLN");
 
-    @Override
-    public String marshal(Money money) {
-        return formater.print(money);
+        currency = CurrencyUnit.CHF;
+        instance = new CurrencyAdapter();
+        result = instance.marshal(currency);
+        assertThat(result).isEqualTo("CHF");
     }
 
 }

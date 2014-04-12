@@ -23,41 +23,49 @@
  */
 package pl.wavesoftware.wfirma.api.mapper.xml;
 
-import java.util.Locale;
+import com.google.common.base.Joiner;
+import com.google.common.base.Splitter;
+import java.util.ArrayList;
+import java.util.Collection;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.xml.bind.annotation.adapters.XmlAdapter;
-import org.joda.money.CurrencyUnit;
-import org.joda.money.Money;
-import org.joda.money.format.GroupingStyle;
-import org.joda.money.format.MoneyAmountStyle;
-import org.joda.money.format.MoneyFormatter;
-import org.joda.money.format.MoneyFormatterBuilder;
-import org.joda.money.format.MoneyParseContext;
 
 /**
  *
  * @author Krzysztof Suszyński <krzysztof.suszynski@wavesoftware.pl>
  */
-public class MoneyAdapter extends XmlAdapter<String, Money> {
+public class TagsAdapter extends XmlAdapter<String, Collection<String>> {
 
-    private final MoneyFormatter formater;
-
-    public MoneyAdapter() {
-        MoneyFormatterBuilder builder = new MoneyFormatterBuilder();
-        formater = builder
-                .appendAmount(MoneyAmountStyle.of(Locale.US).withGroupingStyle(GroupingStyle.NONE))
-                .toFormatter();
+    @Override
+    @Nonnull
+    public Collection<String> unmarshal(@Nullable String input) {
+        ArrayList<String> out = new ArrayList<>();
+        if (input != null) {
+            String txt = input;
+            if (!txt.isEmpty() && txt.startsWith("(") && txt.endsWith(")")) {
+                txt = txt.subSequence(1, txt.length() - 1).toString();
+            }
+            for (String tag : Splitter.on("),(").split(txt)) {
+                out.add(tag);
+            }
+            if (out.size() == 1 && "".equals(out.iterator().next())) {
+                out = new ArrayList<>();
+            }
+        }
+        return out;
     }
 
     @Override
-    public Money unmarshal(String input) {
-        MoneyParseContext ctx = formater.parse(input, 0);
-        ctx.setCurrency(CurrencyUnit.of("PLN"));
-        return ctx.toBigMoney().toMoney();
-    }
-
-    @Override
-    public String marshal(Money money) {
-        return formater.print(money);
+    @Nonnull
+    public String marshal(@Nullable Collection<String> tags) {
+        StringBuilder builder = new StringBuilder();
+        if (tags != null && !tags.isEmpty()) {
+            builder.append("(")
+                    .append(Joiner.on("),(").join(tags))
+                    .append(")");
+        }
+        return builder.toString();
     }
 
 }

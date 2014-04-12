@@ -23,14 +23,19 @@
  */
 package pl.wavesoftware.wfirma.api.model.invoices;
 
+import java.util.Collection;
 import java.util.Date;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+import org.joda.money.CurrencyUnit;
 import org.joda.money.Money;
 import pl.wavesoftware.wfirma.api.mapper.xml.BooleanToIntegerAdapter;
+import pl.wavesoftware.wfirma.api.mapper.xml.CurrencyAdapter;
 import pl.wavesoftware.wfirma.api.mapper.xml.DateAdapter;
+import pl.wavesoftware.wfirma.api.mapper.xml.DateWithTimeAdapter;
 import pl.wavesoftware.wfirma.api.mapper.xml.MoneyAdapter;
+import pl.wavesoftware.wfirma.api.mapper.xml.TagsAdapter;
 import pl.wavesoftware.wfirma.api.model.utils.ReadOnly;
 
 /**
@@ -59,79 +64,293 @@ import pl.wavesoftware.wfirma.api.model.utils.ReadOnly;
 public abstract class AbstractInvoice {
 
     @ReadOnly
-    @XmlElement(required = false)
+    @XmlElement
     private Long id;
 
     @XmlElement(required = true)
     protected TypeOfInvoice type;
 
-    @XmlElement(required = false, name = "paymentmethod")
+    @XmlElement(name = "paymentmethod")
     private PaymentMethod paymentMethod;
 
     @XmlJavaTypeAdapter(DateAdapter.class)
-    @XmlElement(required = false, name = "paymentdate")
+    @XmlElement(name = "paymentdate")
     private Date paymentDate;
 
     @ReadOnly
-    @XmlElement(required = false, name = "paymentstate")
+    @XmlElement(name = "paymentstate")
     private PaymentState paymentState;
 
-    @XmlElement(required = false, name = "disposaldate_form")
+    @XmlElement(name = "disposaldate_form")
     private DisposalDateForm disposalDateForm;
 
     @XmlJavaTypeAdapter(BooleanToIntegerAdapter.class)
-    @XmlElement(required = false, name = "disposaldate_empty")
+    @XmlElement(name = "disposaldate_empty")
     private Boolean disposalDateEmpty;
 
     @XmlJavaTypeAdapter(DateAdapter.class)
-    @XmlElement(required = false, name = "disposaldate")
+    @XmlElement(name = "disposaldate")
     private Date disposalDate;
 
     @XmlJavaTypeAdapter(DateAdapter.class)
-    @XmlElement(required = false)
+    @XmlElement
     private Date date;
 
-    @XmlElement(required = false)
+    @XmlElement
     private Integer period;
 
     @ReadOnly
     @XmlJavaTypeAdapter(MoneyAdapter.class)
-    @XmlElement(required = false)
+    @XmlElement
     private Money total;
 
     @ReadOnly
     @XmlJavaTypeAdapter(MoneyAdapter.class)
-    @XmlElement(required = false, name = "total_composed")
+    @XmlElement(name = "total_composed")
     private Money totalComposed;
 
     @ReadOnly
     @XmlJavaTypeAdapter(MoneyAdapter.class)
-    @XmlElement(required = false, name = "alreadypaid")
+    @XmlElement(name = "alreadypaid")
     private Money alreadyPaid;
 
     @XmlJavaTypeAdapter(MoneyAdapter.class)
-    @XmlElement(required = false, name = "alreadypaid_initial")
+    @XmlElement(name = "alreadypaid_initial")
     private Money alreadyPaidInitial;
 
     @ReadOnly
     @XmlJavaTypeAdapter(MoneyAdapter.class)
-    @XmlElement(required = false)
+    @XmlElement
     private Money remaining;
 
-    @XmlElement(required = false)
+    @XmlElement
     private Integer number;
 
-    @XmlElement(required = false)
+    @XmlElement
     private Integer day;
 
-    @XmlElement(required = false)
+    @XmlElement
     private Integer month;
 
-    @XmlElement(required = false)
+    @XmlElement
     private Integer year;
 
-    @XmlElement(required = false, name = "semitemplatenumber")
+    @XmlElement(name = "semitemplatenumber")
     private String semiTemplateNumber;
+
+    @ReadOnly
+    @XmlElement(name = "correction_type")
+    private String correctionType;
+
+    @ReadOnly
+    @XmlElement
+    private Integer corrections;
+
+    @XmlJavaTypeAdapter(CurrencyAdapter.class)
+    @XmlElement
+    private CurrencyUnit currency;
+
+    @ReadOnly
+    @XmlElement(name = "currency_exchange")
+    private Double currencyExchange;
+
+    @ReadOnly
+    @XmlElement(name = "currency_label")
+    private String currencyLabel;
+
+    @ReadOnly
+    @XmlElement(name = "currency_date")
+    private Date currencyDate;
+
+    @ReadOnly
+    @XmlElement(name = "price_currency_exchange")
+    private Double priceCurrencyExchange;
+
+    @ReadOnly
+    @XmlElement(name = "good_price_group_currency_exchange")
+    private Double goodPriceGroupCurrencyExchange;
+
+    @XmlElement
+    private Integer template;
+
+    @XmlJavaTypeAdapter(BooleanToIntegerAdapter.class)
+    @XmlElement(name = "auto_send")
+    private Boolean autoSend;
+
+    @XmlElement
+    private String description;
+
+    @ReadOnly
+    @XmlElement
+    private String header;
+
+    @ReadOnly
+    @XmlElement
+    private String footer;
+
+    @ReadOnly
+    @XmlElement(name = "user_name")
+    private String user_name;
+
+    @XmlElement
+    private InvoiceSchema schema;
+
+    @XmlJavaTypeAdapter(BooleanToIntegerAdapter.class)
+    @XmlElement(name = "schema_bill")
+    private Boolean schemaBill;
+
+    @XmlJavaTypeAdapter(BooleanToIntegerAdapter.class)
+    @XmlElement(name = "schema_canceled")
+    private Boolean schemaCanceled;
+
+    @XmlElement(name = "register_description")
+    private String registerDescription;
+
+    @ReadOnly
+    @XmlJavaTypeAdapter(MoneyAdapter.class)
+    @XmlElement
+    private Money netto22;
+
+    @ReadOnly
+    @XmlJavaTypeAdapter(MoneyAdapter.class)
+    @XmlElement
+    private Money netto7;
+
+    @ReadOnly
+    @XmlJavaTypeAdapter(MoneyAdapter.class)
+    @XmlElement
+    private Money netto3;
+
+    @ReadOnly
+    @XmlJavaTypeAdapter(MoneyAdapter.class)
+    @XmlElement
+    private Money netto0;
+
+    @ReadOnly
+    @XmlJavaTypeAdapter(MoneyAdapter.class)
+    @XmlElement(name = "nettozw")
+    private Money nettoZw;
+
+    @ReadOnly
+    @XmlJavaTypeAdapter(MoneyAdapter.class)
+    @XmlElement(name = "nettowdt")
+    private Money nettoWdt;
+
+    @ReadOnly
+    @XmlJavaTypeAdapter(MoneyAdapter.class)
+    @XmlElement(name = "nettoexp")
+    private Money nettoExp;
+
+    @ReadOnly
+    @XmlJavaTypeAdapter(MoneyAdapter.class)
+    @XmlElement(name = "nettonp")
+    private Money nettoNp;
+
+    @ReadOnly
+    @XmlJavaTypeAdapter(MoneyAdapter.class)
+    @XmlElement(name = "nettonpue")
+    private Money nettoNpUe;
+
+    @ReadOnly
+    @XmlJavaTypeAdapter(MoneyAdapter.class)
+    @XmlElement(name = "nettovat_buyer")
+    private Money nettoVatBuyer;
+
+    @ReadOnly
+    @XmlJavaTypeAdapter(MoneyAdapter.class)
+    @XmlElement
+    private Money netto23;
+
+    @ReadOnly
+    @XmlJavaTypeAdapter(MoneyAdapter.class)
+    @XmlElement
+    private Money netto8;
+
+    @ReadOnly
+    @XmlJavaTypeAdapter(MoneyAdapter.class)
+    @XmlElement
+    private Money netto5;
+
+    @ReadOnly
+    @XmlJavaTypeAdapter(MoneyAdapter.class)
+    @XmlElement
+    private Money netto;
+
+    @ReadOnly
+    @XmlJavaTypeAdapter(MoneyAdapter.class)
+    @XmlElement
+    private Money tax22;
+
+    @ReadOnly
+    @XmlJavaTypeAdapter(MoneyAdapter.class)
+    @XmlElement
+    private Money tax7;
+
+    @ReadOnly
+    @XmlJavaTypeAdapter(MoneyAdapter.class)
+    @XmlElement
+    private Money tax3;
+
+    @ReadOnly
+    @XmlJavaTypeAdapter(MoneyAdapter.class)
+    @XmlElement
+    private Money tax23;
+
+    @ReadOnly
+    @XmlJavaTypeAdapter(MoneyAdapter.class)
+    @XmlElement
+    private Money tax8;
+
+    @ReadOnly
+    @XmlJavaTypeAdapter(MoneyAdapter.class)
+    @XmlElement
+    private Money tax5;
+
+    @ReadOnly
+    @XmlJavaTypeAdapter(MoneyAdapter.class)
+    @XmlElement
+    private Money tax;
+
+    @ReadOnly
+    @XmlJavaTypeAdapter(BooleanToIntegerAdapter.class)
+    @XmlElement
+    private Boolean signed;
+
+    @ReadOnly
+    @XmlElement
+    private String hash;
+
+    @XmlElement
+    private String idExternal;
+
+    @ReadOnly
+    @XmlElement(name = "warehouse_type")
+    private WarehouseType warehouseType;
+
+    @ReadOnly
+    @XmlElement
+    private Integer notes;
+
+    @ReadOnly
+    @XmlElement
+    private Integer documents;
+
+    @XmlElement
+    @XmlJavaTypeAdapter(TagsAdapter.class)
+    private Collection<String> tags;
+
+    @ReadOnly
+    @XmlElement
+    @XmlJavaTypeAdapter(DateWithTimeAdapter.class)
+    private Date created;
+
+    @ReadOnly
+    @XmlElement
+    @XmlJavaTypeAdapter(DateWithTimeAdapter.class)
+    private Date modified;
+
+    @XmlElement(name = "price_type")
+    private PriceType priceType;
 
     /**
      * Constructor
@@ -302,6 +521,398 @@ public abstract class AbstractInvoice {
         this.paymentMethod = paymentMethod;
     }
 
+    public String getCorrectionType() {
+        return correctionType;
+    }
+
+    public void setCorrectionType(String correctionType) {
+        this.correctionType = correctionType;
+    }
+
+    public Integer getCorrections() {
+        return corrections;
+    }
+
+    public void setCorrections(Integer corrections) {
+        this.corrections = corrections;
+    }
+
+    public CurrencyUnit getCurrency() {
+        return currency;
+    }
+
+    public void setCurrency(CurrencyUnit currency) {
+        this.currency = currency;
+    }
+
+    public Double getCurrencyExchange() {
+        return currencyExchange;
+    }
+
+    public void setCurrencyExchange(Double currencyExchange) {
+        this.currencyExchange = currencyExchange;
+    }
+
+    public String getCurrencyLabel() {
+        return currencyLabel;
+    }
+
+    public void setCurrencyLabel(String currencyLabel) {
+        this.currencyLabel = currencyLabel;
+    }
+
+    public Date getCurrencyDate() {
+        return currencyDate;
+    }
+
+    public void setCurrencyDate(Date currencyDate) {
+        this.currencyDate = currencyDate;
+    }
+
+    public Double getPriceCurrencyExchange() {
+        return priceCurrencyExchange;
+    }
+
+    public void setPriceCurrencyExchange(Double priceCurrencyExchange) {
+        this.priceCurrencyExchange = priceCurrencyExchange;
+    }
+
+    public Double getGoodPriceGroupCurrencyExchange() {
+        return goodPriceGroupCurrencyExchange;
+    }
+
+    public void setGoodPriceGroupCurrencyExchange(Double goodPriceGroupCurrencyExchange) {
+        this.goodPriceGroupCurrencyExchange = goodPriceGroupCurrencyExchange;
+    }
+
+    public Integer getTemplate() {
+        return template;
+    }
+
+    public void setTemplate(Integer template) {
+        this.template = template;
+    }
+
+    public Boolean isAutoSend() {
+        return autoSend;
+    }
+
+    public void setAutoSend(Boolean autoSend) {
+        this.autoSend = autoSend;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getHeader() {
+        return header;
+    }
+
+    public void setHeader(String header) {
+        this.header = header;
+    }
+
+    public String getFooter() {
+        return footer;
+    }
+
+    public void setFooter(String footer) {
+        this.footer = footer;
+    }
+
+    public String getUser_name() {
+        return user_name;
+    }
+
+    public void setUser_name(String user_name) {
+        this.user_name = user_name;
+    }
+
+    public InvoiceSchema getSchema() {
+        return schema;
+    }
+
+    public void setSchema(InvoiceSchema schema) {
+        this.schema = schema;
+    }
+
+    public Boolean isSchemaBill() {
+        return schemaBill;
+    }
+
+    public void setSchemaBill(Boolean schemaBill) {
+        this.schemaBill = schemaBill;
+    }
+
+    public Boolean isSchemaCanceled() {
+        return schemaCanceled;
+    }
+
+    public void setSchemaCanceled(Boolean schemaCanceled) {
+        this.schemaCanceled = schemaCanceled;
+    }
+
+    public String getRegisterDescription() {
+        return registerDescription;
+    }
+
+    public void setRegisterDescription(String registerDescription) {
+        this.registerDescription = registerDescription;
+    }
+
+    public Money getNetto22() {
+        return netto22;
+    }
+
+    public void setNetto22(Money netto22) {
+        this.netto22 = netto22;
+    }
+
+    public Money getNetto7() {
+        return netto7;
+    }
+
+    public void setNetto7(Money netto7) {
+        this.netto7 = netto7;
+    }
+
+    public Money getNetto3() {
+        return netto3;
+    }
+
+    public void setNetto3(Money netto3) {
+        this.netto3 = netto3;
+    }
+
+    public Money getNetto0() {
+        return netto0;
+    }
+
+    public void setNetto0(Money netto0) {
+        this.netto0 = netto0;
+    }
+
+    public Money getNettoZw() {
+        return nettoZw;
+    }
+
+    public void setNettoZw(Money nettoZw) {
+        this.nettoZw = nettoZw;
+    }
+
+    public Money getNettoWdt() {
+        return nettoWdt;
+    }
+
+    public void setNettoWdt(Money nettoWdt) {
+        this.nettoWdt = nettoWdt;
+    }
+
+    public Money getNettoExp() {
+        return nettoExp;
+    }
+
+    public void setNettoExp(Money nettoExp) {
+        this.nettoExp = nettoExp;
+    }
+
+    public Money getNettoNp() {
+        return nettoNp;
+    }
+
+    public void setNettoNp(Money nettoNp) {
+        this.nettoNp = nettoNp;
+    }
+
+    public Money getNettoNpUe() {
+        return nettoNpUe;
+    }
+
+    public void setNettoNpUe(Money nettoNpUe) {
+        this.nettoNpUe = nettoNpUe;
+    }
+
+    public Money getNettoVatBuyer() {
+        return nettoVatBuyer;
+    }
+
+    public void setNettoVatBuyer(Money nettoVatBuyer) {
+        this.nettoVatBuyer = nettoVatBuyer;
+    }
+
+    public Money getNetto23() {
+        return netto23;
+    }
+
+    public void setNetto23(Money netto23) {
+        this.netto23 = netto23;
+    }
+
+    public Money getNetto8() {
+        return netto8;
+    }
+
+    public void setNetto8(Money netto8) {
+        this.netto8 = netto8;
+    }
+
+    public Money getNetto5() {
+        return netto5;
+    }
+
+    public void setNetto5(Money netto5) {
+        this.netto5 = netto5;
+    }
+
+    public Money getNetto() {
+        return netto;
+    }
+
+    public void setNetto(Money netto) {
+        this.netto = netto;
+    }
+
+    public Money getTax22() {
+        return tax22;
+    }
+
+    public void setTax22(Money tax22) {
+        this.tax22 = tax22;
+    }
+
+    public Money getTax7() {
+        return tax7;
+    }
+
+    public void setTax7(Money tax7) {
+        this.tax7 = tax7;
+    }
+
+    public Money getTax3() {
+        return tax3;
+    }
+
+    public void setTax3(Money tax3) {
+        this.tax3 = tax3;
+    }
+
+    public Money getTax23() {
+        return tax23;
+    }
+
+    public void setTax23(Money tax23) {
+        this.tax23 = tax23;
+    }
+
+    public Money getTax8() {
+        return tax8;
+    }
+
+    public void setTax8(Money tax8) {
+        this.tax8 = tax8;
+    }
+
+    public Money getTax5() {
+        return tax5;
+    }
+
+    public void setTax5(Money tax5) {
+        this.tax5 = tax5;
+    }
+
+    public Money getTax() {
+        return tax;
+    }
+
+    public void setTax(Money tax) {
+        this.tax = tax;
+    }
+
+    public Boolean isSigned() {
+        return signed;
+    }
+
+    public void setSigned(Boolean signed) {
+        this.signed = signed;
+    }
+
+    public String getHash() {
+        return hash;
+    }
+
+    public void setHash(String hash) {
+        this.hash = hash;
+    }
+
+    public String getIdExternal() {
+        return idExternal;
+    }
+
+    public void setIdExternal(String idExternal) {
+        this.idExternal = idExternal;
+    }
+
+    public WarehouseType getWarehouseType() {
+        return warehouseType;
+    }
+
+    public void setWarehouseType(WarehouseType warehouseType) {
+        this.warehouseType = warehouseType;
+    }
+
+    public Integer getNotes() {
+        return notes;
+    }
+
+    public void setNotes(Integer notes) {
+        this.notes = notes;
+    }
+
+    public Integer getDocuments() {
+        return documents;
+    }
+
+    public void setDocuments(Integer documents) {
+        this.documents = documents;
+    }
+
+    public Collection<String> getTags() {
+        return tags;
+    }
+
+    public void setTags(Collection<String> tags) {
+        this.tags = tags;
+    }
+
+    public Date getCreated() {
+        return created;
+    }
+
+    public void setCreated(Date created) {
+        this.created = created;
+    }
+
+    public Date getModified() {
+        return modified;
+    }
+
+    public void setModified(Date modified) {
+        this.modified = modified;
+    }
+
+    public PriceType getPriceType() {
+        return priceType;
+    }
+
+    public void setPriceType(PriceType priceType) {
+        this.priceType = priceType;
+    }
+
     /**
      * Metoda płatności
      */
@@ -340,6 +951,24 @@ public abstract class AbstractInvoice {
         receipt_bill,
         receipt_fiscal_bill,
         income_bill
+    }
+
+    /**
+     * Schemat księgowy. W przypadku faktur dotyczących sprzedaży po 1 stycznia 2014 należy stosować schematy
+     */
+    public static enum InvoiceSchema {
+
+        normal, vat_invoice_date, assessor
+    }
+
+    public static enum WarehouseType {
+
+        extended, simple
+    }
+
+    public static enum PriceType {
+
+        netto, brutto
     }
 
 }
