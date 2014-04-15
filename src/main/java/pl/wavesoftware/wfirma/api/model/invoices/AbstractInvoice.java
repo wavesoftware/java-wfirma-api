@@ -40,23 +40,7 @@ import pl.wavesoftware.wfirma.api.model.utils.ReadOnly;
 
 /**
  * <p>
- * Java class for invoiceType complex type.
- *
- * <p>
- * The following schema fragment specifies the expected content contained within this class.
- *
- * <pre>
- * &lt;complexType name="invoiceType">
- *   &lt;complexContent>
- *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
- *       &lt;sequence>
- *         &lt;element name="id" type="{http://www.w3.org/2001/XMLSchema}long"/>
- *         &lt;element name="name" type="{http://www.w3.org/2001/XMLSchema}string"/>
- *       &lt;/sequence>
- *     &lt;/restriction>
- *   &lt;/complexContent>
- * &lt;/complexType>
- * </pre>
+ * A abstracr base Java class for invoiceType complex type.
  *
  * @author Krzysztof Suszyński <krzysztof.suszynski@wavesoftware.pl>
  */
@@ -67,7 +51,7 @@ public abstract class AbstractInvoice {
     @XmlElement
     private Long id;
 
-    @XmlElement(required = true)
+    @XmlTransient
     protected TypeOfInvoice type;
 
     @XmlElement(name = "paymentmethod")

@@ -48,7 +48,8 @@ public class InvoicesTest {
         return PojoValidationFactory.createPojoClassList(
                 InvoicesApi.class,
                 Invoices.class,
-                NormalInvoice.class
+                NormalInvoice.class,
+                ProformaInvoice.class
         );
     }
 

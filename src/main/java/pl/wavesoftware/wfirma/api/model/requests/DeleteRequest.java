@@ -21,12 +21,12 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-
 package pl.wavesoftware.wfirma.api.model.requests;
 
+import pl.wavesoftware.wfirma.api.mapper.Api;
 import pl.wavesoftware.wfirma.api.mapper.RequestPath;
 import pl.wavesoftware.wfirma.api.model.ApiEntityElement;
-import pl.wavesoftware.wfirma.api.model.ApiModule;
+import pl.wavesoftware.wfirma.api.mapper.ApiModule;
 import pl.wavesoftware.wfirma.api.model.Request;
 
 /**
@@ -35,7 +35,7 @@ import pl.wavesoftware.wfirma.api.model.Request;
  */
 public class DeleteRequest implements Request {
 
-    private final ApiModule module;
+    private final Class<? extends Api> module;
 
     private final Long wfirmaId;
 
@@ -45,19 +45,19 @@ public class DeleteRequest implements Request {
      * @param module a module of api
      * @param wfirmaId a ID of wfirma
      */
-    public DeleteRequest(ApiModule module, Long wfirmaId) {
+    public DeleteRequest(Class<? extends Api> module, Long wfirmaId) {
         this.module = module;
         this.wfirmaId = wfirmaId;
     }
 
     @Override
     public RequestPath getAddress() {
-        return RequestPath.fromString(module.name().toLowerCase(), "delete", wfirmaId.toString());
+        return RequestPath.fromString(ApiModule.getRequestModulePath(module), "delete", wfirmaId.toString());
     }
 
     @Override
     public Class<? extends ApiEntityElement> getEntityClass() {
-        return module.getEntityClass();
+        return ApiModule.getEntityClass(module);
     }
 
 }

@@ -21,23 +21,37 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package pl.wavesoftware.wfirma.api.model.requests;
+package pl.wavesoftware.wfirma.api.mapper.xml;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import org.junit.Test;
-import pl.wavesoftware.wfirma.api.model.companies.CompaniesApi;
+import pl.wavesoftware.wfirma.api.mapper.xml.UsesXmlCustomFormatter.Param;
 
 /**
+ * Custom XML formatter
  *
  * @author Krzysztof Suszyński <krzysztof.suszynski@wavesoftware.pl>
  */
-public class GetRequestTest {
+public interface XmlCustomFormatter {
 
-    @Test
-    public void testGetAddress() {
-        GetRequest instance = new GetRequest(CompaniesApi.class, 5L);
-        String result = instance.getAddress().getCorrectedPath();
-        assertThat(result).isEqualTo("/companies/get/5");
-    }
+    /**
+     * Configures a formatter
+     *
+     * @param configuration a configuration
+     */
+    void configure(Param[] configuration);
 
+    /**
+     * Adds a custom formatting to XML source
+     *
+     * @param input a input unformatted XML source
+     * @return a formatted XML output
+     */
+    String format(String input);
+
+    /**
+     * Removes a custom formatting from XML source
+     *
+     * @param input a input formatted XML source
+     * @return an unformatted XML output
+     */
+    String unformat(String input);
 }

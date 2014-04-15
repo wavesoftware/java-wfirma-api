@@ -21,13 +21,13 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-
 package pl.wavesoftware.wfirma.api.model.requests;
 
+import pl.wavesoftware.wfirma.api.mapper.Api;
 import pl.wavesoftware.wfirma.api.mapper.RequestPath;
 import pl.wavesoftware.wfirma.api.mapper.xml.JaxbMarshaller;
 import pl.wavesoftware.wfirma.api.model.ApiEntityElement;
-import pl.wavesoftware.wfirma.api.model.ApiModule;
+import pl.wavesoftware.wfirma.api.mapper.ApiModule;
 import pl.wavesoftware.wfirma.api.model.Parametrizable;
 import pl.wavesoftware.wfirma.api.model.PostRequest;
 import pl.wavesoftware.wfirma.api.model.logic.Parameters;
@@ -39,7 +39,7 @@ import pl.wavesoftware.wfirma.api.model.logic.Parameters;
  */
 public class FindRequest<T extends ApiEntityElement> implements PostRequest<T> {
 
-    private final ApiModule module;
+    private final Class<? extends Api> module;
 
     private final T entity;
 
@@ -49,11 +49,13 @@ public class FindRequest<T extends ApiEntityElement> implements PostRequest<T> {
      * @param module a module of api
      * @param parameters a parameters to find element
      */
-    public FindRequest(ApiModule module, Parameters parameters) {
+    public FindRequest(Class<? extends Api> module, Parameters parameters) {
         this.module = module;
         try {
-            Class<T> cls = module.getEntityClass();
-            this.entity = cls.newInstance();
+            Class<? extends ApiEntityElement> cls = ApiModule.getEntityClass(module);
+            @SuppressWarnings("unchecked")
+            T en = (T) cls.newInstance();
+            this.entity = en;
             if (entity instanceof Parametrizable && parameters != null) {
                 Parametrizable params = (Parametrizable) entity;
                 params.setParameters(parameters);
@@ -63,13 +65,13 @@ public class FindRequest<T extends ApiEntityElement> implements PostRequest<T> {
         }
     }
 
-    public FindRequest(ApiModule module) {
+    public FindRequest(Class<? extends Api> module) {
         this(module, null);
     }
 
     @Override
     public RequestPath getAddress() {
-        return RequestPath.fromString(module.name().toLowerCase(), "find");
+        return RequestPath.fromString(ApiModule.getRequestModulePath(module), "find");
     }
 
     @Override

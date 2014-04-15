@@ -21,23 +21,35 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package pl.wavesoftware.wfirma.api.model.requests;
+package pl.wavesoftware.wfirma.api.mapper.xml;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import org.junit.Test;
-import pl.wavesoftware.wfirma.api.model.companies.CompaniesApi;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
  *
  * @author Krzysztof Suszyński <krzysztof.suszynski@wavesoftware.pl>
  */
-public class GetRequestTest {
+@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.TYPE)
+public @interface UsesXmlCustomFormatter {
 
-    @Test
-    public void testGetAddress() {
-        GetRequest instance = new GetRequest(CompaniesApi.class, 5L);
-        String result = instance.getAddress().getCorrectedPath();
-        assertThat(result).isEqualTo("/companies/get/5");
+    /**
+     * A value of an annotation
+     *
+     * @return a class of XML custom formatter
+     */
+    Class<? extends XmlCustomFormatter> value();
+
+    Param[] parameters() default {};
+
+    @Retention(RetentionPolicy.RUNTIME)
+    public @interface Param {
+
+        String key();
+
+        String value();
     }
-
 }

@@ -30,9 +30,9 @@ import static org.assertj.core.api.Assertions.failBecauseExceptionWasNotThrown;
 import org.joda.money.CurrencyUnit;
 import org.joda.money.Money;
 import org.junit.Test;
-import pl.wavesoftware.wfirma.api.model.ApiModule;
 import pl.wavesoftware.wfirma.api.model.WFirmaException;
 import pl.wavesoftware.wfirma.api.model.companies.Companies;
+import pl.wavesoftware.wfirma.api.model.companies.CompaniesApi;
 import pl.wavesoftware.wfirma.api.model.companies.Company;
 import pl.wavesoftware.wfirma.api.model.contractors.Contractor;
 import pl.wavesoftware.wfirma.api.model.contractors.Contractors;
@@ -59,7 +59,7 @@ public class RequestValidatorTest {
         RequestValidator instance = new RequestValidator(edit);
         assertThat(instance.isValid()).isFalse();
 
-        GetRequest get = new GetRequest(ApiModule.COMPANIES, 6L);
+        GetRequest get = new GetRequest(CompaniesApi.class, 6L);
         instance = new RequestValidator(get);
         assertThat(instance.isValid()).isTrue();
     }
@@ -73,12 +73,12 @@ public class RequestValidatorTest {
         RequestValidator instance = new RequestValidator(edit);
         Collection<String> result = instance.getErrors();
         assertThat(result).containsExactly("`EditRequest` is not supported by "
-                + "`COMPANIES` API module. Only supported request are: `GetRequest`");
+                + "`CompaniesApi` module. Only supported request are: `GetRequest`");
     }
 
     @Test
     public void testValidate() throws Exception {
-        GetRequest get = new GetRequest(ApiModule.COMPANIES, 6l);
+        GetRequest get = new GetRequest(CompaniesApi.class, 6l);
         RequestValidator instance = new RequestValidator(get);
         instance.validate();
         assertThat(instance).isNotNull();
@@ -96,7 +96,7 @@ public class RequestValidatorTest {
             failBecauseExceptionWasNotThrown(WFirmaException.class);
         } catch (WFirmaException wfse) {
             assertThat(wfse).hasMessage("Validation errors: [`EditRequest` is not supported by "
-                    + "`COMPANIES` API module. Only supported request are: `GetRequest`]");
+                    + "`CompaniesApi` module. Only supported request are: `GetRequest`]");
         }
     }
 

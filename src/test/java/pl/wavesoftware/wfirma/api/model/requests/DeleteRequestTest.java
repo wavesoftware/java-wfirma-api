@@ -21,12 +21,11 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-
 package pl.wavesoftware.wfirma.api.model.requests;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import org.junit.Test;
-import pl.wavesoftware.wfirma.api.model.ApiModule;
+import pl.wavesoftware.wfirma.api.model.companies.CompaniesApi;
 
 /**
  *
@@ -36,7 +35,7 @@ public class DeleteRequestTest {
 
     @Test
     public void testGetAddress() {
-        DeleteRequest instance = new DeleteRequest(ApiModule.COMPANIES, 5L);
+        DeleteRequest instance = new DeleteRequest(CompaniesApi.class, 5L);
         String result = instance.getAddress().getCorrectedPath();
         assertThat(result).isEqualTo("/companies/delete/5");
     }

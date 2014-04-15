@@ -21,23 +21,39 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package pl.wavesoftware.wfirma.api.model.requests;
+package pl.wavesoftware.wfirma.api.model.invoices;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import org.junit.Test;
-import pl.wavesoftware.wfirma.api.model.companies.CompaniesApi;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlType;
+import pl.wavesoftware.wfirma.api.model.utils.ReadOnly;
 
 /**
  *
  * @author Krzysztof Suszyński <krzysztof.suszynski@wavesoftware.pl>
  */
-public class GetRequestTest {
+@XmlAccessorType(XmlAccessType.FIELD)
+@XmlType(name = "proforma")
+public class ProformaInvoice extends AbstractInvoice {
 
-    @Test
-    public void testGetAddress() {
-        GetRequest instance = new GetRequest(CompaniesApi.class, 5L);
-        String result = instance.getAddress().getCorrectedPath();
-        assertThat(result).isEqualTo("/companies/get/5");
+    @ReadOnly
+    @XmlElement(name = "fullnumber")
+    private String fullNumber;
+
+    /**
+     * Constructor
+     */
+    public ProformaInvoice() {
+        super(TypeOfInvoice.proforma);
+    }
+
+    public String getFullNumber() {
+        return fullNumber;
+    }
+
+    public void setFullNumber(String fullNumber) {
+        this.fullNumber = fullNumber;
     }
 
 }

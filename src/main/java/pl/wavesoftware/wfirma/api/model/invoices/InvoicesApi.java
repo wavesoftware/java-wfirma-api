@@ -21,9 +21,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-
 package pl.wavesoftware.wfirma.api.model.invoices;
 
+import java.util.Collection;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
@@ -31,7 +31,17 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
 import pl.wavesoftware.wfirma.api.mapper.Api;
+import pl.wavesoftware.wfirma.api.mapper.xml.UsesXmlCustomFormatter;
+import pl.wavesoftware.wfirma.api.mapper.xml.UsesXmlCustomFormatter.Param;
+import pl.wavesoftware.wfirma.api.mapper.xml.XsiTypeToObjectPropertyFormatter;
 import pl.wavesoftware.wfirma.api.model.ApiEntityElement;
+import static pl.wavesoftware.wfirma.api.mapper.ApiModule.collectRequests;
+import pl.wavesoftware.wfirma.api.model.Request;
+import pl.wavesoftware.wfirma.api.model.requests.AddRequest;
+import pl.wavesoftware.wfirma.api.model.requests.DeleteRequest;
+import pl.wavesoftware.wfirma.api.model.requests.EditRequest;
+import pl.wavesoftware.wfirma.api.model.requests.FindRequest;
+import pl.wavesoftware.wfirma.api.model.requests.GetRequest;
 
 /**
  * <p>
@@ -51,14 +61,15 @@ import pl.wavesoftware.wfirma.api.model.ApiEntityElement;
  *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
- *
- *
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "invoicesApiType", propOrder = {
     "invoices"
 })
 @XmlRootElement(name = "api")
+@UsesXmlCustomFormatter(value = XsiTypeToObjectPropertyFormatter.class, parameters = {
+    @Param(key = XsiTypeToObjectPropertyFormatter.FIELD, value = "type")
+})
 public class InvoicesApi implements Api {
 
     /**
@@ -92,6 +103,18 @@ public class InvoicesApi implements Api {
     @XmlTransient
     public Class<? extends ApiEntityElement> getEntityClass() {
         return Invoices.class;
+    }
+
+    @Override
+    @XmlTransient
+    public Collection<Class<? extends Request>> getSupportedRequests() {
+        return collectRequests(
+                GetRequest.class,
+                AddRequest.class,
+                FindRequest.class,
+                DeleteRequest.class,
+                EditRequest.class
+        );
     }
 
 }

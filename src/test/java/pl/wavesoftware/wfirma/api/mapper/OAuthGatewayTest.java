@@ -21,16 +21,15 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-
 package pl.wavesoftware.wfirma.api.mapper;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import org.junit.Test;
 import org.mockito.Mockito;
 import pl.wavesoftware.wfirma.api.OAuthCredentials;
-import pl.wavesoftware.wfirma.api.model.ApiModule;
 import pl.wavesoftware.wfirma.api.model.Request;
 import pl.wavesoftware.wfirma.api.model.companies.Companies;
+import pl.wavesoftware.wfirma.api.model.companies.CompaniesApi;
 import pl.wavesoftware.wfirma.api.model.requests.FindRequest;
 import pl.wavesoftware.wfirma.api.model.requests.GetRequest;
 
@@ -48,14 +47,14 @@ public class OAuthGatewayTest {
 
     @Test(expected = UnsupportedOperationException.class)
     public void testGet() throws Exception {
-        Request request = new GetRequest(ApiModule.COMPANIES, 5L);
+        Request request = new GetRequest(CompaniesApi.class, 5L);
         OAuthGateway instance = new OAuthGateway(creds);
         assertThat(instance.get(request)).isNotNull();
     }
 
     @Test(expected = UnsupportedOperationException.class)
     public void testPost() throws Exception {
-        FindRequest<Companies> request = new FindRequest<>(ApiModule.COMPANIES);
+        FindRequest<Companies> request = new FindRequest<>(CompaniesApi.class);
         OAuthGateway instance = new OAuthGateway(creds);
         assertThat(instance.post(request)).isNotNull();
     }

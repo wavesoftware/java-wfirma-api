@@ -30,7 +30,8 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import pl.wavesoftware.wfirma.api.model.ApiModule;
+import pl.wavesoftware.wfirma.api.mapper.Api;
+import pl.wavesoftware.wfirma.api.mapper.ApiModule;
 import pl.wavesoftware.wfirma.api.model.Request;
 import pl.wavesoftware.wfirma.api.model.WFirmaException;
 import pl.wavesoftware.wfirma.api.model.requests.EditRequest;
@@ -75,9 +76,11 @@ public class RequestValidator {
     }
 
     private void validateIsSupported(Collection<String> errs) {
-        ApiModule module = ApiModule.getModuleFor(request.getEntityClass());
+        Class<? extends Api> module = ApiModule.getModuleFor(request.getEntityClass());
+        Api api = ApiModule.createSampleApi(request.getEntityClass());
+        Collection<Class<? extends Request>> supported = api.getSupportedRequests();
         boolean found = false;
-        for (Class<? extends Request> cls : module.getSupportedRequests()) {
+        for (Class<? extends Request> cls : supported) {
             if (cls.isAssignableFrom(request.getClass())) {
                 found = true;
                 break;
@@ -85,13 +88,13 @@ public class RequestValidator {
         }
         if (!found) {
             String template = "`%s` is not supported by "
-                    + "`%s` API module. Only supported request are: `%s`";
+                    + "`%s` module. Only supported request are: `%s`";
             List<String> simple = new ArrayList<>();
-            for (Class<? extends Request> cls : module.getSupportedRequests()) {
+            for (Class<? extends Request> cls : supported) {
                 simple.add(cls.getSimpleName());
             }
             String valid = Joiner.on("`, `").join(simple);
-            errs.add(String.format(template, request.getClass().getSimpleName(), module.name(), valid));
+            errs.add(String.format(template, request.getClass().getSimpleName(), module.getSimpleName(), valid));
         }
     }
 

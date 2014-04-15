@@ -34,7 +34,7 @@ import pl.wavesoftware.wfirma.api.model.utils.ReadOnly;
  * @author Krzysztof Suszyński <krzysztof.suszynski@wavesoftware.pl>
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "normalInvoiceType")
+@XmlType(name = "normal")
 public class NormalInvoice extends AbstractInvoice {
 
     @ReadOnly

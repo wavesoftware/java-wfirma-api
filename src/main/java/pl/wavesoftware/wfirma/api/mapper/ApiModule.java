@@ -1,0 +1,125 @@
+/*
+ * The MIT License
+ *
+ * Copyright 2014 Krzysztof Suszyński <krzysztof.suszynski@wavesoftware.pl>.
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ */
+package pl.wavesoftware.wfirma.api.mapper;
+
+import com.google.common.base.CaseFormat;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import pl.wavesoftware.wfirma.api.mapper.Api;
+import pl.wavesoftware.wfirma.api.model.ApiEntityElement;
+import pl.wavesoftware.wfirma.api.model.Request;
+
+/**
+ *
+ * @author Krzysztof Suszyński <krzysztof.suszynski@wavesoftware.pl>
+ */
+public final class ApiModule {
+
+    /**
+     * Makes a collection of classes from input
+     *
+     * @param classes a input classes
+     * @return a collection of classes
+     */
+    public static Collection<Class<? extends Request>> collectRequests(Class<?>... classes) {
+        List<Class<? extends Request>> out = new ArrayList<>();
+        for (Class<?> class1 : classes) {
+            if (Request.class.isAssignableFrom(class1)) {
+                @SuppressWarnings("unchecked")
+                Class<? extends Request> casted = (Class<? extends Request>) class1;
+                out.add(casted);
+            } else {
+                throw new IllegalArgumentException("Class `" + class1 + "` is not instance of Request");
+            }
+        }
+        return out;
+    }
+
+    /**
+     * Creates a sample API object
+     *
+     * @param entityClass a entity class
+     * @return a sample API
+     */
+    public static Api createSampleApi(Class<? extends ApiEntityElement> entityClass) {
+        try {
+            ApiEntityElement entity = entityClass.newInstance();
+            return entity.getApi();
+        } catch (InstantiationException | IllegalAccessException ex) {
+            throw new RuntimeException(ex);
+        }
+    }
+
+    /**
+     * Gets a request module path
+     *
+     * @param apiClass a api class
+     * @return a string for request
+     */
+    public static String getRequestModulePath(Class<? extends Api> apiClass) {
+        String name = apiClass.getSimpleName().replaceAll("Api$", "");
+        return CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, name);
+    }
+
+    /**
+     * Gets a entity class for enum
+     *
+     * @param apiClass a class of API
+     * @return a class of entity
+     */
+    public static Class<? extends ApiEntityElement> getEntityClass(Class<? extends Api> apiClass) {
+        try {
+            Class<? extends ApiEntityElement> ret = apiClass.newInstance().getEntityClass();
+            return ret;
+        } catch (InstantiationException | IllegalAccessException ex) {
+            throw new RuntimeException(ex);
+        }
+    }
+
+    /**
+     * Gets a module for entity object
+     *
+     * @param entity a entity object
+     * @return a enum module
+     */
+    public static Class<? extends Api> getModuleFor(ApiEntityElement entity) {
+        return ApiModule.getModuleFor(entity.getClass());
+    }
+
+    /**
+     * Gets a module for entity object
+     *
+     * @param cls a entity class
+     * @return a enum module
+     */
+    public static Class<? extends Api> getModuleFor(Class<? extends ApiEntityElement> cls) {
+        try {
+            return cls.newInstance().getApi().getClass();
+        } catch (InstantiationException | IllegalAccessException ex) {
+            throw new RuntimeException(ex);
+        }
+    }
+
+}

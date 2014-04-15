@@ -28,7 +28,6 @@ import java.util.List;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlElements;
 import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
 import pl.wavesoftware.wfirma.api.mapper.Api;
@@ -87,9 +86,7 @@ public class Invoices implements Parametrizable, ApiEntityElement {
         setApi((InvoicesApi) api);
     }
 
-    @XmlElements({
-        @XmlElement(required = true, name = "normalInvoiceType", type = NormalInvoice.class)
-    })
+    @XmlElement(required = true)
     protected List<AbstractInvoice> invoice;
 
     @XmlElement(required = false)

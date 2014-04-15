@@ -21,13 +21,13 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-
 package pl.wavesoftware.wfirma.api.model.requests;
 
+import pl.wavesoftware.wfirma.api.mapper.Api;
 import pl.wavesoftware.wfirma.api.mapper.RequestPath;
 import pl.wavesoftware.wfirma.api.mapper.xml.JaxbMarshaller;
 import pl.wavesoftware.wfirma.api.model.ApiEntityElement;
-import pl.wavesoftware.wfirma.api.model.ApiModule;
+import pl.wavesoftware.wfirma.api.mapper.ApiModule;
 import pl.wavesoftware.wfirma.api.model.PostRequest;
 
 /**
@@ -37,12 +37,12 @@ import pl.wavesoftware.wfirma.api.model.PostRequest;
  */
 public class AddRequest<T extends ApiEntityElement> implements PostRequest<T> {
 
-    private final ApiModule module;
+    private final Api module;
 
     private final T entity;
 
     private AddRequest(T entity) {
-        this.module = ApiModule.getModuleFor(entity);
+        this.module = ApiModule.createSampleApi(entity.getClass());
         this.entity = entity;
     }
 
@@ -60,7 +60,7 @@ public class AddRequest<T extends ApiEntityElement> implements PostRequest<T> {
 
     @Override
     public RequestPath getAddress() {
-        return RequestPath.fromString(module.name().toLowerCase(), "add");
+        return RequestPath.fromString(ApiModule.getRequestModulePath(module.getClass()), "add");
     }
 
     @Override

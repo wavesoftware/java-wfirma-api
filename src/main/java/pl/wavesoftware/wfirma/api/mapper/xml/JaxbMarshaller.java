@@ -21,13 +21,16 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-
 package pl.wavesoftware.wfirma.api.mapper.xml;
 
+import com.google.common.reflect.ClassPath;
 import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
+import java.util.HashSet;
+import java.util.Set;
 import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
@@ -71,6 +74,25 @@ public class JaxbMarshaller<Type> {
         this.type = cls;
     }
 
+    private JAXBContext getContext() {
+        try {
+            final Package pack = type.getPackage();
+            final ClassLoader loader = Thread.currentThread().getContextClassLoader();
+
+            Set<Class<? extends Object>> classes = new HashSet<>();
+            for (final ClassPath.ClassInfo info : ClassPath.from(loader).getTopLevelClasses()) {
+                if (info.getName().startsWith(pack.getName()) && !info.getName().endsWith("Test")) {
+                    classes.add(info.load());
+                }
+            }
+            Class<?>[] arr = new Class<?>[classes.size()];
+            classes.toArray(arr);
+            return JAXBContext.newInstance(arr);
+        } catch (JAXBException | IOException ex) {
+            throw new RuntimeException(ex);
+        }
+    }
+
     /**
      * Marshal a object to string
      *
@@ -79,7 +101,7 @@ public class JaxbMarshaller<Type> {
      */
     public String marshal(Type object) {
         try {
-            JAXBContext jaxbContext = JAXBContext.newInstance(type);
+            JAXBContext jaxbContext = getContext();
             Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
 
             // output pretty printed
@@ -87,7 +109,7 @@ public class JaxbMarshaller<Type> {
 
             try (StringWriter sw = new StringWriter()) {
                 jaxbMarshaller.marshal(object, sw);
-                return sw.toString();
+                return format(sw.toString());
             } catch (IOException ex) {
                 throw new IllegalStateException(ex);
             }
@@ -104,15 +126,45 @@ public class JaxbMarshaller<Type> {
      */
     public Type unmarshal(String input) {
         try {
-            JAXBContext jaxbContext = JAXBContext.newInstance(type);
+            JAXBContext jaxbContext = getContext();
 
             Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
-            try (StringReader sr = new StringReader(input)) {
-                return type.cast(jaxbUnmarshaller.unmarshal(sr));
+            try (StringReader sr = new StringReader(unformat(input))) {
+                Object element = jaxbUnmarshaller.unmarshal(sr);
+                if (element instanceof JAXBElement) {
+                    @SuppressWarnings("unchecked")
+                    JAXBElement<Type> jaxbe = (JAXBElement<Type>) element;
+                    return jaxbe.getValue();
+                }
+                return type.cast(element);
             }
         } catch (JAXBException ex) {
             throw new IllegalStateException(ex);
         }
+    }
+
+    private XmlCustomFormatter getFormatter() {
+        try {
+            UsesXmlCustomFormatter annot = type.getAnnotation(UsesXmlCustomFormatter.class);
+            XmlCustomFormatter formatter = null;
+            if (annot != null) {
+                formatter = annot.value().newInstance();
+                formatter.configure(annot.parameters());
+            }
+            return formatter;
+        } catch (InstantiationException | IllegalAccessException ex) {
+            throw new RuntimeException(ex);
+        }
+    }
+
+    private String format(String input) {
+        XmlCustomFormatter formatter = getFormatter();
+        return (formatter != null) ? formatter.format(input) : input;
+    }
+
+    private String unformat(String input) {
+        XmlCustomFormatter formatter = getFormatter();
+        return (formatter != null) ? formatter.unformat(input) : input;
     }
 
 }

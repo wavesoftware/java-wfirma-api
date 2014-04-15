@@ -21,9 +21,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-
 package pl.wavesoftware.wfirma.api.model.companies;
 
+import java.util.Collection;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
@@ -32,6 +32,9 @@ import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
 import pl.wavesoftware.wfirma.api.mapper.Api;
 import pl.wavesoftware.wfirma.api.model.ApiEntityElement;
+import static pl.wavesoftware.wfirma.api.mapper.ApiModule.collectRequests;
+import pl.wavesoftware.wfirma.api.model.Request;
+import pl.wavesoftware.wfirma.api.model.requests.GetRequest;
 
 /**
  * <p>
@@ -78,6 +81,12 @@ public class CompaniesApi implements Api {
     @XmlTransient
     public Class<? extends ApiEntityElement> getEntityClass() {
         return Companies.class;
+    }
+
+    @Override
+    @XmlTransient
+    public Collection<Class<? extends Request>> getSupportedRequests() {
+        return collectRequests(GetRequest.class);
     }
 
 }

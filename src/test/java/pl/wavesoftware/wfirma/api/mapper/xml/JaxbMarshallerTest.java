@@ -45,6 +45,7 @@ import pl.wavesoftware.wfirma.api.model.invoices.AbstractInvoice;
 import pl.wavesoftware.wfirma.api.model.invoices.Invoices;
 import pl.wavesoftware.wfirma.api.model.invoices.InvoicesApi;
 import pl.wavesoftware.wfirma.api.model.invoices.NormalInvoice;
+import pl.wavesoftware.wfirma.api.model.invoices.ProformaInvoice;
 import pl.wavesoftware.wfirma.api.model.logic.And;
 import pl.wavesoftware.wfirma.api.model.logic.LogicalOperator;
 import pl.wavesoftware.wfirma.api.model.logic.ObjectFactory;
@@ -213,9 +214,8 @@ public class JaxbMarshallerTest {
         String expected = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n"
                 + "<api>\n"
                 + "    <invoices>\n"
-                + "        <normalInvoiceType>\n"
+                + "        <invoice>\n"
                 + "            <id>13</id>\n"
-                + "            <type>normal</type>\n"
                 + "            <paymentmethod>payment_card</paymentmethod>\n"
                 + "            <paymentstate>unpaid</paymentstate>\n"
                 + "            <disposaldate_form>month</disposaldate_form>\n"
@@ -233,7 +233,8 @@ public class JaxbMarshallerTest {
                 + "            <semitemplatenumber>FV [number]/[year]</semitemplatenumber>\n"
                 + "            <tags>(fun),(new),(tags)</tags>\n"
                 + "            <fullnumber>FV 3/2014</fullnumber>\n"
-                + "        </normalInvoiceType>\n"
+                + "            <type>normal</type>\n"
+                + "        </invoice>\n"
                 + "    </invoices>\n"
                 + "</api>\n";
         assertThat(result).isEqualTo(expected);
@@ -245,6 +246,29 @@ public class JaxbMarshallerTest {
         AbstractInvoice resultInvoice = resultList.iterator().next();
         assertThat(resultInvoice).isExactlyInstanceOf(NormalInvoice.class);
         assertThat(resultInvoice).isEqualToComparingFieldByField(invoice);
+    }
+
+    @Test
+    public void testUnMarshalInheritance() {
+        String input = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n"
+                + "<api>\n"
+                + "    <invoices>\n"
+                + "        <invoice>\n"
+                + "            <id>13</id>\n"
+                + "            <paymentmethod>cash</paymentmethod>\n"
+                + "            <type>proforma</type>\n"
+                + "        </invoice>\n"
+                + "    </invoices>\n"
+                + "</api>\n";
+        JaxbMarshaller<InvoicesApi> instance = JaxbMarshaller.create(InvoicesApi.class);
+        InvoicesApi resultApi = instance.unmarshal(input);
+        assertThat(resultApi).isNotNull();
+        List<AbstractInvoice> resultList = resultApi.getInvoices().getInvoice();
+        assertThat(resultList).isNotNull();
+        assertThat(resultList).hasSize(1);
+        AbstractInvoice resultInvoice = resultList.iterator().next();
+        assertThat(resultInvoice).isExactlyInstanceOf(ProformaInvoice.class);
+        assertThat(resultInvoice.getPaymentMethod()).isEqualTo(AbstractInvoice.PaymentMethod.cash);
     }
 
 }

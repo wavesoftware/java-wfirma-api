@@ -21,14 +21,15 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-
 package pl.wavesoftware.wfirma.api.model.contractors;
 
 import java.util.List;
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.*;
 import org.junit.Test;
+import static org.mockito.Mockito.*;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
 import pl.wavesoftware.wfirma.api.mapper.Api;
-import pl.wavesoftware.wfirma.api.model.ApiEntityElement;
 import pl.wavesoftware.wfirma.api.model.logic.Parameters;
 
 /**
@@ -40,13 +41,14 @@ public class ContractorsTypeTest {
     private final Api api;
 
     public ContractorsTypeTest() {
-        api = new Api() {
+        api = mock(Api.class);
+        when(api.getEntityClass()).thenAnswer(new Answer<Object>() {
 
             @Override
-            public Class<? extends ApiEntityElement> getEntityClass() {
+            public Object answer(InvocationOnMock invocation) throws Throwable {
                 return Contractors.class;
             }
-        };
+        });
     }
 
     @Test
@@ -125,5 +127,4 @@ public class ContractorsTypeTest {
 //        contractor.set("j");
 //        assertThat(contractor.getCreated()).isEqualTo("j");
 //    }
-
 }

@@ -21,10 +21,11 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-
 package pl.wavesoftware.wfirma.api.mapper;
 
+import java.util.Collection;
 import pl.wavesoftware.wfirma.api.model.ApiEntityElement;
+import pl.wavesoftware.wfirma.api.model.Request;
 
 /**
  *
@@ -38,5 +39,12 @@ public interface Api {
      * @return a entity class
      */
     Class<? extends ApiEntityElement> getEntityClass();
+
+    /**
+     * Gets a collection of supported requests
+     *
+     * @return a list of supported request types
+     */
+    Collection<Class<? extends Request>> getSupportedRequests();
 
 }
