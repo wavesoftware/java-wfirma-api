@@ -336,6 +336,9 @@ public abstract class AbstractInvoice {
     @XmlElement(name = "price_type")
     private PriceType priceType;
 
+    @XmlElement(name = "invoicecontents")
+    private InvoiceContents invoiceContents;
+
     /**
      * Constructor
      *
@@ -895,6 +898,14 @@ public abstract class AbstractInvoice {
 
     public void setPriceType(PriceType priceType) {
         this.priceType = priceType;
+    }
+
+    public InvoiceContents getInvoiceContents() {
+        return invoiceContents;
+    }
+
+    public void setInvoiceContents(InvoiceContents invoiceContents) {
+        this.invoiceContents = invoiceContents;
     }
 
     /**

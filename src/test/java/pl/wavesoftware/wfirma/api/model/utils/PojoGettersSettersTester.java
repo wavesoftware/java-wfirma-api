@@ -30,17 +30,12 @@ import com.openpojo.validation.affirm.Affirm;
 import com.openpojo.validation.test.Tester;
 import com.openpojo.validation.utils.IdentityHandlerStub;
 import com.openpojo.validation.utils.ValidationHelper;
-import java.util.Random;
-import org.joda.money.CurrencyUnit;
-import org.joda.money.Money;
 
 /**
  *
  * @author Krzysztof Suszyński <krzysztof.suszynski@wavesoftware.pl>
  */
 public class PojoGettersSettersTester implements Tester {
-
-    private final Random random = new Random();
 
     @Override
     public void run(PojoClass pojoClass) {
@@ -61,7 +56,7 @@ public class PojoGettersSettersTester implements Tester {
                 Object value = fieldEntry.get(instance);
 
                 if (!fieldEntry.isFinal()) {
-                    value = getRandomValue(fieldEntry);
+                    value = RandomFactory.getRandomValue(fieldEntry.getType());
                     if (fieldEntry.hasSetter()) {
                         fieldEntry.invokeSetter(instance, value);
                     } else {
@@ -80,20 +75,6 @@ public class PojoGettersSettersTester implements Tester {
                 Affirm.fail("There is no getter for field=[" + fieldEntry + "]");
             }
         }
-    }
-
-    private Object getRandomValue(PojoField fieldEntry) {
-        Class<?> type = fieldEntry.getType();
-        Object value;
-        if (Money.class.isAssignableFrom(type)) {
-            Money money = Money.zero(CurrencyUnit.USD);
-            money = money.plusMajor(random.nextInt(100000));
-            money = money.plusMinor(random.nextInt(100));
-            value = money;
-        } else {
-            value = RandomFactory.getRandomValue(fieldEntry.getType());
-        }
-        return value;
     }
 
 }

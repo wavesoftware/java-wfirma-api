@@ -23,12 +23,14 @@
  */
 package pl.wavesoftware.wfirma.api.model.contractors;
 
+import java.util.Date;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import pl.wavesoftware.wfirma.api.mapper.xml.BooleanToIntegerAdapter;
+import pl.wavesoftware.wfirma.api.mapper.xml.DateWithTimeAdapter;
 import pl.wavesoftware.wfirma.api.model.utils.ReadOnly;
 
 /**
@@ -154,112 +156,114 @@ import pl.wavesoftware.wfirma.api.model.utils.ReadOnly;
 public class Contractor {
 
     @ReadOnly
-    @XmlElement(required = false)
+    @XmlElement
     protected Long id;
 
-    @XmlElement(required = false)
+    @XmlElement
     protected String access;
 
     @XmlElement(required = true)
     protected String name;
 
-    @XmlElement(required = false)
+    @XmlElement
     protected String altname;
 
-    @XmlElement(required = false)
+    @XmlElement
     protected String nip;
 
-    @XmlElement(required = false)
+    @XmlElement
     protected String regon;
 
-    @XmlElement(required = false)
+    @XmlElement
     protected String street;
 
-    @XmlElement(required = false)
+    @XmlElement
     protected String zip;
 
-    @XmlElement(required = false)
+    @XmlElement
     protected String city;
 
     @XmlJavaTypeAdapter(BooleanToIntegerAdapter.class)
-    @XmlElement(name = "different_contact_address", required = false)
+    @XmlElement(name = "different_contact_address")
     protected Boolean differentContactAddress;
 
-    @XmlElement(name = "contact_name", required = false)
+    @XmlElement(name = "contact_name")
     protected String contactName;
 
-    @XmlElement(name = "contact_street", required = false)
+    @XmlElement(name = "contact_street")
     protected String contactStreet;
 
-    @XmlElement(name = "contact_zip", required = false)
+    @XmlElement(name = "contact_zip")
     protected String contactZip;
 
-    @XmlElement(name = "contact_city", required = false)
+    @XmlElement(name = "contact_city")
     protected String contactCity;
 
-    @XmlElement(name = "contact_person", required = false)
+    @XmlElement(name = "contact_person")
     protected String contactPerson;
 
-    @XmlElement(required = false)
+    @XmlElement
     protected String phone;
 
-    @XmlElement(required = false)
+    @XmlElement
     protected String fax;
 
-    @XmlElement(required = false)
+    @XmlElement
     protected String email;
 
-    @XmlElement(required = false)
+    @XmlElement
     protected String url;
 
-    @XmlElement(required = false)
+    @XmlElement
     protected String description;
 
     @XmlJavaTypeAdapter(BooleanToIntegerAdapter.class)
-    @XmlElement(required = false)
+    @XmlElement
     protected Boolean buyer;
 
     @XmlJavaTypeAdapter(BooleanToIntegerAdapter.class)
-    @XmlElement(required = false)
+    @XmlElement
     protected Boolean seller;
 
-    @XmlElement(name = "discount_percent", required = false)
+    @XmlElement(name = "discount_percent")
     protected Integer discountPercent;
 
-    @XmlElement(name = "payment_days", required = false)
+    @XmlElement(name = "payment_days")
     protected Integer paymentDays;
 
-    @XmlElement(name = "payment_method", required = false)
+    @XmlElement(name = "payment_method")
     protected String paymentMethod;
 
-    @XmlElement(required = false)
+    @XmlElement
     protected Integer remind;
 
-    @XmlElement(required = false)
+    @XmlElement
     protected String tags;
 
     @ReadOnly
-    @XmlElement(required = false)
+    @XmlElement
     protected Integer notes;
 
     @ReadOnly
-    @XmlElement(required = false)
-    protected String created;
+    @XmlJavaTypeAdapter(DateWithTimeAdapter.class)
+    @XmlElement
+    protected Date created;
 
     @ReadOnly
-    @XmlElement(required = false)
-    protected String modified;
+    @XmlJavaTypeAdapter(DateWithTimeAdapter.class)
+    @XmlElement
+    protected Date modified;
 
-    @XmlElement(required = false)
+    @XmlElement
     protected Integer provider;
 
-    @XmlElement(name = "translation_language", required = false)
+    @XmlElement(name = "translation_language")
     protected Contractor.TranslationLanguage translationLanguage;
 
-    @XmlElement(name = "company_account", required = false)
+    @XmlElement(name = "company_account")
     protected Contractor.CompanyAccount companyAccount;
 
-    @XmlElement(name = "invoice_description", required = false)
+    @XmlElement(name = "invoice_description")
     protected Contractor.InvoiceDescription invoiceDescription;
 
     /**
@@ -676,6 +680,7 @@ public class Contractor {
 
     /**
      * Gets the value of the seller property.
+     *
      * @return is seller?
      */
     public Boolean isSeller() {
@@ -801,7 +806,7 @@ public class Contractor {
      * @return possible object is {@link String }
      *
      */
-    public String getCreated() {
+    public Date getCreated() {
         return created;
     }
 
@@ -811,7 +816,7 @@ public class Contractor {
      * @param value allowed object is {@link String }
      *
      */
-    public void setCreated(String value) {
+    public void setCreated(Date value) {
         this.created = value;
     }
 
@@ -821,7 +826,7 @@ public class Contractor {
      * @return possible object is {@link String }
      *
      */
-    public String getModified() {
+    public Date getModified() {
         return modified;
     }
 
@@ -831,7 +836,7 @@ public class Contractor {
      * @param value allowed object is {@link String }
      *
      */
-    public void setModified(String value) {
+    public void setModified(Date value) {
         this.modified = value;
     }
 

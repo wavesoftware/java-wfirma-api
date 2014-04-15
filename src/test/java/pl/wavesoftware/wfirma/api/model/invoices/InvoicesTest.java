@@ -49,7 +49,9 @@ public class InvoicesTest {
                 InvoicesApi.class,
                 Invoices.class,
                 NormalInvoice.class,
-                ProformaInvoice.class
+                ProformaInvoice.class,
+                InvoiceContents.class,
+                InvoiceContent.class
         );
     }
 

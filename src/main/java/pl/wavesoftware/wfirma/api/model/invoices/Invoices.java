@@ -124,7 +124,7 @@ public class Invoices implements Parametrizable, ApiEntityElement {
      *
      * @param invoices a list of invoices to set
      */
-    public void setInvoice(List<AbstractInvoice> invoices) {
+    protected void setInvoice(List<AbstractInvoice> invoices) {
         this.invoice = invoices;
     }
 

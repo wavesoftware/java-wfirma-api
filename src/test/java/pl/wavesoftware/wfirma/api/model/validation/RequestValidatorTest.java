@@ -24,6 +24,7 @@
 package pl.wavesoftware.wfirma.api.model.validation;
 
 import java.util.Collection;
+import java.util.Date;
 import java.util.GregorianCalendar;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.failBecauseExceptionWasNotThrown;
@@ -105,7 +106,7 @@ public class RequestValidatorTest {
         Contractors contractors = new Contractors();
         Contractor contractor = new Contractor();
         contractor.setName("New name");
-        contractor.setModified("set as now"); // Should fail on read only
+        contractor.setModified(new Date()); // Should fail on read only
         contractors.getContractor().add(contractor);
         EditRequest<Contractors> edit = EditRequest.create(contractors, 234L);
         RequestValidator instance = new RequestValidator(edit);
