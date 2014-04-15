@@ -24,10 +24,11 @@
 package pl.wavesoftware.wfirma.api.mapper;
 
 import com.google.common.base.CaseFormat;
+import com.google.common.base.Preconditions;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import pl.wavesoftware.wfirma.api.mapper.Api;
+import javax.annotation.Nonnull;
 import pl.wavesoftware.wfirma.api.model.ApiEntityElement;
 import pl.wavesoftware.wfirma.api.model.Request;
 
@@ -36,6 +37,9 @@ import pl.wavesoftware.wfirma.api.model.Request;
  * @author Krzysztof Suszyński <krzysztof.suszynski@wavesoftware.pl>
  */
 public final class ApiModule {
+
+    private ApiModule() {
+    }
 
     /**
      * Makes a collection of classes from input
@@ -63,7 +67,9 @@ public final class ApiModule {
      * @param entityClass a entity class
      * @return a sample API
      */
-    public static Api createSampleApi(Class<? extends ApiEntityElement> entityClass) {
+    @Nonnull
+    public static Api createSampleApi(@Nonnull Class<? extends ApiEntityElement> entityClass) {
+        Preconditions.checkNotNull(entityClass);
         try {
             ApiEntityElement entity = entityClass.newInstance();
             return entity.getApi();
@@ -78,7 +84,9 @@ public final class ApiModule {
      * @param apiClass a api class
      * @return a string for request
      */
-    public static String getRequestModulePath(Class<? extends Api> apiClass) {
+    @Nonnull
+    public static String getRequestModulePath(@Nonnull Class<? extends Api> apiClass) {
+        Preconditions.checkNotNull(apiClass);
         String name = apiClass.getSimpleName().replaceAll("Api$", "");
         return CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, name);
     }
@@ -89,7 +97,9 @@ public final class ApiModule {
      * @param apiClass a class of API
      * @return a class of entity
      */
-    public static Class<? extends ApiEntityElement> getEntityClass(Class<? extends Api> apiClass) {
+    @Nonnull
+    public static Class<? extends ApiEntityElement> getEntityClass(@Nonnull Class<? extends Api> apiClass) {
+        Preconditions.checkNotNull(apiClass);
         try {
             Class<? extends ApiEntityElement> ret = apiClass.newInstance().getEntityClass();
             return ret;
@@ -104,7 +114,9 @@ public final class ApiModule {
      * @param entity a entity object
      * @return a enum module
      */
-    public static Class<? extends Api> getModuleFor(ApiEntityElement entity) {
+    @Nonnull
+    public static Class<? extends Api> getModuleFor(@Nonnull ApiEntityElement entity) {
+        Preconditions.checkNotNull(entity);
         return ApiModule.getModuleFor(entity.getClass());
     }
 
@@ -114,7 +126,9 @@ public final class ApiModule {
      * @param cls a entity class
      * @return a enum module
      */
-    public static Class<? extends Api> getModuleFor(Class<? extends ApiEntityElement> cls) {
+    @Nonnull
+    public static Class<? extends Api> getModuleFor(@Nonnull Class<? extends ApiEntityElement> cls) {
+        Preconditions.checkNotNull(cls);
         try {
             return cls.newInstance().getApi().getClass();
         } catch (InstantiationException | IllegalAccessException ex) {

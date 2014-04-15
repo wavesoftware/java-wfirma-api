@@ -23,8 +23,13 @@
  */
 package pl.wavesoftware.wfirma.api.model.requests;
 
+import java.util.Collection;
+import org.assertj.core.api.Assertions;
 import static org.assertj.core.api.Assertions.assertThat;
 import org.junit.Test;
+import pl.wavesoftware.wfirma.api.mapper.Api;
+import pl.wavesoftware.wfirma.api.model.ApiEntityElement;
+import pl.wavesoftware.wfirma.api.model.Request;
 import pl.wavesoftware.wfirma.api.model.companies.Companies;
 import pl.wavesoftware.wfirma.api.model.companies.CompaniesApi;
 import pl.wavesoftware.wfirma.api.model.contractors.Contractors;
@@ -106,4 +111,42 @@ public class FindRequestTest {
         assertThat(new FindRequest<Companies>(CompaniesApi.class)).isNotNull();
     }
 
+    @Test
+    public void testConstructionInvalid() {
+        try {
+            assertThat(new FindRequest<SampleApiEntityElement>(SampleApi.class)).isNotNull();
+            Assertions.failBecauseExceptionWasNotThrown(IllegalArgumentException.class);
+        } catch (IllegalArgumentException ex) {
+            assertThat(ex).hasCauseExactlyInstanceOf(IllegalAccessException.class);
+            assertThat(ex).hasMessage("java.lang.IllegalAccessException: Class pl.wavesoftware.wfirma.api.model."
+                    + "requests.FindRequest can not access a member of class pl.wavesoftware.wfirma.api.model."
+                    + "requests.FindRequestTest$SampleApiEntityElement with modifiers \"private\"");
+        }
+    }
+
+    public static class SampleApiEntityElement implements ApiEntityElement {
+
+        private SampleApiEntityElement() {
+        }
+
+        @Override
+        public Api getApi() {
+            return null;
+        }
+
+    }
+
+    public static class SampleApi implements Api {
+
+        @Override
+        public Class<? extends ApiEntityElement> getEntityClass() {
+            return SampleApiEntityElement.class;
+        }
+
+        @Override
+        public Collection<Class<? extends Request>> getSupportedRequests() {
+            return null;
+        }
+
+    }
 }
