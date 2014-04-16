@@ -31,9 +31,7 @@ import pl.wavesoftware.wfirma.api.mapper.Api;
 import pl.wavesoftware.wfirma.api.model.ApiEntityElement;
 import pl.wavesoftware.wfirma.api.model.Request;
 import pl.wavesoftware.wfirma.api.model.companies.Companies;
-import pl.wavesoftware.wfirma.api.model.companies.CompaniesApi;
 import pl.wavesoftware.wfirma.api.model.contractors.Contractors;
-import pl.wavesoftware.wfirma.api.model.contractors.ContractorsApi;
 import pl.wavesoftware.wfirma.api.model.logic.And;
 import pl.wavesoftware.wfirma.api.model.logic.Condition;
 import pl.wavesoftware.wfirma.api.model.logic.LogicalOperator;
@@ -55,7 +53,7 @@ public class FindRequestTest {
         cond.setValue("Coca%");
         and.getCondition().add(cond);
         parameters.getConditions().getAnd().add(and);
-        FindRequest<Contractors> instance = new FindRequest<>(ContractorsApi.class, parameters);
+        FindRequest<Contractors> instance = new FindRequest<>(Contractors.class, parameters);
         String result = instance.getAddress().getCorrectedPath();
         assertThat(result).isEqualTo("/contractors/find");
     }
@@ -70,7 +68,7 @@ public class FindRequestTest {
         cond.setValue("Coca%");
         and.getCondition().add(cond);
         parameters.getConditions().getAnd().add(and);
-        FindRequest<Contractors> instance = new FindRequest<>(ContractorsApi.class, parameters);
+        FindRequest<Contractors> instance = new FindRequest<>(Contractors.class, parameters);
         Object result = instance.getEntity();
         assertThat(result).isExactlyInstanceOf(Contractors.class);
     }
@@ -85,7 +83,7 @@ public class FindRequestTest {
         cond.setValue("Coca%");
         and.getCondition().add(cond);
         parameters.getConditions().getAnd().add(and);
-        FindRequest<Contractors> instance = new FindRequest<>(ContractorsApi.class, parameters);
+        FindRequest<Contractors> instance = new FindRequest<>(Contractors.class, parameters);
         String result = instance.getBody();
         assertThat(result).isEqualTo("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n"
                 + "<api>\n"
@@ -108,13 +106,13 @@ public class FindRequestTest {
     }
 
     public void testExceptionOnUnimplementd() {
-        assertThat(new FindRequest<Companies>(CompaniesApi.class)).isNotNull();
+        assertThat(new FindRequest<>(Companies.class)).isNotNull();
     }
 
     @Test
     public void testConstructionInvalid() {
         try {
-            assertThat(new FindRequest<SampleApiEntityElement>(SampleApi.class)).isNotNull();
+            assertThat(new FindRequest<>(SampleApiEntityElement.class)).isNotNull();
             Assertions.failBecauseExceptionWasNotThrown(IllegalArgumentException.class);
         } catch (IllegalArgumentException ex) {
             assertThat(ex).hasCauseExactlyInstanceOf(IllegalAccessException.class);

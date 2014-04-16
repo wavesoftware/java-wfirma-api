@@ -46,7 +46,9 @@ public class ApiModuleTest {
     @Test
     public void testCollectRequests() {
         Collection<Class<? extends Request>> result = ApiModule.collectRequests(GetRequest.class, FindRequest.class);
-        assertThat(result).containsExactly(GetRequest.class, FindRequest.class);
+        assertThat(result).hasSize(2);
+        assertThat(result.contains(GetRequest.class)).isTrue();
+        assertThat(result.contains(FindRequest.class)).isTrue();
     }
 
     @Test

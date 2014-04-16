@@ -29,7 +29,6 @@ import org.mockito.Mockito;
 import pl.wavesoftware.wfirma.api.OAuthCredentials;
 import pl.wavesoftware.wfirma.api.model.Request;
 import pl.wavesoftware.wfirma.api.model.companies.Companies;
-import pl.wavesoftware.wfirma.api.model.companies.CompaniesApi;
 import pl.wavesoftware.wfirma.api.model.requests.FindRequest;
 import pl.wavesoftware.wfirma.api.model.requests.GetRequest;
 
@@ -47,14 +46,14 @@ public class OAuthGatewayTest {
 
     @Test(expected = UnsupportedOperationException.class)
     public void testGet() throws Exception {
-        Request request = new GetRequest(CompaniesApi.class, 5L);
+        Request<Companies> request = new GetRequest<>(Companies.class, 5L);
         OAuthGateway instance = new OAuthGateway(creds);
         assertThat(instance.get(request)).isNotNull();
     }
 
     @Test(expected = UnsupportedOperationException.class)
     public void testPost() throws Exception {
-        FindRequest<Companies> request = new FindRequest<>(CompaniesApi.class);
+        FindRequest<Companies> request = new FindRequest<>(Companies.class);
         OAuthGateway instance = new OAuthGateway(creds);
         assertThat(instance.post(request)).isNotNull();
     }

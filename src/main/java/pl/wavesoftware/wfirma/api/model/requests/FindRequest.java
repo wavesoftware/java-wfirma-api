@@ -24,10 +24,10 @@
 package pl.wavesoftware.wfirma.api.model.requests;
 
 import pl.wavesoftware.wfirma.api.mapper.Api;
+import pl.wavesoftware.wfirma.api.mapper.ApiModule;
 import pl.wavesoftware.wfirma.api.mapper.RequestPath;
 import pl.wavesoftware.wfirma.api.mapper.xml.JaxbMarshaller;
 import pl.wavesoftware.wfirma.api.model.ApiEntityElement;
-import pl.wavesoftware.wfirma.api.mapper.ApiModule;
 import pl.wavesoftware.wfirma.api.model.Parametrizable;
 import pl.wavesoftware.wfirma.api.model.PostRequest;
 import pl.wavesoftware.wfirma.api.model.logic.Parameters;
@@ -39,22 +39,20 @@ import pl.wavesoftware.wfirma.api.model.logic.Parameters;
  */
 public class FindRequest<T extends ApiEntityElement> implements PostRequest<T> {
 
-    private final Class<? extends Api> module;
-
     private final T entity;
+
+    private final Class<T> entityClass;
 
     /**
      * Constructor
      *
-     * @param module a module of api
+     * @param entityClass a entity class of api module
      * @param parameters a parameters to find element
      */
-    public FindRequest(Class<? extends Api> module, Parameters parameters) {
-        this.module = module;
+    public FindRequest(Class<T> entityClass, Parameters parameters) {
+        this.entityClass = entityClass;
         try {
-            Class<? extends ApiEntityElement> cls = ApiModule.getEntityClass(module);
-            @SuppressWarnings("unchecked")
-            T en = (T) cls.newInstance();
+            T en = entityClass.newInstance();
             this.entity = en;
             if (entity instanceof Parametrizable && parameters != null) {
                 Parametrizable params = (Parametrizable) entity;
@@ -65,12 +63,18 @@ public class FindRequest<T extends ApiEntityElement> implements PostRequest<T> {
         }
     }
 
-    public FindRequest(Class<? extends Api> module) {
-        this(module, null);
+    /**
+     * Constructor for find all elements
+     *
+     * @param entityClass a entity class of api module
+     */
+    public FindRequest(Class<T> entityClass) {
+        this(entityClass, null);
     }
 
     @Override
     public RequestPath getAddress() {
+        Class<? extends Api> module = ApiModule.getModuleFor(entityClass);
         return RequestPath.fromString(ApiModule.getRequestModulePath(module), "find");
     }
 
@@ -85,8 +89,8 @@ public class FindRequest<T extends ApiEntityElement> implements PostRequest<T> {
     }
 
     @Override
-    public Class<? extends ApiEntityElement> getEntityClass() {
-        return entity.getClass();
+    public Class<T> getEntityClass() {
+        return entityClass;
     }
 
 }

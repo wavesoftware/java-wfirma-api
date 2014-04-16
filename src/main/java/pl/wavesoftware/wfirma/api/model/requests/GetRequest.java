@@ -24,40 +24,41 @@
 package pl.wavesoftware.wfirma.api.model.requests;
 
 import pl.wavesoftware.wfirma.api.mapper.Api;
+import pl.wavesoftware.wfirma.api.mapper.ApiModule;
 import pl.wavesoftware.wfirma.api.mapper.RequestPath;
 import pl.wavesoftware.wfirma.api.model.ApiEntityElement;
-import pl.wavesoftware.wfirma.api.mapper.ApiModule;
 import pl.wavesoftware.wfirma.api.model.Request;
 
 /**
  *
  * @author Krzysztof Suszyński <krzysztof.suszynski@wavesoftware.pl>
  */
-public class GetRequest implements Request {
-
-    private final Class<? extends Api> module;
+public class GetRequest<T extends ApiEntityElement> implements Request<T> {
 
     private final Long wfirmaId;
+
+    private final Class<T> entityClass;
 
     /**
      * Constructor
      *
-     * @param module a module of api
+     * @param entityClass a entity class of api module
      * @param wfirmaId a ID of wfirma
      */
-    public GetRequest(Class<? extends Api> module, Long wfirmaId) {
-        this.module = module;
+    public GetRequest(Class<T> entityClass, Long wfirmaId) {
+        this.entityClass = entityClass;
         this.wfirmaId = wfirmaId;
     }
 
     @Override
     public RequestPath getAddress() {
+        Class<? extends Api> module = ApiModule.getModuleFor(entityClass);
         return RequestPath.fromString(ApiModule.getRequestModulePath(module), "get", wfirmaId.toString());
     }
 
     @Override
-    public Class<? extends ApiEntityElement> getEntityClass() {
-        return ApiModule.getEntityClass(module);
+    public Class<T> getEntityClass() {
+        return entityClass;
     }
 
 }

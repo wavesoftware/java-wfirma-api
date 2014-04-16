@@ -25,7 +25,7 @@ package pl.wavesoftware.wfirma.api.model.requests;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import org.junit.Test;
-import pl.wavesoftware.wfirma.api.model.companies.CompaniesApi;
+import pl.wavesoftware.wfirma.api.model.companies.Companies;
 
 /**
  *
@@ -35,7 +35,7 @@ public class DeleteRequestTest {
 
     @Test
     public void testGetAddress() {
-        DeleteRequest instance = new DeleteRequest(CompaniesApi.class, 5L);
+        DeleteRequest<Companies> instance = new DeleteRequest<>(Companies.class, 5L);
         String result = instance.getAddress().getCorrectedPath();
         assertThat(result).isEqualTo("/companies/delete/5");
     }

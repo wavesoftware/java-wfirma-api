@@ -37,7 +37,7 @@ import pl.wavesoftware.wfirma.api.mapper.xml.JaxbMarshaller;
 import pl.wavesoftware.wfirma.api.model.Request;
 import pl.wavesoftware.wfirma.api.model.WFirmaException;
 import pl.wavesoftware.wfirma.api.model.WFirmaSecurityException;
-import pl.wavesoftware.wfirma.api.model.companies.CompaniesApi;
+import pl.wavesoftware.wfirma.api.model.companies.Companies;
 import pl.wavesoftware.wfirma.api.model.contractors.Contractor;
 import pl.wavesoftware.wfirma.api.model.contractors.Contractors;
 import pl.wavesoftware.wfirma.api.model.contractors.ContractorsApi;
@@ -186,7 +186,7 @@ public class SimpleGatewayIT {
         SimpleCredentials creds = new SimpleCredentials(correctLogin, correctPassword);
         SimpleGateway instance = new SimpleGateway(creds);
 
-        Request get = new GetRequest(CompaniesApi.class, 1L);
+        Request<Companies> get = new GetRequest<>(Companies.class, 1L);
         String result = instance.get(get);
         assertNotNull(result);
         assertThat(result).matches(expResultRe);
@@ -196,7 +196,7 @@ public class SimpleGatewayIT {
     public void testPost() throws Exception {
         AddRequest<Contractors> addRequest = createAddRequest();
         FindRequest<Contractors> findRequest = createFindRequest();
-        DeleteRequest deleteRequest;
+        DeleteRequest<Contractors> deleteRequest;
 
         SimpleCredentials creds = new SimpleCredentials(correctLogin, correctPassword);
         SimpleGateway instance = new SimpleGateway(creds);
@@ -252,7 +252,7 @@ public class SimpleGatewayIT {
         };
         instance.addListener(listener);
         try {
-            Request get = new GetRequest(CompaniesApi.class, 2L);
+            Request<Companies> get = new GetRequest<>(Companies.class, 2L);
             instance.get(get);
             fail("Expected to throw a WFirmaSercurityException for invalid auth");
         } catch (WFirmaSecurityException ex) {
@@ -275,7 +275,7 @@ public class SimpleGatewayIT {
         cond.setValue(EXAMPLE_NIP);
         and.getCondition().add(cond);
         conds.getAnd().add(and);
-        return new FindRequest<>(ContractorsApi.class, params);
+        return new FindRequest<>(Contractors.class, params);
     }
 
     private AddRequest<Contractors> createAddRequest() {
@@ -289,8 +289,8 @@ public class SimpleGatewayIT {
         return AddRequest.create(contractors);
     }
 
-    private DeleteRequest createDeleteRequest(Contractor contractor) {
-        return new DeleteRequest(ContractorsApi.class, contractor.getId().longValue());
+    private DeleteRequest<Contractors> createDeleteRequest(Contractor contractor) {
+        return new DeleteRequest<>(Contractors.class, contractor.getId());
     }
 
 }

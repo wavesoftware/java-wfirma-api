@@ -21,7 +21,6 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-
 package pl.wavesoftware.wfirma.api.model;
 
 import pl.wavesoftware.wfirma.api.mapper.RequestPath;
@@ -29,8 +28,9 @@ import pl.wavesoftware.wfirma.api.mapper.RequestPath;
 /**
  *
  * @author Krzysztof Suszyński <krzysztof.suszynski@gmail.com>
+ * @param <T> a type of entity
  */
-public interface Request {
+public interface Request<T extends ApiEntityElement> {
 
     /**
      * Gets a target address
@@ -44,6 +44,6 @@ public interface Request {
      *
      * @return a entity class
      */
-    Class<? extends ApiEntityElement> getEntityClass();
+    Class<T> getEntityClass();
 
 }

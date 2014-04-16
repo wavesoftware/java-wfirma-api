@@ -43,11 +43,11 @@ import pl.wavesoftware.wfirma.api.model.utils.ReadOnly;
  */
 public class RequestValidator {
 
-    private final Request request;
+    private final Request<?> request;
 
     private Collection<String> errors;
 
-    public RequestValidator(Request request) {
+    public RequestValidator(Request<?> request) {
         this.request = request;
     }
 

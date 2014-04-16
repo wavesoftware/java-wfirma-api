@@ -21,7 +21,6 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-
 package pl.wavesoftware.wfirma.api.model;
 
 /**
@@ -29,7 +28,7 @@ package pl.wavesoftware.wfirma.api.model;
  * @author Krzysztof Suszyński <krzysztof.suszynski@wavesoftware.pl>
  * @param <T> a type of entity
  */
-public interface PostRequest<T extends ApiEntityElement> extends Request {
+public interface PostRequest<T extends ApiEntityElement> extends Request<T> {
 
     /**
      * Gets a entity of this request
