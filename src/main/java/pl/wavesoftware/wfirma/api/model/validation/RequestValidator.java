@@ -78,6 +78,7 @@ public class RequestValidator {
     private void validateIsSupported(Collection<String> errs) {
         Class<? extends Api> module = ApiModule.getModuleFor(request.getEntityClass());
         Api api = ApiModule.createSampleApi(request.getEntityClass());
+        @SuppressWarnings("unchecked")
         Collection<Class<? extends Request>> supported = api.getSupportedRequests();
         boolean found = false;
         for (Class<? extends Request> cls : supported) {

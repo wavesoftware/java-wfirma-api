@@ -21,23 +21,19 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package pl.wavesoftware.wfirma.api.model.requests;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import org.junit.Test;
-import pl.wavesoftware.wfirma.api.model.companies.Companies;
+package pl.wavesoftware.wfirma.api.model;
 
 /**
  *
  * @author Krzysztof Suszyński <krzysztof.suszynski@wavesoftware.pl>
+ * @param <T> a type of response
  */
-public class GetRequestTest {
+public interface Response<T extends ApiEntityElement> {
 
-    @Test
-    public void testGetAddress() {
-        GetRequest<Companies> instance = GetRequest.create(Companies.class, 5L);
-        String result = instance.getAddress().getCorrectedPath();
-        assertThat(result).isEqualTo("/companies/get/5");
-    }
-
+    /**
+     * Gets a unpacked entity from sucessful request to WFirma API
+     *
+     * @return a entity
+     */
+    T getEntity();
 }

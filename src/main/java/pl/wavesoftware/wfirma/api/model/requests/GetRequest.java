@@ -32,6 +32,7 @@ import pl.wavesoftware.wfirma.api.model.Request;
 /**
  *
  * @author Krzysztof Suszyński <krzysztof.suszynski@wavesoftware.pl>
+ * @param <T> a type of request
  */
 public class GetRequest<T extends ApiEntityElement> implements Request<T> {
 
@@ -45,9 +46,22 @@ public class GetRequest<T extends ApiEntityElement> implements Request<T> {
      * @param entityClass a entity class of api module
      * @param wfirmaId a ID of wfirma
      */
-    public GetRequest(Class<T> entityClass, Long wfirmaId) {
+    private GetRequest(Class<T> entityClass, Long wfirmaId) {
         this.entityClass = entityClass;
         this.wfirmaId = wfirmaId;
+    }
+
+    /**
+     * Creates a {@link GetRequest} for an entity
+     *
+     * @param entityClass a entity class of api module
+     * @param wfirmaId a ID of wfirma
+     * @param <T> a type of entity
+     * @return a request
+     */
+    public static <T extends ApiEntityElement> GetRequest<T> create(Class<T> entityClass, Long wfirmaId) {
+        GetRequest<T> obj = new GetRequest<>(entityClass, wfirmaId);
+        return obj;
     }
 
     @Override

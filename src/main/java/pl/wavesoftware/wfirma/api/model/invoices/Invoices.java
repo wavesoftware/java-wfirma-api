@@ -66,24 +66,22 @@ public class Invoices implements Parametrizable, ApiEntityElement {
      * Api wrapper root element
      */
     @XmlTransient
-    private final Api api;
+    private Api<Invoices> api;
 
     /**
      * Constructor with API root
      *
      * @param api {@link #api}
      */
-    public Invoices(Api api) {
-        this.api = api;
-        setApi(InvoicesApi.class.cast(api));
+    public Invoices(Api<Invoices> api) {
+        setApi(api);
     }
 
     /**
      * Default constructor
      */
     public Invoices() {
-        api = new InvoicesApi();
-        setApi((InvoicesApi) api);
+        this(new InvoicesApi());
     }
 
     @XmlElement(required = true)
@@ -151,12 +149,13 @@ public class Invoices implements Parametrizable, ApiEntityElement {
     }
 
     @Override
-    public Api getApi() {
+    public Api<Invoices> getApi() {
         return api;
     }
 
-    private void setApi(InvoicesApi invoicesApi) {
-        invoicesApi.setInvoices(this);
+    private void setApi(Api<Invoices> invoicesApi) {
+        this.api = invoicesApi;
+        invoicesApi.setEntityElement(this);
     }
 
 }

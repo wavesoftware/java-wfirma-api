@@ -38,10 +38,12 @@ import pl.wavesoftware.wfirma.api.model.logic.Parameters;
  */
 public class ContractorsTypeTest {
 
-    private final Api api;
+    private final Api<Contractors> api;
 
     public ContractorsTypeTest() {
-        api = mock(Api.class);
+        @SuppressWarnings("unchecked")
+        Api<Contractors> mock = mock(Api.class);
+        api = mock;
         when(api.getEntityClass()).thenAnswer(new Answer<Object>() {
 
             @Override

@@ -42,13 +42,23 @@ public class DeleteRequest<T extends ApiEntityElement> implements Request<T> {
 
     /**
      * Constructor
+     */
+    private DeleteRequest(Class<T> entityClass, Long wfirmaId) {
+        this.entityClass = entityClass;
+        this.wfirmaId = wfirmaId;
+    }
+
+    /**
+     * Creates a AddRequest for an entity
      *
      * @param entityClass a entity class of api module
      * @param wfirmaId a ID of wfirma
+     * @param <T> a type of entity
+     * @return a request
      */
-    public DeleteRequest(Class<T> entityClass, Long wfirmaId) {
-        this.entityClass = entityClass;
-        this.wfirmaId = wfirmaId;
+    public static <T extends ApiEntityElement> DeleteRequest<T> create(Class<T> entityClass, Long wfirmaId) {
+        DeleteRequest<T> obj = new DeleteRequest<>(entityClass, wfirmaId);
+        return obj;
     }
 
     @Override

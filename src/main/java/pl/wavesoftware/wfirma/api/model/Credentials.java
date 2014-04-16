@@ -21,7 +21,6 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-
 package pl.wavesoftware.wfirma.api.model;
 
 /**
@@ -29,5 +28,19 @@ package pl.wavesoftware.wfirma.api.model;
  * @author Krzysztof Suszyński <krzysztof.suszynski@wavesoftware.pl>
  */
 public interface Credentials {
+
+    /**
+     * Geta a consumer key for an aplication
+     *
+     * @return a consumer key
+     */
+    public String getConsumerKey();
+
+    /**
+     * Gets a consumer secret
+     *
+     * @return a consumer secret
+     */
+    public String getConsumerSecret();
 
 }

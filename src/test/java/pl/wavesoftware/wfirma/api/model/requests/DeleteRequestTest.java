@@ -35,7 +35,7 @@ public class DeleteRequestTest {
 
     @Test
     public void testGetAddress() {
-        DeleteRequest<Companies> instance = new DeleteRequest<>(Companies.class, 5L);
+        DeleteRequest<Companies> instance = DeleteRequest.create(Companies.class, 5L);
         String result = instance.getAddress().getCorrectedPath();
         assertThat(result).isEqualTo("/companies/delete/5");
     }

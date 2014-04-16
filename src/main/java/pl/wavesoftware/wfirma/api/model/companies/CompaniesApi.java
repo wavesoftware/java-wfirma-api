@@ -31,7 +31,6 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
 import pl.wavesoftware.wfirma.api.mapper.Api;
-import pl.wavesoftware.wfirma.api.model.ApiEntityElement;
 import static pl.wavesoftware.wfirma.api.mapper.ApiModule.collectRequests;
 import pl.wavesoftware.wfirma.api.model.Request;
 import pl.wavesoftware.wfirma.api.model.requests.GetRequest;
@@ -56,11 +55,9 @@ import pl.wavesoftware.wfirma.api.model.requests.GetRequest;
  * </pre>
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "companiesApiType", propOrder = {
-    "companies"
-})
+@XmlType(name = "companiesApiType")
 @XmlRootElement(name = "api")
-public class CompaniesApi implements Api {
+public class CompaniesApi implements Api<Companies> {
 
     @XmlElement(nillable = false)
     private Companies companies;
@@ -69,24 +66,35 @@ public class CompaniesApi implements Api {
         companies = new Companies(this);
     }
 
-    public Companies getCompanies() {
-        return companies;
-    }
-
     public void setCompanies(Companies companies) {
         this.companies = companies;
     }
 
-    @Override
-    @XmlTransient
-    public Class<? extends ApiEntityElement> getEntityClass() {
-        return Companies.class;
+    public Companies getCompanies() {
+        return companies;
     }
 
     @Override
     @XmlTransient
     public Collection<Class<? extends Request>> getSupportedRequests() {
         return collectRequests(GetRequest.class);
+    }
+
+    @Override
+    @XmlTransient
+    public Class<Companies> getEntityClass() {
+        return Companies.class;
+    }
+
+    @Override
+    @XmlTransient
+    public Companies getEntityElement() {
+        return getCompanies();
+    }
+
+    @Override
+    public void setEntityElement(Companies entityElement) {
+        this.companies = entityElement;
     }
 
 }

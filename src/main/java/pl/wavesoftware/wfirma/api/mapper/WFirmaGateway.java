@@ -46,7 +46,7 @@ public interface WFirmaGateway {
      * @return a string with a XML Response from WFirma
      * @throws WFirmaException if some error occured while fetching data
      */
-    String get(Request request) throws WFirmaException;
+    String get(Request<?> request) throws WFirmaException;
 
     /**
      * Fetches data from WFirma API2 by sending data with find request object

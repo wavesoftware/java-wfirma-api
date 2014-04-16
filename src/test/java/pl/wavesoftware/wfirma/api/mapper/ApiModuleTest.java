@@ -82,16 +82,26 @@ public class ApiModuleTest {
 
     }
 
-    private static class SampleApi implements Api {
-
-        @Override
-        public Class<? extends ApiEntityElement> getEntityClass() {
-            return null;
-        }
+    private static class SampleApi implements Api<SampleApiEntityElement> {
 
         @Override
         public Collection<Class<? extends Request>> getSupportedRequests() {
             return null;
+        }
+
+        @Override
+        public Class<SampleApiEntityElement> getEntityClass() {
+            return SampleApiEntityElement.class;
+        }
+
+        @Override
+        public SampleApiEntityElement getEntityElement() {
+            return null;
+        }
+
+        @Override
+        public void setEntityElement(SampleApiEntityElement entityElement) {
+            // empty
         }
 
     }

@@ -33,44 +33,48 @@ import pl.wavesoftware.wfirma.api.model.WFirmaException;
  *
  * @author Krzysztof Suszyński <krzysztof.suszynski@wavesoftware.pl>
  */
-class OAuthGateway implements WFirmaGateway {
-
-    private final Credentials credentials;
-
-    private final URI gateway;
+public abstract class AbstractWFirmaGatewayFactory {
 
     /**
-     * Getaway for OAuth
+     * Gets a type for simple gateway
      *
-     * @param credentials OAuth cerentials
+     * @return a type
      */
-    OAuthGateway(Credentials credentials, URI gateway) {
-        this.credentials = credentials;
-        this.gateway = gateway;
+    protected abstract Class<? extends Credentials> getTypeForSimpleGateway();
+
+    /**
+     * Gets a type for OAuth gateway
+     *
+     * @return a type
+     */
+    protected abstract Class<? extends Credentials> getTypeForOAuthGateway();
+
+    /**
+     * Creates a gateway for end user
+     *
+     * @param credentials a credentials
+     * @param gatewayAddress a gateway address
+     * @return a created gateway
+     */
+    protected WFirmaGateway create(Credentials credentials, URI gatewayAddress) {
+        WFirmaGateway gateway;
+        if (getTypeForSimpleGateway().isAssignableFrom(credentials.getClass())) {
+            gateway = new SimpleGateway(credentials, gatewayAddress);
+        } else if (getTypeForOAuthGateway().isAssignableFrom(credentials.getClass())) {
+            gateway = new OAuthGateway(credentials, gatewayAddress);
+        } else {
+            throw new UnsupportedOperationException("credentials `" + credentials + "` is not supported by this SDK.");
+        }
+        return gateway;
     }
 
-    @Override
-    public String get(Request<?> request) throws WFirmaException {
-        // FIXME: Not yet implemented!!!
-        throw new UnsupportedOperationException("Not supported yet.");
+    protected static String execute(WFirmaGateway gateway, Request<?> request) throws WFirmaException {
+        String response;
+        if (request instanceof PostRequest) {
+            response = gateway.post(PostRequest.class.cast(request));
+        } else {
+            response = gateway.get(request);
+        }
+        return response;
     }
-
-    @Override
-    public String post(PostRequest<?> request) throws WFirmaException {
-        // FIXME: Not yet implemented!!!
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public void addListener(ResponseListener listener) {
-        // FIXME: Not yet implemented!!!
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public void removeListener(ResponseListener listener) {
-        // FIXME: Not yet implemented!!!
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
 }

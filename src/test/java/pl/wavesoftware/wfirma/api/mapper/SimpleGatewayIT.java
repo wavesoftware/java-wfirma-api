@@ -23,6 +23,7 @@
  */
 package pl.wavesoftware.wfirma.api.mapper;
 
+import java.net.URI;
 import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -68,6 +69,8 @@ public class SimpleGatewayIT {
     private String expResultPost;
 
     private static final String EXAMPLE_NIP = "5272516453";
+
+    private static final URI GATEWAY_ADDRESS = URI.create(WFirmaGateway.GATEWAY_ADDRESS);
 
     @Before
     public void before() {
@@ -184,9 +187,9 @@ public class SimpleGatewayIT {
     @Test
     public void testFetch() throws WFirmaException {
         SimpleCredentials creds = new SimpleCredentials(correctLogin, correctPassword);
-        SimpleGateway instance = new SimpleGateway(creds);
+        SimpleGateway instance = new SimpleGateway(creds, GATEWAY_ADDRESS);
 
-        Request<Companies> get = new GetRequest<>(Companies.class, 1L);
+        Request<Companies> get = GetRequest.create(Companies.class, 1L);
         String result = instance.get(get);
         assertNotNull(result);
         assertThat(result).matches(expResultRe);
@@ -199,7 +202,7 @@ public class SimpleGatewayIT {
         DeleteRequest<Contractors> deleteRequest;
 
         SimpleCredentials creds = new SimpleCredentials(correctLogin, correctPassword);
-        SimpleGateway instance = new SimpleGateway(creds);
+        SimpleGateway instance = new SimpleGateway(creds, GATEWAY_ADDRESS);
 
         String result;
         result = instance.post(findRequest);
@@ -241,7 +244,7 @@ public class SimpleGatewayIT {
         }
         Assume.assumeTrue(cond);
         SimpleCredentials creds = new SimpleCredentials("non-existing-login-2@example.org", "invalid-password");
-        SimpleGateway instance = new SimpleGateway(creds);
+        SimpleGateway instance = new SimpleGateway(creds, GATEWAY_ADDRESS);
         final StringBuilder responseBuilder = new StringBuilder();
         ResponseListener listener = new ResponseListener() {
 
@@ -252,7 +255,7 @@ public class SimpleGatewayIT {
         };
         instance.addListener(listener);
         try {
-            Request<Companies> get = new GetRequest<>(Companies.class, 2L);
+            Request<Companies> get = GetRequest.create(Companies.class, 2L);
             instance.get(get);
             fail("Expected to throw a WFirmaSercurityException for invalid auth");
         } catch (WFirmaSecurityException ex) {
@@ -275,7 +278,7 @@ public class SimpleGatewayIT {
         cond.setValue(EXAMPLE_NIP);
         and.getCondition().add(cond);
         conds.getAnd().add(and);
-        return new FindRequest<>(Contractors.class, params);
+        return FindRequest.create(Contractors.class, params);
     }
 
     private AddRequest<Contractors> createAddRequest() {
@@ -290,7 +293,7 @@ public class SimpleGatewayIT {
     }
 
     private DeleteRequest<Contractors> createDeleteRequest(Contractor contractor) {
-        return new DeleteRequest<>(Contractors.class, contractor.getId());
+        return DeleteRequest.create(Contractors.class, contractor.getId());
     }
 
 }

@@ -59,7 +59,7 @@ public class RequestValidatorTest {
         RequestValidator instance = new RequestValidator(edit);
         assertThat(instance.isValid()).isFalse();
 
-        GetRequest<Companies> get = new GetRequest<>(Companies.class, 6L);
+        GetRequest<Companies> get = GetRequest.create(Companies.class, 6L);
         instance = new RequestValidator(get);
         assertThat(instance.isValid()).isTrue();
     }
@@ -78,7 +78,7 @@ public class RequestValidatorTest {
 
     @Test
     public void testValidate() throws Exception {
-        GetRequest<Companies> get = new GetRequest<>(Companies.class, 6l);
+        GetRequest<Companies> get = GetRequest.create(Companies.class, 6l);
         RequestValidator instance = new RequestValidator(get);
         instance.validate();
         assertThat(instance).isNotNull();

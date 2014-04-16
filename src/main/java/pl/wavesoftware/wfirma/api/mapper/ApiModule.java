@@ -101,6 +101,7 @@ public final class ApiModule {
     public static Class<? extends ApiEntityElement> getEntityClass(@Nonnull Class<? extends Api> apiClass) {
         Preconditions.checkNotNull(apiClass);
         try {
+            @SuppressWarnings("unchecked")
             Class<? extends ApiEntityElement> ret = apiClass.newInstance().getEntityClass();
             return ret;
         } catch (InstantiationException | IllegalAccessException ex) {
@@ -123,14 +124,19 @@ public final class ApiModule {
     /**
      * Gets a module for entity object
      *
+     * @param <T> type of API antity
      * @param cls a entity class
      * @return a enum module
      */
     @Nonnull
-    public static Class<? extends Api> getModuleFor(@Nonnull Class<? extends ApiEntityElement> cls) {
+    public static <T extends ApiEntityElement> Class<? extends Api<T>> getModuleFor(@Nonnull Class<T> cls) {
         Preconditions.checkNotNull(cls);
         try {
-            return cls.newInstance().getApi().getClass();
+            T inst = cls.newInstance();
+            Api api = inst.getApi();
+            @SuppressWarnings("unchecked")
+            Class<? extends Api<T>> ret = (Class<? extends Api<T>>) api.getClass();
+            return ret;
         } catch (InstantiationException | IllegalAccessException ex) {
             throw new RuntimeException(ex);
         }

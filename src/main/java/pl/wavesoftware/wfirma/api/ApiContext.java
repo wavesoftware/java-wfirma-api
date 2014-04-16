@@ -21,7 +21,6 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-
 package pl.wavesoftware.wfirma.api;
 
 import pl.wavesoftware.wfirma.api.model.Credentials;
@@ -30,23 +29,29 @@ import pl.wavesoftware.wfirma.api.model.Credentials;
  *
  * @author Krzysztof Suszyński <krzysztof.suszynski@wavesoftware.pl>
  */
-public class APIContext {
+public class ApiContext {
 
     private final Credentials credentials;
 
+    Credentials getCredentials() {
+        return credentials;
+    }
+
     /**
      * Constructor with OAuth
+     *
      * @param credentials a OAuth credentials
      */
-    public APIContext(OAuthCredentials credentials) {
+    public ApiContext(OAuthCredentials credentials) {
         this.credentials = credentials;
     }
 
     /**
      * Constructor with Simple method
+     *
      * @param credentials a simple credentials
      */
-    public APIContext(SimpleCredentials credentials) {
+    public ApiContext(SimpleCredentials credentials) {
         this.credentials = credentials;
     }
 

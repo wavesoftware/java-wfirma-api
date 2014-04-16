@@ -65,15 +65,14 @@ import pl.wavesoftware.wfirma.api.model.logic.Parameters;
 public class Contractors implements Parametrizable, ApiEntityElement {
 
     @XmlTransient
-    private final Api api;
+    private Api<Contractors> api;
 
-    public Contractors(Api api) {
-        this.api = api;
+    public Contractors(Api<Contractors> api) {
+        setApi(api);
     }
 
     public Contractors() {
-        api = new ContractorsApi();
-        setApi((ContractorsApi) api);
+        this(new ContractorsApi());
     }
 
     @XmlElement(required = true)
@@ -86,9 +85,8 @@ public class Contractors implements Parametrizable, ApiEntityElement {
      * Gets the value of the contractor property.
      *
      * <p>
-     * This accessor method returns a reference to the live list, not a snapshot. Therefore any modification you make to
-     * the returned list will be present inside the JAXB object. This is why there is not a <CODE>set</CODE> method for
-     * the contractor property.
+     * This accessor method returns a reference to the live list, not a snapshot. Therefore any modification you make to the returned list
+     * will be present inside the JAXB object. This is why there is not a <CODE>set</CODE> method for the contractor property.
      *
      * <p>
      * For example, to add a new item, do as follows:
@@ -142,12 +140,13 @@ public class Contractors implements Parametrizable, ApiEntityElement {
     }
 
     @Override
-    public Api getApi() {
+    public Api<Contractors> getApi() {
         return api;
     }
 
-    private void setApi(ContractorsApi contractorsApi) {
-        contractorsApi.setContractors(this);
+    private void setApi(Api<Contractors> contractorsApi) {
+        this.api = contractorsApi;
+        contractorsApi.setEntityElement(this);
     }
 
 }

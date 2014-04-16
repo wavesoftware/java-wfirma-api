@@ -21,7 +21,6 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-
 package pl.wavesoftware.wfirma.api.mapper;
 
 import com.google.common.base.Charsets;
@@ -50,7 +49,7 @@ import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
-import pl.wavesoftware.wfirma.api.SimpleCredentials;
+import pl.wavesoftware.wfirma.api.model.Credentials;
 import pl.wavesoftware.wfirma.api.model.PostRequest;
 import pl.wavesoftware.wfirma.api.model.Request;
 import pl.wavesoftware.wfirma.api.model.WFirmaException;
@@ -63,7 +62,7 @@ import pl.wavesoftware.wfirma.api.model.validation.RequestValidator;
  */
 class SimpleGateway implements WFirmaGateway {
 
-    private final SimpleCredentials credentials;
+    private final Credentials credentials;
 
     private final URI gateway;
 
@@ -72,22 +71,12 @@ class SimpleGateway implements WFirmaGateway {
     private final Set<ResponseListener> listeners = new HashSet<>();
 
     /**
-     * Constructor
-     *
-     * @param credentials a simple credentials
-     */
-    public SimpleGateway(SimpleCredentials credentials) {
-        this.credentials = credentials;
-        gateway = URI.create(GATEWAY_ADDRESS);
-    }
-
-    /**
-     * A junit overwritable method
+     * A default constructor
      *
      * @param credentials a simple credentials
      * @param gateway a gateway address
      */
-    protected SimpleGateway(SimpleCredentials credentials, URI gateway) {
+    SimpleGateway(Credentials credentials, URI gateway) {
         this.credentials = credentials;
         this.gateway = gateway;
     }
@@ -108,7 +97,7 @@ class SimpleGateway implements WFirmaGateway {
         CredentialsProvider credsProvider = new BasicCredentialsProvider();
         credsProvider.setCredentials(
                 new AuthScope(target.getHostName(), target.getPort()),
-                new UsernamePasswordCredentials(credentials.getLogin(), credentials.getPassword()));
+                new UsernamePasswordCredentials(credentials.getConsumerKey(), credentials.getConsumerSecret()));
         try (CloseableHttpClient httpclient = HttpClients.custom()
                 .setDefaultCredentialsProvider(credsProvider).build()) {
 
@@ -168,12 +157,12 @@ class SimpleGateway implements WFirmaGateway {
                     for (ResponseListener responseListener : listeners) {
                         responseListener.responseRecived(content);
                     }
-                    return statusParser.checkedForStatus(credentials.getLogin(), content);
+                    return statusParser.checkedForStatus(credentials.getConsumerKey(), content);
                 } catch (IOException | IllegalStateException ex) {
                     throw new RuntimeException(ex);
                 }
             case 403:
-                throw new WFirmaSecurityException("Auth failed for user: `%s`", credentials.getLogin());
+                throw new WFirmaSecurityException("Auth failed for user: `%s`", credentials.getConsumerKey());
             default:
                 StatusLine status = response.getStatusLine();
                 throw new WFirmaException("Connection error: %d - %s", status.getStatusCode(),

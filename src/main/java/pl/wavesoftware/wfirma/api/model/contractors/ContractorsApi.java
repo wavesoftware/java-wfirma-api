@@ -31,7 +31,6 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
 import pl.wavesoftware.wfirma.api.mapper.Api;
-import pl.wavesoftware.wfirma.api.model.ApiEntityElement;
 import static pl.wavesoftware.wfirma.api.mapper.ApiModule.collectRequests;
 import pl.wavesoftware.wfirma.api.model.Request;
 import pl.wavesoftware.wfirma.api.model.requests.AddRequest;
@@ -48,7 +47,7 @@ import pl.wavesoftware.wfirma.api.model.requests.GetRequest;
  * The following schema fragment specifies the expected content contained within this class.
  *
  * <pre>
- * &lt;complexType name="apiType">
+ * &lt;complexType name="contractorsApiType">
  *   &lt;complexContent>
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
@@ -62,11 +61,9 @@ import pl.wavesoftware.wfirma.api.model.requests.GetRequest;
  *
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "apiType", propOrder = {
-    "contractors"
-})
+@XmlType(name = "contractorsApiType")
 @XmlRootElement(name = "api")
-public class ContractorsApi implements Api {
+public class ContractorsApi implements Api<Contractors> {
 
     @XmlElement(nillable = false)
     private Contractors contractors;
@@ -85,12 +82,6 @@ public class ContractorsApi implements Api {
 
     @Override
     @XmlTransient
-    public Class<? extends ApiEntityElement> getEntityClass() {
-        return Contractors.class;
-    }
-
-    @Override
-    @XmlTransient
     public Collection<Class<? extends Request>> getSupportedRequests() {
         return collectRequests(
                 GetRequest.class,
@@ -99,6 +90,23 @@ public class ContractorsApi implements Api {
                 DeleteRequest.class,
                 EditRequest.class
         );
+    }
+
+    @Override
+    @XmlTransient
+    public Class<Contractors> getEntityClass() {
+        return Contractors.class;
+    }
+
+    @Override
+    @XmlTransient
+    public Contractors getEntityElement() {
+        return getContractors();
+    }
+
+    @Override
+    public void setEntityElement(Contractors entityElement) {
+        this.contractors = entityElement;
     }
 
 }

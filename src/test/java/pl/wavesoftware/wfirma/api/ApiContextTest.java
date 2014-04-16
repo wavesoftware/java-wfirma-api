@@ -21,24 +21,32 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-
 package pl.wavesoftware.wfirma.api;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import org.junit.Test;
+import pl.wavesoftware.wfirma.api.model.Credentials;
 
 /**
  *
  * @author Krzysztof Suszyński <krzysztof.suszynski@wavesoftware.pl>
  */
-public class APIContextTest {
+public class ApiContextTest {
 
     @Test
     public void testCreate() {
-        APIContext context = new APIContext(new OAuthCredentials("key", "secret"));
+        ApiContext context = new ApiContext(new OAuthCredentials("key", "secret"));
         assertThat(context).isNotNull();
-        context = new APIContext(new SimpleCredentials("login", "password"));
+        context = new ApiContext(new SimpleCredentials("login", "password"));
         assertThat(context).isNotNull();
+    }
+
+    @Test
+    public void testGetCredentials() {
+        SimpleCredentials input = new SimpleCredentials("login2", "password2");
+        ApiContext instance = new ApiContext(input);
+        Credentials result = instance.getCredentials();
+        assertThat(result).isSameAs(input);
     }
 
 }

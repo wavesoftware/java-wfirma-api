@@ -30,15 +30,30 @@ import pl.wavesoftware.wfirma.api.model.Request;
 /**
  *
  * @author Krzysztof Suszyński <krzysztof.suszynski@wavesoftware.pl>
+ * @param <T> a type of API
  */
-public interface Api {
+public interface Api<T extends ApiEntityElement> {
 
     /**
      * Gets a entity class for API
      *
      * @return a entity class
      */
-    Class<? extends ApiEntityElement> getEntityClass();
+    Class<T> getEntityClass();
+
+    /**
+     * Gets a entity element for API
+     *
+     * @return a entity element
+     */
+    T getEntityElement();
+
+    /**
+     * Sets a entity element for API
+     *
+     * @param entityElement an entity element
+     */
+    void setEntityElement(T entityElement);
 
     /**
      * Gets a collection of supported requests

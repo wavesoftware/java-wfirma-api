@@ -31,11 +31,10 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
 import pl.wavesoftware.wfirma.api.mapper.Api;
+import static pl.wavesoftware.wfirma.api.mapper.ApiModule.collectRequests;
 import pl.wavesoftware.wfirma.api.mapper.xml.UsesXmlCustomFormatter;
 import pl.wavesoftware.wfirma.api.mapper.xml.UsesXmlCustomFormatter.Param;
 import pl.wavesoftware.wfirma.api.mapper.xml.XsiTypeToObjectPropertyFormatter;
-import pl.wavesoftware.wfirma.api.model.ApiEntityElement;
-import static pl.wavesoftware.wfirma.api.mapper.ApiModule.collectRequests;
 import pl.wavesoftware.wfirma.api.model.Request;
 import pl.wavesoftware.wfirma.api.model.requests.AddRequest;
 import pl.wavesoftware.wfirma.api.model.requests.DeleteRequest;
@@ -70,7 +69,7 @@ import pl.wavesoftware.wfirma.api.model.requests.GetRequest;
 @UsesXmlCustomFormatter(value = XsiTypeToObjectPropertyFormatter.class, parameters = {
     @Param(key = XsiTypeToObjectPropertyFormatter.FIELD, value = "type")
 })
-public class InvoicesApi implements Api {
+public class InvoicesApi implements Api<Invoices> {
 
     /**
      * a invoices main element in api
@@ -101,12 +100,6 @@ public class InvoicesApi implements Api {
 
     @Override
     @XmlTransient
-    public Class<? extends ApiEntityElement> getEntityClass() {
-        return Invoices.class;
-    }
-
-    @Override
-    @XmlTransient
     public Collection<Class<? extends Request>> getSupportedRequests() {
         return collectRequests(
                 GetRequest.class,
@@ -115,6 +108,23 @@ public class InvoicesApi implements Api {
                 DeleteRequest.class,
                 EditRequest.class
         );
+    }
+
+    @Override
+    @XmlTransient
+    public Class<Invoices> getEntityClass() {
+        return Invoices.class;
+    }
+
+    @Override
+    @XmlTransient
+    public Invoices getEntityElement() {
+        return getInvoices();
+    }
+
+    @Override
+    public void setEntityElement(Invoices entityElement) {
+        this.invoices = entityElement;
     }
 
 }

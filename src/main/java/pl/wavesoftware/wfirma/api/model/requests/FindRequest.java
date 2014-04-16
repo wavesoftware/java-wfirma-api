@@ -43,13 +43,7 @@ public class FindRequest<T extends ApiEntityElement> implements PostRequest<T> {
 
     private final Class<T> entityClass;
 
-    /**
-     * Constructor
-     *
-     * @param entityClass a entity class of api module
-     * @param parameters a parameters to find element
-     */
-    public FindRequest(Class<T> entityClass, Parameters parameters) {
+    private FindRequest(Class<T> entityClass, Parameters parameters) {
         this.entityClass = entityClass;
         try {
             T en = entityClass.newInstance();
@@ -63,13 +57,33 @@ public class FindRequest<T extends ApiEntityElement> implements PostRequest<T> {
         }
     }
 
+    private FindRequest(Class<T> entityClass) {
+        this(entityClass, null);
+    }
+
     /**
-     * Constructor for find all elements
+     * Constructor method
      *
      * @param entityClass a entity class of api module
+     * @param parameters a parameters to find element
+     * @param <T> a type of entity
+     * @return a request
      */
-    public FindRequest(Class<T> entityClass) {
-        this(entityClass, null);
+    public static <T extends ApiEntityElement> FindRequest<T> create(Class<T> entityClass, Parameters parameters) {
+        FindRequest<T> obj = new FindRequest<>(entityClass, parameters);
+        return obj;
+    }
+
+    /**
+     * Constructor method for find all elements
+     *
+     * @param entityClass a entity class of api module
+     * @param <T> a type of entity
+     * @return a request
+     */
+    public static <T extends ApiEntityElement> FindRequest<T> create(Class<T> entityClass) {
+        FindRequest<T> obj = new FindRequest<>(entityClass);
+        return obj;
     }
 
     @Override

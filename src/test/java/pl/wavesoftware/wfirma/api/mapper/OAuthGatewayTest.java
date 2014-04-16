@@ -46,29 +46,29 @@ public class OAuthGatewayTest {
 
     @Test(expected = UnsupportedOperationException.class)
     public void testGet() throws Exception {
-        Request<Companies> request = new GetRequest<>(Companies.class, 5L);
-        OAuthGateway instance = new OAuthGateway(creds);
+        Request<Companies> request = GetRequest.create(Companies.class, 5L);
+        OAuthGateway instance = new OAuthGateway(creds, null);
         assertThat(instance.get(request)).isNotNull();
     }
 
     @Test(expected = UnsupportedOperationException.class)
     public void testPost() throws Exception {
-        FindRequest<Companies> request = new FindRequest<>(Companies.class);
-        OAuthGateway instance = new OAuthGateway(creds);
+        FindRequest<Companies> request = FindRequest.create(Companies.class);
+        OAuthGateway instance = new OAuthGateway(creds, null);
         assertThat(instance.post(request)).isNotNull();
     }
 
     @Test(expected = UnsupportedOperationException.class)
     public void testAddListener() {
         ResponseListener listener = Mockito.mock(ResponseListener.class);
-        OAuthGateway instance = new OAuthGateway(creds);
+        OAuthGateway instance = new OAuthGateway(creds, null);
         instance.addListener(listener);
     }
 
     @Test(expected = UnsupportedOperationException.class)
     public void testRemoveListener() {
         ResponseListener listener = Mockito.mock(ResponseListener.class);
-        OAuthGateway instance = new OAuthGateway(creds);
+        OAuthGateway instance = new OAuthGateway(creds, null);
         instance.removeListener(listener);
     }
 

@@ -39,20 +39,12 @@ public class OAuthCredentials implements Credentials {
         this.consumerSecret = consumerSecret;
     }
 
-    /**
-     * Geta a consumer key for an aplication
-     *
-     * @return a consumer key
-     */
+    @Override
     public String getConsumerKey() {
         return consumerKey;
     }
 
-    /**
-     * Gets a consumer secret
-     *
-     * @return a consumer secret
-     */
+    @Override
     public String getConsumerSecret() {
         return consumerSecret;
     }
