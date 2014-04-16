@@ -107,12 +107,9 @@ public class JaxbMarshaller<Type> {
             // output pretty printed
             jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
 
-            try (StringWriter sw = new StringWriter()) {
-                jaxbMarshaller.marshal(object, sw);
-                return format(sw.toString());
-            } catch (IOException ex) {
-                throw new IllegalStateException(ex);
-            }
+            StringWriter sw = new StringWriter();
+            jaxbMarshaller.marshal(object, sw);
+            return format(sw.toString());
         } catch (JAXBException ex) {
             throw new IllegalStateException(ex);
         }

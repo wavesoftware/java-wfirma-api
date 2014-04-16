@@ -130,15 +130,21 @@ public class XsiTypeToObjectPropertyFormatter implements XmlCustomFormatter {
         return iterate(nodeList);
     }
 
-    private Document getDoc(String xml) {
+    protected Document getDoc(StringReader reader) {
         try {
             DocumentBuilderFactory docBuilderFactory = DocumentBuilderFactory.newInstance();
             DocumentBuilder docBuilder = docBuilderFactory.newDocumentBuilder();
-            Document doc = docBuilder.parse(new InputSource(new StringReader(xml)));
+            Document doc = docBuilder.parse(new InputSource(reader));
             doc.setXmlStandalone(true);
             return doc;
         } catch (SAXException | IOException | ParserConfigurationException ex) {
             throw new RuntimeException(ex);
+        }
+    }
+
+    private Document getDoc(String xml) {
+        try (StringReader reader = new StringReader(xml)) {
+            return getDoc(reader);
         }
     }
 

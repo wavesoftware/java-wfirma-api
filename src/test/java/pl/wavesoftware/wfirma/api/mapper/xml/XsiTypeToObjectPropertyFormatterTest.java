@@ -23,6 +23,8 @@
  */
 package pl.wavesoftware.wfirma.api.mapper.xml;
 
+import java.io.IOException;
+import java.io.StringReader;
 import java.lang.annotation.Annotation;
 import java.util.Map;
 import mockit.Deencapsulation;
@@ -202,6 +204,23 @@ public class XsiTypeToObjectPropertyFormatterTest {
                 return Param.class;
             }
         };
+    }
+
+    @Test
+    public void testGetDoc() throws IOException {
+        try {
+            XsiTypeToObjectPropertyFormatter instance = new XsiTypeToObjectPropertyFormatter();
+            String sample = "sample";
+            StringReader reader = new StringReader(sample);
+            assertThat(reader.read()).inHexadecimal().isEqualTo(0x73);
+            reader.close();
+            instance.getDoc(reader);
+            Assertions.failBecauseExceptionWasNotThrown(RuntimeException.class);
+        } catch (RuntimeException ex) {
+            assertThat(ex).isExactlyInstanceOf(RuntimeException.class);
+            assertThat(ex).hasCauseExactlyInstanceOf(IOException.class);
+            assertThat(ex).hasMessage("java.io.IOException: Stream closed");
+        }
     }
 
 }

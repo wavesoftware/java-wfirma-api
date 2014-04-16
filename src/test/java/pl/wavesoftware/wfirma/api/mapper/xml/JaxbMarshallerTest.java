@@ -23,12 +23,15 @@
  */
 package pl.wavesoftware.wfirma.api.mapper.xml;
 
+import com.openpojo.random.RandomFactory;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
 import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Scanner;
+import javax.xml.bind.JAXBException;
+import org.assertj.core.api.Assertions;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.custommonkey.xmlunit.XMLAssert.assertXMLEqual;
 import org.custommonkey.xmlunit.XMLUnit;
@@ -38,6 +41,9 @@ import org.junit.Before;
 import org.junit.Test;
 import static org.unitils.reflectionassert.ReflectionAssert.assertReflectionEquals;
 import org.xml.sax.SAXException;
+import pl.wavesoftware.wfirma.api.mapper.xml.invalidjaxbconfig.JaxbEntityWithBadConfiguration;
+import pl.wavesoftware.wfirma.api.mapper.xml.invalidjaxbentity.JaxbInvalidEntity;
+import pl.wavesoftware.wfirma.api.mapper.xml.invalidjaxbformatter.JaxbEntityWithInvalidFormatter;
 import pl.wavesoftware.wfirma.api.model.companies.Companies;
 import pl.wavesoftware.wfirma.api.model.companies.CompaniesApi;
 import pl.wavesoftware.wfirma.api.model.companies.Company;
@@ -269,6 +275,89 @@ public class JaxbMarshallerTest {
         AbstractInvoice resultInvoice = resultList.iterator().next();
         assertThat(resultInvoice).isExactlyInstanceOf(ProformaInvoice.class);
         assertThat(resultInvoice.getPaymentMethod()).isEqualTo(AbstractInvoice.PaymentMethod.cash);
+    }
+
+    @Test
+    public void testConstructorOnInvalidConfiguration() {
+        try {
+            JaxbMarshaller<JaxbEntityWithBadConfiguration> instance = JaxbMarshaller.create(JaxbEntityWithBadConfiguration.class);
+            assertThat(instance).isNotNull();
+            JaxbEntityWithBadConfiguration entity = new JaxbEntityWithBadConfiguration();
+            entity.setName(RandomFactory.getRandomValue(String.class));
+            instance.marshal(entity);
+            Assertions.failBecauseExceptionWasNotThrown(RuntimeException.class);
+        } catch (RuntimeException ex) {
+            assertThat(ex).isExactlyInstanceOf(RuntimeException.class);
+            assertThat(ex).hasCauseInstanceOf(JAXBException.class);
+            assertThat(ex).hasMessage("javax.xml.bind.JAXBException\n"
+                    + " - with linked exception:\n"
+                    + "[java.lang.ClassNotFoundException: pl.wave.nonexisting.JaxbContextFactory]");
+        }
+    }
+
+    @Test
+    public void testMarshalOnInvalidEntity() {
+        try {
+            JaxbMarshaller<JaxbInvalidEntity> instance = JaxbMarshaller.create(JaxbInvalidEntity.class);
+            assertThat(instance).isNotNull();
+            JaxbInvalidEntity entity = new JaxbInvalidEntity();
+            entity.setName(RandomFactory.getRandomValue(String.class));
+            entity.setPrice(Money.of(CurrencyUnit.USD, 45.76d));
+            instance.marshal(entity);
+            Assertions.failBecauseExceptionWasNotThrown(RuntimeException.class);
+        } catch (RuntimeException ex) {
+            assertThat(ex).isExactlyInstanceOf(IllegalStateException.class);
+            assertThat(ex).hasCauseInstanceOf(JAXBException.class);
+            assertThat(ex.getLocalizedMessage()).contains("javax.xml.bind.MarshalException",
+                    "java.lang.IllegalArgumentException: Not supported, on purpuse.");
+        }
+    }
+
+    @Test
+    public void testUnmarshalOnInvalidEntity() {
+        try {
+            JaxbMarshaller<JaxbInvalidEntity> instance = JaxbMarshaller.create(JaxbInvalidEntity.class);
+            assertThat(instance).isNotNull();
+            String xml = "<jaxbInvalidEntity>\n"
+                    + "    <price>USD 920.78</price>\n"
+                    + "    <name>sample</name>\n"
+                    + "</jaxbInvalidEntity>";
+            JaxbInvalidEntity entity = instance.unmarshal(xml);
+            assertThat(entity).isNotNull();
+            assertThat(entity.getName()).isEqualTo("sample");
+            assertThat(entity.getPrice()).isNull();
+            xml = "<jaxbInvalidEntity>\n"
+                    + "    <price>USD 920.78\n"
+                    + "    <name>sample</name>\n"
+                    + "</jaxbInvalidEntity>";
+            instance.unmarshal(xml);
+            Assertions.failBecauseExceptionWasNotThrown(RuntimeException.class);
+        } catch (RuntimeException ex) {
+            assertThat(ex).isExactlyInstanceOf(IllegalStateException.class);
+            assertThat(ex).hasCauseInstanceOf(JAXBException.class);
+            assertThat(ex.getLocalizedMessage()).contains("javax.xml.bind.UnmarshalException",
+                    "org.xml.sax.SAXParseException; lineNumber: 4; columnNumber: 3; The element type"
+                    + " \"price\" must be terminated by the matching end-tag \"</price>\"");
+        }
+    }
+
+    @Test
+    public void testMarshalOnInvalidFormatter() {
+        try {
+            JaxbMarshaller<JaxbEntityWithInvalidFormatter> instance = JaxbMarshaller.create(JaxbEntityWithInvalidFormatter.class);
+            assertThat(instance).isNotNull();
+            JaxbEntityWithInvalidFormatter entity = new JaxbEntityWithInvalidFormatter();
+            entity.setName(RandomFactory.getRandomValue(String.class));
+            String xml = instance.marshal(entity);
+            assertThat(xml).isEqualTo("");
+            Assertions.failBecauseExceptionWasNotThrown(RuntimeException.class);
+        } catch (RuntimeException ex) {
+            assertThat(ex).hasCauseInstanceOf(IllegalAccessException.class);
+            assertThat(ex).hasMessage("java.lang.IllegalAccessException: Class pl.wavesoftware.wfirma.api.mapper.xml."
+                    + "JaxbMarshaller can not access a member of class pl.wavesoftware.wfirma.api.mapper.xml."
+                    + "invalidjaxbformatter.JaxbEntityWithInvalidFormatter$InvalidJaxbFormatter with modifiers"
+                    + " \"private\"");
+        }
     }
 
 }
