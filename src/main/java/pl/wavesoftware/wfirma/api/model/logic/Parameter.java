@@ -23,46 +23,57 @@
  */
 package pl.wavesoftware.wfirma.api.model.logic;
 
-import com.openpojo.reflection.PojoClass;
-import com.openpojo.validation.PojoValidator;
-import java.util.Collection;
-import static org.assertj.core.api.Assertions.assertThat;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
-import pl.wavesoftware.wfirma.api.model.utils.PojoValidationFactory;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlType;
 
 /**
  *
  * @author Krzysztof Suszyński <krzysztof.suszynski@wavesoftware.pl>
  */
-@RunWith(Parameterized.class)
-public class LogicPojoValidationTest {
+@XmlAccessorType(XmlAccessType.FIELD)
+@XmlType(name = "parameterType")
+public class Parameter {
 
-    private final PojoClass pojoClass;
+    @XmlElement(required = true)
+    private String name;
 
-    private final PojoValidator pojoValidator = PojoValidationFactory.createPojoValidator();
+    @XmlElement(required = true)
+    private String value;
 
-    @Parameterized.Parameters(name = "{0}")
-    public static Collection<Object[]> data() {
-        return PojoValidationFactory.createPojoClassList(
-                Parameters.class,
-                Parameter.class,
-                Order.class,
-                Or.class,
-                Conditions.class,
-                Condition.class,
-                And.class
-        );
+    /**
+     * Default constructor
+     */
+    public Parameter() {
+        // nothing here
     }
 
-    public LogicPojoValidationTest(String label, PojoClass pojoClass) {
-        this.pojoClass = pojoClass;
+    /**
+     * Constructor to all elements
+     *
+     * @param name a name of property
+     * @param value a value of a property
+     */
+    public Parameter(String name, String value) {
+        this.name = name;
+        this.value = value;
     }
 
-    @Test
-    public void testPojoStructureAndBehavior() {
-        assertThat(pojoClass).isNotNull();
-        pojoValidator.runValidation(pojoClass);
+    public String getName() {
+        return name;
     }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getValue() {
+        return value;
+    }
+
+    public void setValue(String value) {
+        this.value = value;
+    }
+
 }

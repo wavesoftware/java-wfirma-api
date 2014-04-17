@@ -106,7 +106,8 @@ public class InvoicesApi implements Api<Invoices> {
                 AddRequest.class,
                 FindRequest.class,
                 DeleteRequest.class,
-                EditRequest.class
+                EditRequest.class,
+                DownloadRequest.class
         );
     }
 

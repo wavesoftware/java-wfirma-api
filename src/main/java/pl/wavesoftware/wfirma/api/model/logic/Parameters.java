@@ -23,6 +23,8 @@
  */
 package pl.wavesoftware.wfirma.api.model.logic;
 
+import java.util.ArrayList;
+import java.util.List;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
@@ -56,6 +58,7 @@ import javax.xml.bind.annotation.XmlType;
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "parametersType", propOrder = {
     "conditions",
+    "parameter",
     "order",
     "page",
     "limit"
@@ -63,17 +66,20 @@ import javax.xml.bind.annotation.XmlType;
 @XmlRootElement(name = "parameters")
 public class Parameters {
 
-    @XmlElement(required = true)
-    protected Conditions conditions = new Conditions();
+    @XmlElement
+    private Conditions conditions;
+
+    @XmlElement
+    private List<Parameter> parameter;
 
     @XmlElement(required = true)
-    protected Order order;
+    private Order order;
 
-    @XmlElement(required = false)
-    protected Integer page = 0;
+    @XmlElement
+    private Integer page = 0;
 
-    @XmlElement(required = false)
-    protected Integer limit = 20;
+    @XmlElement
+    private Integer limit = 20;
 
     /**
      * Gets the value of the conditions property.
@@ -82,6 +88,9 @@ public class Parameters {
      *
      */
     public Conditions getConditions() {
+        if (conditions == null) {
+            conditions = new Conditions();
+        }
         return conditions;
     }
 
@@ -149,6 +158,36 @@ public class Parameters {
      */
     public void setLimit(Integer limit) {
         this.limit = limit;
+    }
+
+    /**
+     * Gets the value of the parameter property.
+     *
+     * <p>
+     * This accessor method returns a reference to the live list, not a snapshot. Therefore any modification you make to the returned list
+     * will be present inside the JAXB object. This is why there is not a <CODE>set</CODE> method for the and property.
+     *
+     * <p>
+     * For example, to add a new item, do as follows:
+     * <pre>
+     *    getParameter().add(newItem);
+     * </pre>
+     *
+     *
+     * <p>
+     * Objects of the following type(s) are allowed in the list {@link Parameter}
+     *
+     * @return Parameter(s)
+     */
+    public List<Parameter> getParameter() {
+        if (parameter == null) {
+            parameter = new ArrayList<>();
+        }
+        return parameter;
+    }
+
+    protected void setParameter(List<Parameter> parameter) {
+        this.parameter = parameter;
     }
 
 }
