@@ -70,7 +70,7 @@ public class JaxbMarshaller<Type> {
         return marshaller;
     }
 
-    private JaxbMarshaller(Class<Type> cls) {
+    protected JaxbMarshaller(Class<Type> cls) {
         this.type = cls;
     }
 

@@ -57,6 +57,15 @@ public class ApiExecutor extends AbstractWFirmaGatewayFactory {
         this.context = context;
     }
 
+    /**
+     * Execute a {@link Request} throuth WFirma API2 and fetches a {@link Response} with objects that are being unpacked from response XML
+     *
+     * @param <T> a type of API entity element - the main element type.
+     * @param request a request to be executed
+     * @return a response from API
+     * @throws WFirmaException if anything goes wrong. {@link pl.wavesoftware.wfirma.api.model.WFirmaSecurityException} is thrown if there
+     * ware problem with security credentials.
+     */
     public <T extends ApiEntityElement> Response<T> execute(Request<T> request) throws WFirmaException {
         String responseOutput = execute(getGateway(), request);
         JaxbResponse<T> response = new JaxbResponse<>(request.getEntityClass(), responseOutput);

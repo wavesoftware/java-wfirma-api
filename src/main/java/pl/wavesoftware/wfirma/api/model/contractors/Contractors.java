@@ -55,22 +55,27 @@ import pl.wavesoftware.wfirma.api.model.logic.Parameters;
  * &lt;/complexType>
  * </pre>
  *
- *
+ * @author Krzysztof Suszyński <krzysztof.suszynski@wavesoftware.pl>
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "contractorsType", propOrder = {
-    "contractor",
-    "parameters"
-})
+@XmlType(name = "contractorsType")
 public class Contractors implements Parametrizable, ApiEntityElement {
 
     @XmlTransient
     private Api<Contractors> api;
 
+    /**
+     * Constructor with API
+     *
+     * @param api api
+     */
     public Contractors(Api<Contractors> api) {
         setApi(api);
     }
 
+    /**
+     * Default constructor
+     */
     public Contractors() {
         this(new ContractorsApi());
     }

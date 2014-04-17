@@ -49,14 +49,10 @@ import javax.xml.bind.annotation.XmlType;
  * &lt;/complexType>
  * </pre>
  *
- *
+ * @author Krzysztof Suszyński <krzysztof.suszynski@wavesoftware.pl>
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "conditionType", propOrder = {
-    "field",
-    "operator",
-    "value"
-})
+@XmlType(name = "conditionType")
 public class Condition {
 
     @XmlElement(required = true)

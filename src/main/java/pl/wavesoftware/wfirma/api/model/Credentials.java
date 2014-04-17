@@ -34,13 +34,13 @@ public interface Credentials {
      *
      * @return a consumer key
      */
-    public String getConsumerKey();
+    String getConsumerKey();
 
     /**
      * Gets a consumer secret
      *
      * @return a consumer secret
      */
-    public String getConsumerSecret();
+    String getConsumerSecret();
 
 }

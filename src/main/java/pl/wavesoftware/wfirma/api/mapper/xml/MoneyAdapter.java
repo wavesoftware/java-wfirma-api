@@ -41,6 +41,9 @@ public class MoneyAdapter extends XmlAdapter<String, Money> {
 
     private final MoneyFormatter formater;
 
+    /**
+     * Default constructor
+     */
     public MoneyAdapter() {
         MoneyFormatterBuilder builder = new MoneyFormatterBuilder();
         formater = builder

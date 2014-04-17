@@ -48,7 +48,6 @@ import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
-import pl.wavesoftware.wfirma.api.model.Credentials;
 import pl.wavesoftware.wfirma.api.model.PostRequest;
 import pl.wavesoftware.wfirma.api.model.Request;
 import pl.wavesoftware.wfirma.api.model.WFirmaException;
@@ -61,7 +60,7 @@ import pl.wavesoftware.wfirma.api.model.validation.RequestValidator;
  */
 class SimpleGateway implements WFirmaGateway {
 
-    private final Credentials credentials;
+    private final CredentialsBuilder credentials;
 
     private final URI gateway;
 
@@ -72,10 +71,10 @@ class SimpleGateway implements WFirmaGateway {
     /**
      * A default constructor
      *
-     * @param credentials a simple credentials
+     * @param credentials a credentials
      * @param gateway a gateway address
      */
-    SimpleGateway(Credentials credentials, URI gateway) {
+    SimpleGateway(CredentialsBuilder credentials, URI gateway) {
         this.credentials = credentials;
         this.gateway = gateway;
     }
@@ -96,7 +95,7 @@ class SimpleGateway implements WFirmaGateway {
         CredentialsProvider credsProvider = new BasicCredentialsProvider();
         credsProvider.setCredentials(
                 new AuthScope(target.getHostName(), target.getPort()),
-                new UsernamePasswordCredentials(credentials.getConsumerKey(), credentials.getConsumerSecret()));
+                new UsernamePasswordCredentials(credentials.getKey(), credentials.getSecret()));
         try (CloseableHttpClient httpclient = HttpClients.custom()
                 .setDefaultCredentialsProvider(credsProvider).build()) {
 
@@ -156,12 +155,12 @@ class SimpleGateway implements WFirmaGateway {
                     for (ResponseListener responseListener : listeners) {
                         responseListener.responseRecived(content);
                     }
-                    return statusParser.checkedForStatus(credentials.getConsumerKey(), content);
+                    return statusParser.checkedForStatus(credentials.getKey(), content);
                 } catch (IOException ex) {
                     throw new RuntimeException(ex);
                 }
             case 403:
-                throw new WFirmaSecurityException("Auth failed for user: `%s`", credentials.getConsumerKey());
+                throw new WFirmaSecurityException("Auth failed for user: `%s`", credentials.getKey());
             default:
                 StatusLine status = response.getStatusLine();
                 throw new WFirmaException("Connection error: %d - %s", status.getStatusCode(),

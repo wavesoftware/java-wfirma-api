@@ -43,7 +43,7 @@ public class EditRequest<T extends ApiEntityElement> implements PostRequest<T> {
 
     private final Long wFirmaId;
 
-    private EditRequest(T entity, Long wFirmaId) {
+    protected EditRequest(T entity, Long wFirmaId) {
         this.entity = entity;
         this.wFirmaId = wFirmaId;
         this.module = ApiModule.getModuleFor(entity);

@@ -25,6 +25,7 @@ package pl.wavesoftware.wfirma.api.mapper.xml;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.NoSuchElementException;
 import static org.assertj.core.api.Assertions.*;
 import org.junit.Before;
 import org.junit.Test;
@@ -111,6 +112,19 @@ public class NodeListIteratorTest {
         } catch (UnsupportedOperationException ex) {
             assertThat(ex.getLocalizedMessage()).isNull();
             assertThat(ex).hasNoCause();
+        }
+    }
+
+    @Test
+    public void testEmpty() {
+        try {
+            NodeListIterator instance = new NodeListIterator(nodeList);
+            instance.next();
+            instance.empty();
+            failBecauseExceptionWasNotThrown(NoSuchElementException.class);
+        } catch (NoSuchElementException nsee) {
+            assertThat(nsee).hasNoCause();
+            assertThat(nsee).hasMessage("NodeList element `1` doesn't exists");
         }
     }
 

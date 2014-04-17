@@ -37,6 +37,11 @@ public class CompaniesGetRequest extends GetRequest<Companies> {
         super(Companies.class, 0L);
     }
 
+    /**
+     * Creats a {@link CompaniesGetRequest} object
+     *
+     * @return a created request
+     */
     public static CompaniesGetRequest create() {
         return new CompaniesGetRequest();
     }

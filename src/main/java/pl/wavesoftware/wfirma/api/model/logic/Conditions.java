@@ -50,13 +50,10 @@ import javax.xml.bind.annotation.XmlType;
  * &lt;/complexType>
  * </pre>
  *
- *
+ * @author Krzysztof Suszyński <krzysztof.suszynski@wavesoftware.pl>
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "conditionsType", propOrder = {
-    "or",
-    "and"
-})
+@XmlType(name = "conditionsType")
 public class Conditions {
 
     @XmlElement(required = true)

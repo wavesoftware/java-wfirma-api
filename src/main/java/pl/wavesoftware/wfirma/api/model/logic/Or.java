@@ -49,12 +49,10 @@ import javax.xml.bind.annotation.XmlType;
  * &lt;/complexType>
  * </pre>
  *
- *
+ * @author Krzysztof Suszyński <krzysztof.suszynski@wavesoftware.pl>
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "orType", propOrder = {
-    "condition"
-})
+@XmlType(name = "orType")
 public class Or {
 
     @XmlElement(required = true)

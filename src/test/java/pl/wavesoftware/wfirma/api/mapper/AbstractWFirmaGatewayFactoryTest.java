@@ -87,7 +87,7 @@ public class AbstractWFirmaGatewayFactoryTest {
             assertThat(ex).isExactlyInstanceOf(UnsupportedOperationException.class);
             assertThat(ex).hasNoCause();
             assertThat(ex.getLocalizedMessage()).contains(
-                    "credentials `pl.wavesoftware.wfirma.api.mapper.AbstractWFirmaGatewayFactoryTest$1",
+                    "Credentials `pl.wavesoftware.wfirma.api.mapper.AbstractWFirmaGatewayFactoryTest$1",
                     "` is not supported by this SDK.");
 
         }
@@ -123,7 +123,7 @@ public class AbstractWFirmaGatewayFactoryTest {
         assertThat(result).isEqualTo(expResult);
     }
 
-    private class AbstractWFirmaGatewayFactoryImpl extends AbstractWFirmaGatewayFactory {
+    private static class AbstractWFirmaGatewayFactoryImpl extends AbstractWFirmaGatewayFactory {
 
         public Class<? extends Credentials> getTypeForSimpleGateway() {
             return SimpleCredentials.class;

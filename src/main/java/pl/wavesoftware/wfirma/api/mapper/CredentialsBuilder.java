@@ -21,7 +21,6 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-
 package pl.wavesoftware.wfirma.api.mapper;
 
 import pl.wavesoftware.wfirma.api.OAuthCredentials;
@@ -32,58 +31,56 @@ import pl.wavesoftware.wfirma.api.model.Credentials;
  *
  * @author Krzysztof Suszyński <krzysztof.suszynski@wavesoftware.pl>
  */
-public final class CredentialsBuilder {
+final class CredentialsBuilder {
 
-    private final String password;
+    private final String secret;
 
-    private final String login;
-
-    private final Credentials credentials;
+    private final String key;
 
     private CredentialsBuilder(final OAuthCredentials credentials) {
-        this.login = credentials.getConsumerKey();
-        this.password = credentials.getConsumerSecret();
-        this.credentials = credentials;
+        this.key = credentials.getConsumerKey();
+        this.secret = credentials.getConsumerSecret();
     }
 
     private CredentialsBuilder(final SimpleCredentials credentials) {
-        this.login = credentials.getLogin();
-        this.password = credentials.getPassword();
-        this.credentials = credentials;
+        this.key = credentials.getLogin();
+        this.secret = credentials.getPassword();
     }
 
     /**
-     * Getter for login
-     * @return a login
+     * Getter for key
+     *
+     * @return a key
      */
-    public String getLogin() {
-        return login;
+    public String getKey() {
+        return key;
     }
 
     /**
-     * A getter for password
-     * @return
+     * A getter for secret
+     *
+     * @return a secret
      */
-    public String getPassword() {
-        return password;
+    public String getSecret() {
+        return secret;
     }
 
     /**
-     * Builder for OAuth method
-     * @param credentials a OAuth credentials
+     * Builder for credentials
+     *
+     * @param credentials a credentials
      * @return a builder
      */
-    public static CredentialsBuilder from(final OAuthCredentials credentials) {
-        return new CredentialsBuilder(credentials);
-    }
-
-    /**
-     * Builder for simple method
-     * @param credentials a simple credentials
-     * @return a builder
-     */
-    public static CredentialsBuilder from(final SimpleCredentials credentials) {
-        return new CredentialsBuilder(credentials);
+    public static CredentialsBuilder from(final Credentials credentials) {
+        CredentialsBuilder builder;
+        if (credentials instanceof SimpleCredentials) {
+            builder = new CredentialsBuilder((SimpleCredentials) credentials);
+        } else if (credentials instanceof OAuthCredentials) {
+            builder = new CredentialsBuilder((OAuthCredentials) credentials);
+        } else {
+            throw new UnsupportedOperationException("Credentials `" + credentials + "` is not supported by this SDK.");
+        }
+        return builder;
     }
 
 }

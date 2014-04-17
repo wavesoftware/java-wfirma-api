@@ -54,12 +54,11 @@ import pl.wavesoftware.wfirma.api.model.logic.Parameters;
  *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
+ *
+ * @author Krzysztof Suszyński <krzysztof.suszynski@wavesoftware.pl>
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "invoicesType", propOrder = {
-    "invoice",
-    "parameters"
-})
+@XmlType(name = "invoicesType")
 public class Invoices implements Parametrizable, ApiEntityElement {
 
     /**

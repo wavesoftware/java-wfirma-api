@@ -43,7 +43,7 @@ public class FindRequest<T extends ApiEntityElement> implements PostRequest<T> {
 
     private final Class<T> entityClass;
 
-    private FindRequest(Class<T> entityClass, Parameters parameters) {
+    protected FindRequest(Class<T> entityClass, Parameters parameters) {
         this.entityClass = entityClass;
         try {
             T en = entityClass.newInstance();
@@ -57,7 +57,7 @@ public class FindRequest<T extends ApiEntityElement> implements PostRequest<T> {
         }
     }
 
-    private FindRequest(Class<T> entityClass) {
+    protected FindRequest(Class<T> entityClass) {
         this(entityClass, null);
     }
 

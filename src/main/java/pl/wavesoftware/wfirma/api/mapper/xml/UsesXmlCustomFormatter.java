@@ -43,13 +43,31 @@ public @interface UsesXmlCustomFormatter {
      */
     Class<? extends XmlCustomFormatter> value();
 
+    /**
+     * A parameters for custom formatter
+     *
+     * @return parameters for custom formatter
+     */
     Param[] parameters() default {};
 
+    /**
+     * A single param element
+     */
     @Retention(RetentionPolicy.RUNTIME)
     public @interface Param {
 
+        /**
+         * A key of param
+         *
+         * @return a key
+         */
         String key();
 
+        /**
+         * A value of a param
+         *
+         * @return a value
+         */
         String value();
     }
 }

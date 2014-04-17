@@ -21,7 +21,6 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-
 package pl.wavesoftware.wfirma.api.mapper.xml;
 
 import javax.xml.bind.annotation.adapters.XmlAdapter;
@@ -33,12 +32,12 @@ import javax.xml.bind.annotation.adapters.XmlAdapter;
 public class BooleanToIntegerAdapter extends XmlAdapter<Integer, Boolean> {
 
     @Override
-    public Boolean unmarshal(Integer value) throws Exception {
+    public Boolean unmarshal(Integer value) {
         return value != 0;
     }
 
     @Override
-    public Integer marshal(Boolean booleanValue) throws Exception {
+    public Integer marshal(Boolean booleanValue) {
         return booleanValue ? 1 : 0;
     }
 

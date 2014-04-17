@@ -38,10 +38,10 @@ import pl.wavesoftware.wfirma.api.model.requests.GetRequest;
  */
 public class OAuthGatewayTest {
 
-    private final OAuthCredentials creds;
+    private final CredentialsBuilder creds;
 
     public OAuthGatewayTest() {
-        creds = new OAuthCredentials("key", "value");
+        creds = CredentialsBuilder.from(new OAuthCredentials("key", "value"));
     }
 
     @Test(expected = UnsupportedOperationException.class)

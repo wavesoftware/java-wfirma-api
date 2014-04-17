@@ -41,7 +41,7 @@ public class AddRequest<T extends ApiEntityElement> implements PostRequest<T> {
 
     private final T entity;
 
-    private AddRequest(T entity) {
+    protected AddRequest(T entity) {
         this.module = ApiModule.createSampleApi(entity.getClass());
         this.entity = entity;
     }

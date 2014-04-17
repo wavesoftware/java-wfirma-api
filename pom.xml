@@ -20,6 +20,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <sonar.java.coveragePlugin>jacoco</sonar.java.coveragePlugin>
         <sonar.dynamicAnalysis>reuseReports</sonar.dynamicAnalysis>
+        <sqe.dir>${project.build.sourceDirectory}/../config</sqe.dir>
     </properties>
 
     <licenses>
@@ -141,6 +142,57 @@
                         </goals>
                     </execution>
                 </executions>
+            </plugin>
+            
+            <!--  Checkstyles config  -->
+            <!--
+             You can use mvn checkstyle:check to check errors on project 
+            -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-checkstyle-plugin</artifactId>
+                <version>2.12</version>
+                <configuration>
+                    <failsOnError>false</failsOnError>
+                    <failOnViolation>false</failOnViolation>
+                    <consoleOutput>true</consoleOutput>
+                    <!--  Custom local file system checkstyle set  -->
+                    <configLocation>${sqe.dir}/checkstyle_client.xml</configLocation>
+                    <suppressionsLocation>file:${sqe.dir}/checkstyle_client_suppress.xml</suppressionsLocation>
+                </configuration>
+            </plugin>
+            <!--
+             You can use mvn pmd:check to check errors on project 
+            -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-pmd-plugin</artifactId>
+                <version>3.1</version>
+                <configuration>
+                    <targetJdk>1.7</targetJdk>
+                    <verbose>true</verbose>
+                    <aggregate>true</aggregate>
+                    <failOnViolation>false</failOnViolation>
+                    <rulesets>
+                        <!--  Custom local file system rule set  -->
+                        <ruleset>${sqe.dir}/pmd_client.xml</ruleset>
+                    </rulesets>
+                </configuration>
+            </plugin>
+            <!--
+             You can use mvn findbugs:check to check errors on project 
+            -->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>findbugs-maven-plugin</artifactId>
+                <version>2.5.3</version>
+                <configuration>
+                    <includeTests>false</includeTests>
+                    <failOnError>false</failOnError>
+                    <!--  Custom local file system rule set  -->
+                    <includeFilterFile>${sqe.dir}/findbugs_client.xml</includeFilterFile>
+                    <excludeFilterFile>${sqe.dir}/findbugs_client_suppress.xml</excludeFilterFile>
+                </configuration>
             </plugin>
         </plugins>
     </build>

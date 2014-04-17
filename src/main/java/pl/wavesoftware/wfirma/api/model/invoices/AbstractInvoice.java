@@ -39,8 +39,8 @@ import pl.wavesoftware.wfirma.api.mapper.xml.MoneyAdapter;
 import pl.wavesoftware.wfirma.api.mapper.xml.TagsAdapter;
 import pl.wavesoftware.wfirma.api.model.companies.Company;
 import pl.wavesoftware.wfirma.api.model.contractors.Contractor;
-import pl.wavesoftware.wfirma.api.model.utils.Reference;
 import pl.wavesoftware.wfirma.api.model.utils.ReadOnly;
+import pl.wavesoftware.wfirma.api.model.utils.Reference;
 
 /**
  * <p>
@@ -185,7 +185,7 @@ public abstract class AbstractInvoice {
 
     @ReadOnly
     @XmlElement(name = "user_name")
-    private String user_name;
+    private String userName;
 
     @XmlElement
     private InvoiceSchema schema;
@@ -628,11 +628,11 @@ public abstract class AbstractInvoice {
     }
 
     public Date getCurrencyDate() {
-        return currencyDate;
+        return copy(currencyDate);
     }
 
     public void setCurrencyDate(Date currencyDate) {
-        this.currencyDate = currencyDate;
+        this.currencyDate = copy(currencyDate);
     }
 
     public Double getPriceCurrencyExchange() {
@@ -691,12 +691,12 @@ public abstract class AbstractInvoice {
         this.footer = footer;
     }
 
-    public String getUser_name() {
-        return user_name;
+    public String getUserName() {
+        return userName;
     }
 
-    public void setUser_name(String user_name) {
-        this.user_name = user_name;
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 
     public InvoiceSchema getSchema() {
@@ -956,19 +956,19 @@ public abstract class AbstractInvoice {
     }
 
     public Date getCreated() {
-        return created;
+        return copy(created);
     }
 
     public void setCreated(Date created) {
-        this.created = created;
+        this.created = copy(created);
     }
 
     public Date getModified() {
-        return modified;
+        return copy(modified);
     }
 
     public void setModified(Date modified) {
-        this.modified = modified;
+        this.modified = copy(modified);
     }
 
     public PriceType getPriceType() {
@@ -1115,6 +1115,9 @@ public abstract class AbstractInvoice {
         month, day
     }
 
+    /**
+     * Type of invoice
+     */
     public static enum TypeOfInvoice {
 
         // Vat
@@ -1139,11 +1142,17 @@ public abstract class AbstractInvoice {
         normal, vat_invoice_date, assessor
     }
 
+    /**
+     * Warehouse type
+     */
     public static enum WarehouseType {
 
         extended, simple
     }
 
+    /**
+     * Price type
+     */
     public static enum PriceType {
 
         netto, brutto

@@ -58,7 +58,7 @@ import pl.wavesoftware.wfirma.api.model.requests.GetRequest;
  * &lt;/complexType>
  * </pre>
  *
- *
+ * @author Krzysztof Suszyński <krzysztof.suszynski@wavesoftware.pl>
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "contractorsApiType")
@@ -68,6 +68,9 @@ public class ContractorsApi implements Api<Contractors> {
     @XmlElement(nillable = false)
     private Contractors contractors;
 
+    /**
+     * Default constructor
+     */
     public ContractorsApi() {
         contractors = new Contractors(this);
     }

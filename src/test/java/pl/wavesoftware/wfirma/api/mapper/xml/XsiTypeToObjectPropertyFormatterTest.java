@@ -42,7 +42,7 @@ public class XsiTypeToObjectPropertyFormatterTest {
 
     private static final String TYPE = "type";
 
-    private final String unFormatted = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n"
+    private static final String UN_FORMATTED = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n"
             + "<api>\n"
             + "    <invoices>\n"
             + "        <invoice xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:type=\"normal\">\n"
@@ -56,7 +56,7 @@ public class XsiTypeToObjectPropertyFormatterTest {
             + "    </invoices>\n"
             + "</api>\n";
 
-    private final String quasiFormatted = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n"
+    private static final String QUASI_FORMATTED = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n"
             + "<api>\n"
             + "    <invoices>\n"
             + "        <invoice xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:type=\"normal\">\n"
@@ -71,7 +71,7 @@ public class XsiTypeToObjectPropertyFormatterTest {
             + "    </invoices>\n"
             + "</api>\n";
 
-    private final String formatted = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n"
+    private static final String FORMATTED = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n"
             + "<api>\n"
             + "    <invoices>\n"
             + "        <invoice>\n"
@@ -87,7 +87,7 @@ public class XsiTypeToObjectPropertyFormatterTest {
             + "    </invoices>\n"
             + "</api>\n";
 
-    private final String formattedCdata = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n"
+    private static final String FORMATTED_CDATA = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n"
             + "<api>\n"
             + "    <invoices>\n"
             + "        <invoice>\n"
@@ -110,15 +110,15 @@ public class XsiTypeToObjectPropertyFormatterTest {
             newParam(XsiTypeToObjectPropertyFormatter.FIELD, TYPE)
         };
         instance.configure(configuration);
-        String result = instance.format(unFormatted);
-        assertThat(result).isEqualTo(formatted);
+        String result = instance.format(UN_FORMATTED);
+        assertThat(result).isEqualTo(FORMATTED);
     }
 
     @Test
     public void testFormatUnconfigured() {
         try {
             XsiTypeToObjectPropertyFormatter instance = new XsiTypeToObjectPropertyFormatter();
-            instance.format(unFormatted);
+            instance.format(UN_FORMATTED);
             Assertions.failBecauseExceptionWasNotThrown(IllegalStateException.class);
         } catch (IllegalStateException ex) {
             assertThat(ex).hasNoCause();
@@ -133,8 +133,8 @@ public class XsiTypeToObjectPropertyFormatterTest {
             newParam(XsiTypeToObjectPropertyFormatter.FIELD, TYPE)
         };
         instance.configure(configuration);
-        String result = instance.unformat(formattedCdata);
-        assertThat(result).isEqualTo(unFormatted);
+        String result = instance.unformat(FORMATTED_CDATA);
+        assertThat(result).isEqualTo(UN_FORMATTED);
     }
 
     @Test
@@ -144,8 +144,8 @@ public class XsiTypeToObjectPropertyFormatterTest {
             newParam(XsiTypeToObjectPropertyFormatter.FIELD, TYPE)
         };
         instance.configure(configuration);
-        String result = instance.format(quasiFormatted);
-        assertThat(result).isEqualTo(formatted);
+        String result = instance.format(QUASI_FORMATTED);
+        assertThat(result).isEqualTo(FORMATTED);
     }
 
     @Test
@@ -155,8 +155,8 @@ public class XsiTypeToObjectPropertyFormatterTest {
             newParam(XsiTypeToObjectPropertyFormatter.FIELD, TYPE)
         };
         instance.configure(configuration);
-        String result = instance.unformat(formatted);
-        assertThat(result).isEqualTo(unFormatted);
+        String result = instance.unformat(FORMATTED);
+        assertThat(result).isEqualTo(UN_FORMATTED);
     }
 
     @Test
@@ -166,10 +166,10 @@ public class XsiTypeToObjectPropertyFormatterTest {
             newParam(XsiTypeToObjectPropertyFormatter.FIELD, TYPE)
         };
         instance.configure(configuration);
-        String result = instance.format(instance.unformat(formatted));
-        assertThat(result).isEqualTo(formatted);
-        result = instance.unformat(instance.format(unFormatted));
-        assertThat(result).isEqualTo(unFormatted);
+        String result = instance.format(instance.unformat(FORMATTED));
+        assertThat(result).isEqualTo(FORMATTED);
+        result = instance.unformat(instance.format(UN_FORMATTED));
+        assertThat(result).isEqualTo(UN_FORMATTED);
     }
 
     @Test

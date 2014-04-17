@@ -48,11 +48,11 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
+ *
+ * @author Krzysztof Suszyński <krzysztof.suszynski@wavesoftware.pl>
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "andType", propOrder = {
-    "condition"
-})
+@XmlType(name = "andType")
 public class And {
 
     @XmlElement(required = true)

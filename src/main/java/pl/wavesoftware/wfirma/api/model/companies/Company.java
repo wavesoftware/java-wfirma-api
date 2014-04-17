@@ -53,6 +53,8 @@ import pl.wavesoftware.wfirma.api.model.utils.ReadOnly;
  *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
+ *
+ * @author Krzysztof Suszyński <krzysztof.suszynski@wavesoftware.pl>
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "companyType")
@@ -222,6 +224,9 @@ public class Company {
         this.registered = registered;
     }
 
+    /**
+     * Company tax calculate method
+     */
     public static enum TaxType {
 
         taxregister, lumpregister

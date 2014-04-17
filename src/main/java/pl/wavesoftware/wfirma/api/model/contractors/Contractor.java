@@ -39,6 +39,7 @@ import pl.wavesoftware.wfirma.api.model.utils.Reference;
  * <p>
  * Java class for contractorType complex type.
  *
+ * @author Krzysztof Suszyński <krzysztof.suszynski@wavesoftware.pl>
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "contractorType")
@@ -173,6 +174,7 @@ public class Contractor {
     /**
      * Gets the value of the id property.
      *
+     * @return id property
      */
     public Long getId() {
         return id;
@@ -181,6 +183,7 @@ public class Contractor {
     /**
      * Sets the value of the id property.
      *
+     * @param value a value for a id property
      */
     public void setId(Long value) {
         this.id = value;
@@ -603,6 +606,7 @@ public class Contractor {
     /**
      * Gets the value of the discountPercent property.
      *
+     * @return {@link #discountPercent} property
      */
     public Integer getDiscountPercent() {
         return discountPercent;
@@ -611,6 +615,7 @@ public class Contractor {
     /**
      * Sets the value of the discountPercent property.
      *
+     * @param value {@link #discountPercent} property
      */
     public void setDiscountPercent(Integer value) {
         this.discountPercent = value;
@@ -619,6 +624,7 @@ public class Contractor {
     /**
      * Gets the value of the paymentDays property.
      *
+     * @return {@link #paymentDays} property
      */
     public Integer getPaymentDays() {
         return paymentDays;
@@ -627,6 +633,7 @@ public class Contractor {
     /**
      * Sets the value of the paymentDays property.
      *
+     * @param value {@link #paymentDays} property
      */
     public void setPaymentDays(Integer value) {
         this.paymentDays = value;
@@ -636,7 +643,6 @@ public class Contractor {
      * Gets the value of the paymentMethod property.
      *
      * @return possible object is {@link String }
-     *
      */
     public String getPaymentMethod() {
         return paymentMethod;
@@ -655,6 +661,7 @@ public class Contractor {
     /**
      * Gets the value of the remind property.
      *
+     * @return {@link #remind} property
      */
     public Integer getRemind() {
         return remind;
@@ -663,6 +670,7 @@ public class Contractor {
     /**
      * Sets the value of the remind property.
      *
+     * @param value {@link #remind} property
      */
     public void setRemind(Integer value) {
         this.remind = value;
@@ -672,7 +680,6 @@ public class Contractor {
      * Gets the value of the tags property.
      *
      * @return possible object is {@link String }
-     *
      */
     public String getTags() {
         return tags;
@@ -691,6 +698,7 @@ public class Contractor {
     /**
      * Gets the value of the notes property.
      *
+     * @return {@link #notes} property
      */
     public Integer getNotes() {
         return notes;
@@ -699,6 +707,7 @@ public class Contractor {
     /**
      * Sets the value of the notes property.
      *
+     * @param value {@link #notes} property
      */
     public void setNotes(Integer value) {
         this.notes = value;
@@ -707,8 +716,7 @@ public class Contractor {
     /**
      * Gets the value of the created property.
      *
-     * @return possible object is {@link String }
-     *
+     * @return possible object is {@link Date}
      */
     public Date getCreated() {
         return copy(created);
@@ -717,7 +725,7 @@ public class Contractor {
     /**
      * Sets the value of the created property.
      *
-     * @param value allowed object is {@link String }
+     * @param value allowed object is {@link Date}
      *
      */
     public void setCreated(Date value) {
@@ -727,8 +735,7 @@ public class Contractor {
     /**
      * Gets the value of the modified property.
      *
-     * @return possible object is {@link String }
-     *
+     * @return possible object is {@link Date}
      */
     public Date getModified() {
         return copy(modified);
@@ -737,7 +744,7 @@ public class Contractor {
     /**
      * Sets the value of the modified property.
      *
-     * @param value allowed object is {@link String }
+     * @param value allowed object is {@link Date}
      *
      */
     public void setModified(Date value) {
@@ -747,6 +754,7 @@ public class Contractor {
     /**
      * Gets the value of the provider property.
      *
+     * @return {@link #provider} property
      */
     public Integer getProvider() {
         return provider;
@@ -755,6 +763,7 @@ public class Contractor {
     /**
      * Sets the value of the provider property.
      *
+     * @param value {@link #provider} property
      */
     public void setProvider(Integer value) {
         this.provider = value;
@@ -764,7 +773,6 @@ public class Contractor {
      * Gets the value of the translationLanguage property.
      *
      * @return possible object is {@link Reference}
-     *
      */
     public Reference getTranslationLanguage() {
         return translationLanguage;
@@ -774,7 +782,6 @@ public class Contractor {
      * Sets the value of the translationLanguage property.
      *
      * @param value allowed object is {@link Reference}
-     *
      */
     public void setTranslationLanguage(Reference value) {
         this.translationLanguage = value;
@@ -784,7 +791,6 @@ public class Contractor {
      * Gets the value of the companyAccount property.
      *
      * @return possible object is {@link Reference}
-     *
      */
     public Reference getCompanyAccount() {
         return companyAccount;
@@ -794,7 +800,6 @@ public class Contractor {
      * Sets the value of the companyAccount property.
      *
      * @param value allowed object is {@link Reference}
-     *
      */
     public void setCompanyAccount(Reference value) {
         this.companyAccount = value;
@@ -804,7 +809,6 @@ public class Contractor {
      * Gets the value of the invoiceDescription property.
      *
      * @return possible object is {@link Reference}
-     *
      */
     public Reference getInvoiceDescription() {
         return invoiceDescription;
@@ -814,7 +818,6 @@ public class Contractor {
      * Sets the value of the invoiceDescription property.
      *
      * @param value allowed object is {@link Reference}
-     *
      */
     public void setInvoiceDescription(Reference value) {
         this.invoiceDescription = value;

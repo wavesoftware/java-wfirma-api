@@ -34,14 +34,23 @@ import javax.xml.bind.annotation.XmlType;
  *
  * <p>
  * The following schema fragment specifies the expected content contained within this class.
- * <p>
- * <
- * pre>
- * &lt;simpleType name="logicalOperator"> &lt;restriction base="{http://www.w3.org/2001/XMLSchema}string"> &lt;enumeration value="eq"/>
- * &lt;enumeration value="ne"/> &lt;enumeration value="lt"/> &lt;enumeration value="le"/> &lt;enumeration value="gt"/> &lt;enumeration
- * value="ge"/> &lt;enumeration value="like"/> &lt;enumeration value="not like"/> &lt;/restriction> &lt;/simpleType>
+ *
+ * <pre>
+ * &lt;simpleType name="logicalOperator">
+ *   &lt;restriction base="{http://www.w3.org/2001/XMLSchema}string">
+ *     &lt;enumeration value="eq"/>
+ *     &lt;enumeration value="ne"/>
+ *     &lt;enumeration value="lt"/>
+ *     &lt;enumeration value="le"/>
+ *     &lt;enumeration value="gt"/>
+ *     &lt;enumeration value="ge"/>
+ *     &lt;enumeration value="like"/>
+ *     &lt;enumeration value="not like"/>
+ *   &lt;/restriction>
+ * &lt;/simpleType>
  * </pre>
  *
+ * @author Krzysztof Suszyński <krzysztof.suszynski@wavesoftware.pl>
  */
 @XmlType(name = "logicalOperator")
 @XmlEnum
@@ -70,13 +79,31 @@ public enum LogicalOperator {
         this.value = value;
     }
 
+    /**
+     * Gets a value of enum
+     *
+     * @return a value of enum
+     */
     public String value() {
         return value;
     }
 
+    /**
+     * Creates a enum from string input as XML string
+     *
+     * <p>
+     * Example
+     *
+     * <pre>
+     * LogicalOperator.fromValue("not like");
+     * </pre>
+     *
+     * @param value input as XML string
+     * @return an created enum
+     */
     public static LogicalOperator fromValue(String value) {
         for (LogicalOperator c : LogicalOperator.values()) {
-            if (c.value.equals(value)) {
+            if (c.value().equals(value)) {
                 return c;
             }
         }

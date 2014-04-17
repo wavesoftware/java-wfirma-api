@@ -48,6 +48,11 @@ public class RequestValidator {
 
     private Collection<String> errors;
 
+    /**
+     * Constructor
+     *
+     * @param request a request
+     */
     public RequestValidator(Request<?> request) {
         this.request = request;
     }
@@ -56,6 +61,11 @@ public class RequestValidator {
         return getErrors().isEmpty();
     }
 
+    /**
+     * Gets all errors collected by this validator in validation process
+     *
+     * @return all errors
+     */
     public Collection<String> getErrors() {
         if (errors == null) {
             errors = validateAndGetErrors();
@@ -70,6 +80,11 @@ public class RequestValidator {
         return errs;
     }
 
+    /**
+     * Validate a request befre it being submitted to WFirma API
+     *
+     * @throws WFirmaException throws if something is wrong
+     */
     public void validate() throws WFirmaException {
         if (!getErrors().isEmpty()) {
             throw new WFirmaException("Validation errors: [%s]", Joiner.on("][").join(errors));

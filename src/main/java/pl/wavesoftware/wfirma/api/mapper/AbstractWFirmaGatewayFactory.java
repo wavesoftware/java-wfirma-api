@@ -57,13 +57,12 @@ public abstract class AbstractWFirmaGatewayFactory {
      * @return a created gateway
      */
     protected WFirmaGateway create(Credentials credentials, URI gatewayAddress) {
-        WFirmaGateway gateway;
+        WFirmaGateway gateway = null;
+        CredentialsBuilder builder = CredentialsBuilder.from(credentials);
         if (getTypeForSimpleGateway().isAssignableFrom(credentials.getClass())) {
-            gateway = new SimpleGateway(credentials, gatewayAddress);
+            gateway = new SimpleGateway(builder, gatewayAddress);
         } else if (getTypeForOAuthGateway().isAssignableFrom(credentials.getClass())) {
-            gateway = new OAuthGateway(credentials, gatewayAddress);
-        } else {
-            throw new UnsupportedOperationException("credentials `" + credentials + "` is not supported by this SDK.");
+            gateway = new OAuthGateway(builder, gatewayAddress);
         }
         return gateway;
     }

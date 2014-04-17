@@ -43,7 +43,7 @@ public class DeleteRequest<T extends ApiEntityElement> implements Request<T> {
     /**
      * Constructor
      */
-    private DeleteRequest(Class<T> entityClass, Long wfirmaId) {
+    protected DeleteRequest(Class<T> entityClass, Long wfirmaId) {
         this.entityClass = entityClass;
         this.wfirmaId = wfirmaId;
     }

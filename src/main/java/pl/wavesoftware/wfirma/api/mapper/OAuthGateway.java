@@ -24,7 +24,6 @@
 package pl.wavesoftware.wfirma.api.mapper;
 
 import java.net.URI;
-import pl.wavesoftware.wfirma.api.model.Credentials;
 import pl.wavesoftware.wfirma.api.model.PostRequest;
 import pl.wavesoftware.wfirma.api.model.Request;
 import pl.wavesoftware.wfirma.api.model.WFirmaException;
@@ -35,16 +34,16 @@ import pl.wavesoftware.wfirma.api.model.WFirmaException;
  */
 class OAuthGateway implements WFirmaGateway {
 
-    private final Credentials credentials;
+    private final CredentialsBuilder credentials;
 
     private final URI gateway;
 
     /**
      * Getaway for OAuth
      *
-     * @param credentials OAuth cerentials
+     * @param credentials cerentials
      */
-    OAuthGateway(Credentials credentials, URI gateway) {
+    OAuthGateway(CredentialsBuilder credentials, URI gateway) {
         this.credentials = credentials;
         this.gateway = gateway;
     }

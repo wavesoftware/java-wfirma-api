@@ -78,18 +78,26 @@ public class SimpleGatewayTest {
 
     private String contractorsFindBody;
 
+    private SimpleGateway instance(String login, String password) {
+        return instance(login, password, mockAddress);
+    }
+
+    private SimpleGateway instance(String login, String password, URI address) {
+        SimpleCredentials creds = new SimpleCredentials(login, password);
+        CredentialsBuilder builder = CredentialsBuilder.from(creds);
+        return new SimpleGateway(builder, address);
+    }
+
     @Test
     public void testFetch() throws WFirmaException {
-        SimpleCredentials creds = new SimpleCredentials("login@example.org", "a-user-password");
-        SimpleGateway instance = new SimpleGateway(creds, mockAddress);
+        SimpleGateway instance = instance("login@example.org", "a-user-password");
 
         CompaniesGetRequest get = CompaniesGetRequest.create();
         String result = instance.get(get);
         assertThat(result).isNotNull();
         assertThat(result).isEqualTo(expResult);
 
-        creds = new SimpleCredentials("login2@example.org", "invalid-password");
-        instance = new SimpleGateway(creds, mockAddress);
+        instance = instance("login2@example.org", "invalid-password");
 
         try {
             instance.get(get);
@@ -101,16 +109,14 @@ public class SimpleGatewayTest {
 
     @Test
     public void testFetchWithAuthFail() throws WFirmaException {
-        SimpleCredentials creds = new SimpleCredentials("login@example.org", "a-user-password");
-        SimpleGateway instance = new SimpleGateway(creds, mockAddress);
+        SimpleGateway instance = instance("login@example.org", "a-user-password");
 
         CompaniesGetRequest get = CompaniesGetRequest.create();
         String result = instance.get(get);
         assertThat(result).isNotNull();
         assertThat(result).isEqualTo(expResult);
 
-        creds = new SimpleCredentials("login2@example.org", "invalid-password");
-        instance = new SimpleGateway(creds, mockAddress);
+        instance = instance("login2@example.org", "invalid-password");
 
         try {
             instance.get(get);
@@ -123,8 +129,7 @@ public class SimpleGatewayTest {
     @Test
     public void testFetchWithAuthFail2() throws WFirmaException {
         GetRequest<Contractors> get = GetRequest.create(Contractors.class, 1L);
-        SimpleCredentials creds = new SimpleCredentials("login2@example.org", "invalid-password");
-        SimpleGateway instance = new SimpleGateway(creds, mockAddress);
+        SimpleGateway instance = instance("login2@example.org", "invalid-password");
 
         try {
             instance.get(get);
@@ -137,8 +142,8 @@ public class SimpleGatewayTest {
     @Test
     public void testFetchWithConnectionFail() throws WFirmaException {
         FindRequest<Contractors> get = FindRequest.create(Contractors.class);
-        SimpleCredentials creds = new SimpleCredentials("login@example.org", "a-user-password");
-        SimpleGateway instance = new SimpleGateway(creds, URI.create("http://localhost:" + (PORT - 1)));
+        URI uri = URI.create("http://localhost:" + (PORT - 1));
+        SimpleGateway instance = instance("login@example.org", "a-user-password", uri);
 
         try {
             instance.get(get);
@@ -151,8 +156,7 @@ public class SimpleGatewayTest {
     @Test
     public void testFetchWithFatalFail() throws WFirmaException {
         FindRequest<Contractors> get = FindRequest.create(Contractors.class);
-        SimpleCredentials creds = new SimpleCredentials("login@example.org", "fatal-error");
-        SimpleGateway instance = new SimpleGateway(creds, mockAddress);
+        SimpleGateway instance = instance("login@example.org", "fatal-error");
 
         try {
             instance.get(get);
@@ -164,16 +168,15 @@ public class SimpleGatewayTest {
 
     @Test
     public void testGetTargetHost() {
-        SimpleCredentials creds = new SimpleCredentials("login@example.org", "a-user-password");
-        SimpleGateway instance = new SimpleGateway(creds, URI.create("http://localhost"));
+        SimpleGateway instance = instance("login@example.org", "a-user-password", URI.create("http://localhost"));
         HttpHost host = (HttpHost) Deencapsulation.invoke(instance, "getTargetHost");
         assertThat(host.getPort()).isEqualTo(80);
 
-        instance = new SimpleGateway(creds, URI.create("https://localhost"));
+        instance = instance("login@example.org", "a-user-password", URI.create("https://localhost"));
         host = (HttpHost) Deencapsulation.invoke(instance, "getTargetHost");
         assertThat(host.getPort()).isEqualTo(443);
 
-        instance = new SimpleGateway(creds, URI.create("ajp://localhost"));
+        instance = instance("login@example.org", "a-user-password", URI.create("ajp://localhost"));
         try {
             Deencapsulation.invoke(instance, "getTargetHost");
             fail("Expected to throw a WFirmaException for invalid scheme");
@@ -349,8 +352,7 @@ public class SimpleGatewayTest {
                 sb.append(response);
             }
         };
-        SimpleCredentials creds = new SimpleCredentials("login@example.org", "a-user-password");
-        SimpleGateway instance = new SimpleGateway(creds, mockAddress);
+        SimpleGateway instance = instance("login@example.org", "a-user-password");
         instance.addListener(listener);
         CompaniesGetRequest get = CompaniesGetRequest.create();
         instance.get(get);
@@ -367,8 +369,7 @@ public class SimpleGatewayTest {
                 sb.append(response);
             }
         };
-        SimpleCredentials creds = new SimpleCredentials("login@example.org", "a-user-password");
-        SimpleGateway instance = new SimpleGateway(creds, mockAddress);
+        SimpleGateway instance = instance("login@example.org", "a-user-password");
         instance.addListener(listener);
         instance.removeListener(listener);
         CompaniesGetRequest get = CompaniesGetRequest.create();
@@ -378,8 +379,7 @@ public class SimpleGatewayTest {
 
     @Test
     public void testGet() throws Exception {
-        SimpleCredentials creds = new SimpleCredentials("login@example.org", "a-user-password");
-        SimpleGateway instance = new SimpleGateway(creds, mockAddress);
+        SimpleGateway instance = instance("login@example.org", "a-user-password");
         CompaniesGetRequest get = CompaniesGetRequest.create();
         String result = instance.get(get);
         assertThat(result).isEqualTo(expResult);
@@ -397,8 +397,7 @@ public class SimpleGatewayTest {
         and.getCondition().add(cond);
         conds.getAnd().add(and);
         FindRequest<Contractors> findRequest = FindRequest.create(Contractors.class, params);
-        SimpleCredentials creds = new SimpleCredentials("login@example.org", "a-user-password");
-        SimpleGateway instance = new SimpleGateway(creds, mockAddress);
+        SimpleGateway instance = instance("login@example.org", "a-user-password");
         String result = instance.post(findRequest);
         assertThat(result).isEqualTo(expPostResult);
     }

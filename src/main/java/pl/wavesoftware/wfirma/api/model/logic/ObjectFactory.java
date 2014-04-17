@@ -24,7 +24,6 @@
 package pl.wavesoftware.wfirma.api.model.logic;
 
 import javax.xml.bind.annotation.XmlRegistry;
-import javax.xml.namespace.QName;
 
 /**
  * This object contains factory methods for each Java content interface and Java element interface generated in the
@@ -34,11 +33,10 @@ import javax.xml.namespace.QName;
  * representation of XML content can consist of schema derived interfaces and classes representing the binding of schema type definitions,
  * element declarations and model groups. Factory methods for each of these are provided in this class.
  *
+ * @author Krzysztof Suszyński <krzysztof.suszynski@wavesoftware.pl>
  */
 @XmlRegistry
 public class ObjectFactory {
-
-    private final static QName _PARAMETERS_QNAME = new QName("", "parameters");
 
     /**
      * Create a new ObjectFactory that can be used to create new instances of schema derived classes for package:

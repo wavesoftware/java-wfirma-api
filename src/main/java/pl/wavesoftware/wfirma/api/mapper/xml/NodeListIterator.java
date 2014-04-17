@@ -52,7 +52,7 @@ class NodeListIterator implements Iterator<Node> {
         return hasNext() ? nodeList.item(forward()) : empty();
     }
 
-    private Node empty() {
+    protected Node empty() {
         throw new NoSuchElementException("NodeList element `" + index + "` doesn't exists");
     }
 

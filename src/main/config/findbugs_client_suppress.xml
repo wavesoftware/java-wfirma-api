@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Copyright (c) 2013 Wave Software.
+
+The  source  code contained  in  this  file is  owned  and/or  is subject  to
+copyright  by  Wave  Software.  Only  employees  of  the  company,  or  other
+cooperating entities responsible for developing, maintaining and implementing
+this code shall be  entitled to inspect the contents of the  file. If you are
+not one  of them,  delete the  file and let  us know  about a  possible theft
+attempt by e-mail to: info@wavesoftware.pl.  This file may not be reproduced,
+used  in  whole  or in  part,  by  persons  not  listed above.  If  you  need
+clarification  on permissions  in the  use of  this file  please contact  via
+e-mail.
+-->
+<FindBugsFilter>
+	<Match>
+		<Class name="~.*Test$"/>
+	</Match>
+	<Match>
+		<Package name="~test\..*"/>
+	</Match>
+</FindBugsFilter>

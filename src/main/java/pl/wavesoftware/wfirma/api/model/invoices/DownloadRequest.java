@@ -107,6 +107,9 @@ public final class DownloadRequest implements PostRequest<Invoices> {
         return Invoices.class;
     }
 
+    /**
+     * A print type of invoice
+     */
     public static enum InvoicePage {
 
         all, invoice, copy

@@ -23,7 +23,6 @@
  */
 package pl.wavesoftware.wfirma.api.mapper;
 
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import javax.annotation.Nullable;
 
@@ -55,7 +54,7 @@ public final class Copier {
                 @SuppressWarnings("unchecked")
                 T casted = (T) clone;
                 ret = casted;
-            } catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
+            } catch (ReflectiveOperationException | SecurityException | IllegalArgumentException ex) {
                 throw new IllegalStateException(ex);
             }
         }

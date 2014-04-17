@@ -60,15 +60,18 @@ import pl.wavesoftware.wfirma.api.model.requests.GetRequest;
  *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
+ *
+ * @author Krzysztof Suszyński <krzysztof.suszynski@wavesoftware.pl>
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "invoicesApiType", propOrder = {
-    "invoices"
-})
+@XmlType(name = "invoicesApiType")
 @XmlRootElement(name = "api")
-@UsesXmlCustomFormatter(value = XsiTypeToObjectPropertyFormatter.class, parameters = {
-    @Param(key = XsiTypeToObjectPropertyFormatter.FIELD, value = "type")
-})
+@UsesXmlCustomFormatter(
+        value = XsiTypeToObjectPropertyFormatter.class,
+        parameters = {
+            @Param(key = XsiTypeToObjectPropertyFormatter.FIELD, value = "type")
+        }
+)
 public class InvoicesApi implements Api<Invoices> {
 
     /**

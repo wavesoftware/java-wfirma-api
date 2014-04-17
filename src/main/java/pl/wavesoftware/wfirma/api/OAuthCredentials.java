@@ -34,6 +34,12 @@ public class OAuthCredentials implements Credentials {
 
     private final String consumerKey;
 
+    /**
+     * Default constructor
+     *
+     * @param consumerKey a customer key
+     * @param consumerSecret a customer secret
+     */
     public OAuthCredentials(final String consumerKey, final String consumerSecret) {
         this.consumerKey = consumerKey;
         this.consumerSecret = consumerSecret;

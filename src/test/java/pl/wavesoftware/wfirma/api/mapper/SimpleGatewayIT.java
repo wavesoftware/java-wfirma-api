@@ -172,10 +172,15 @@ public class SimpleGatewayIT {
                 + "</api>\\s*";
     }
 
+    private SimpleGateway instance(String login, String password) {
+        SimpleCredentials creds = new SimpleCredentials(login, password);
+        CredentialsBuilder builder = CredentialsBuilder.from(creds);
+        return new SimpleGateway(builder, GATEWAY_ADDRESS);
+    }
+
     @Test
     public void testFetch() throws WFirmaException {
-        SimpleCredentials creds = new SimpleCredentials(correctLogin, correctPassword);
-        SimpleGateway instance = new SimpleGateway(creds, GATEWAY_ADDRESS);
+        SimpleGateway instance = instance(correctLogin, correctPassword);
 
         Request<Companies> get = CompaniesGetRequest.create();
         String result = instance.get(get);
@@ -189,8 +194,7 @@ public class SimpleGatewayIT {
         FindRequest<Contractors> findRequest = createFindRequest();
         DeleteRequest<Contractors> deleteRequest;
 
-        SimpleCredentials creds = new SimpleCredentials(correctLogin, correctPassword);
-        SimpleGateway instance = new SimpleGateway(creds, GATEWAY_ADDRESS);
+        SimpleGateway instance = instance(correctLogin, correctPassword);
 
         String result;
         result = instance.post(findRequest);
@@ -231,8 +235,7 @@ public class SimpleGatewayIT {
                     "Invalid login testing on WFirma API is possible no more often then 5min interval, skipping test!");
         }
         Assume.assumeTrue(cond);
-        SimpleCredentials creds = new SimpleCredentials("non-existing-login-2@example.org", "invalid-password");
-        SimpleGateway instance = new SimpleGateway(creds, GATEWAY_ADDRESS);
+        SimpleGateway instance = instance("non-existing-login-2@example.org", "invalid-password");
         final StringBuilder responseBuilder = new StringBuilder();
         ResponseListener listener = new ResponseListener() {
 

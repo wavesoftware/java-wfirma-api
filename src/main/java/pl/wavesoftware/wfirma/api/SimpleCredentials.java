@@ -35,6 +35,12 @@ public class SimpleCredentials implements Credentials {
 
     private final String login;
 
+    /**
+     * Default constructor
+     *
+     * @param login a login
+     * @param password a password
+     */
     public SimpleCredentials(final String login, final String password) {
         this.login = login;
         this.password = password;
@@ -46,7 +52,7 @@ public class SimpleCredentials implements Credentials {
      * @return a login to service
      */
     public String getLogin() {
-        return login;
+        return getConsumerKey();
     }
 
     /**
@@ -55,7 +61,7 @@ public class SimpleCredentials implements Credentials {
      * @return a password to service
      */
     public String getPassword() {
-        return password;
+        return getConsumerSecret();
     }
 
     @Override

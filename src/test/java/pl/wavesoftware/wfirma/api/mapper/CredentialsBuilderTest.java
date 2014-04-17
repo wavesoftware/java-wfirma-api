@@ -41,14 +41,14 @@ public class CredentialsBuilderTest {
     @Test
     public void testGetLogin() {
         CredentialsBuilder instance = CredentialsBuilder.from(new SimpleCredentials("a", "b"));
-        String result = instance.getLogin();
+        String result = instance.getKey();
         assertThat(result).isEqualTo("a");
     }
 
     @Test
     public void testGetPassword() {
         CredentialsBuilder instance = CredentialsBuilder.from(new OAuthCredentials("a", "b"));
-        String result = instance.getPassword();
+        String result = instance.getSecret();
         assertThat(result).isEqualTo("b");
     }
 

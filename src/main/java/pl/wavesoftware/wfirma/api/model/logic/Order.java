@@ -50,13 +50,10 @@ import javax.xml.bind.annotation.XmlType;
  * &lt;/complexType>
  * </pre>
  *
- *
+ * @author Krzysztof Suszyński <krzysztof.suszynski@wavesoftware.pl>
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "orderType", propOrder = {
-    "asc",
-    "desc"
-})
+@XmlType(name = "orderType")
 public class Order {
 
     @XmlElement(required = true)

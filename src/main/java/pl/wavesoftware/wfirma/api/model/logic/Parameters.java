@@ -53,16 +53,10 @@ import javax.xml.bind.annotation.XmlType;
  * &lt;/complexType>
  * </pre>
  *
- *
+ * @author Krzysztof Suszyński <krzysztof.suszynski@wavesoftware.pl>
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "parametersType", propOrder = {
-    "conditions",
-    "parameter",
-    "order",
-    "page",
-    "limit"
-})
+@XmlType(name = "parametersType")
 @XmlRootElement(name = "parameters")
 public class Parameters {
 
