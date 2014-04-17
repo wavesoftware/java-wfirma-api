@@ -26,19 +26,26 @@ package pl.wavesoftware.wfirma.api.mapper.xml;
 import com.openpojo.random.RandomFactory;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.Reader;
 import java.util.Arrays;
 import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Scanner;
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
+import javax.xml.bind.Unmarshaller;
 import org.assertj.core.api.Assertions;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.custommonkey.xmlunit.XMLAssert.assertXMLEqual;
+import static org.assertj.core.api.Assertions.*;
+import static org.custommonkey.xmlunit.XMLAssert.*;
 import org.custommonkey.xmlunit.XMLUnit;
 import org.joda.money.CurrencyUnit;
 import org.joda.money.Money;
 import org.junit.Before;
 import org.junit.Test;
+import static org.mockito.Mockito.*;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
 import static org.unitils.reflectionassert.ReflectionAssert.assertReflectionEquals;
 import org.xml.sax.SAXException;
 import pl.wavesoftware.wfirma.api.mapper.xml.invalidjaxbconfig.JaxbEntityWithBadConfiguration;
@@ -358,6 +365,33 @@ public class JaxbMarshallerTest {
                     + "invalidjaxbformatter.JaxbEntityWithInvalidFormatter$InvalidJaxbFormatter with modifiers"
                     + " \"private\"");
         }
+    }
+
+    @Test
+    @SuppressWarnings("unchecked")
+    public void testUnmarshalOnJaxbElementOutput() throws JAXBException {
+        JaxbMarshaller<InvoicesApi> instance = mock(JaxbMarshaller.class);
+        JAXBContext ctx = mock(JAXBContext.class);
+        Unmarshaller unmarshaller = mock(Unmarshaller.class);
+        JAXBElement<InvoicesApi> element = mock(JAXBElement.class);
+        InvoicesApi api = new InvoicesApi();
+
+        when(instance.unmarshal(anyString())).thenCallRealMethod();
+        when(instance.unformat(anyString())).thenAnswer(new Answer<String>() {
+
+            @Override
+            public String answer(InvocationOnMock invocation) throws Throwable {
+                Object first = invocation.getArguments()[0];
+                return first.toString();
+            }
+        });
+        when(instance.getContext()).thenReturn(ctx);
+        when(ctx.createUnmarshaller()).thenReturn(unmarshaller);
+        when(unmarshaller.unmarshal(any(Reader.class))).thenReturn(element);
+        when(element.getValue()).thenReturn(api);
+
+        InvoicesApi result = instance.unmarshal("Testowy");
+        assertThat(result).isSameAs(api);
     }
 
 }

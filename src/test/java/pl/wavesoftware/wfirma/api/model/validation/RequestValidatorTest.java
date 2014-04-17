@@ -26,13 +26,13 @@ package pl.wavesoftware.wfirma.api.model.validation;
 import java.util.Collection;
 import java.util.Date;
 import java.util.GregorianCalendar;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.failBecauseExceptionWasNotThrown;
+import static org.assertj.core.api.Assertions.*;
 import org.joda.money.CurrencyUnit;
 import org.joda.money.Money;
 import org.junit.Test;
 import pl.wavesoftware.wfirma.api.model.WFirmaException;
 import pl.wavesoftware.wfirma.api.model.companies.Companies;
+import pl.wavesoftware.wfirma.api.model.companies.CompaniesGetRequest;
 import pl.wavesoftware.wfirma.api.model.companies.Company;
 import pl.wavesoftware.wfirma.api.model.contractors.Contractor;
 import pl.wavesoftware.wfirma.api.model.contractors.Contractors;
@@ -41,7 +41,6 @@ import pl.wavesoftware.wfirma.api.model.invoices.Invoices;
 import pl.wavesoftware.wfirma.api.model.invoices.InvoicesApi;
 import pl.wavesoftware.wfirma.api.model.invoices.NormalInvoice;
 import pl.wavesoftware.wfirma.api.model.requests.EditRequest;
-import pl.wavesoftware.wfirma.api.model.requests.GetRequest;
 
 /**
  *
@@ -59,7 +58,7 @@ public class RequestValidatorTest {
         RequestValidator instance = new RequestValidator(edit);
         assertThat(instance.isValid()).isFalse();
 
-        GetRequest<Companies> get = GetRequest.create(Companies.class, 6L);
+        CompaniesGetRequest get = CompaniesGetRequest.create();
         instance = new RequestValidator(get);
         assertThat(instance.isValid()).isTrue();
     }
@@ -73,12 +72,12 @@ public class RequestValidatorTest {
         RequestValidator instance = new RequestValidator(edit);
         Collection<String> result = instance.getErrors();
         assertThat(result).containsExactly("`EditRequest` is not supported by "
-                + "`CompaniesApi` module. Only supported request are: `GetRequest`");
+                + "`CompaniesApi` module. Only supported request are: `CompaniesGetRequest`");
     }
 
     @Test
     public void testValidate() throws Exception {
-        GetRequest<Companies> get = GetRequest.create(Companies.class, 6l);
+        CompaniesGetRequest get = CompaniesGetRequest.create();
         RequestValidator instance = new RequestValidator(get);
         instance.validate();
         assertThat(instance).isNotNull();
@@ -96,7 +95,7 @@ public class RequestValidatorTest {
             failBecauseExceptionWasNotThrown(WFirmaException.class);
         } catch (WFirmaException wfse) {
             assertThat(wfse).hasMessage("Validation errors: [`EditRequest` is not supported by "
-                    + "`CompaniesApi` module. Only supported request are: `GetRequest`]");
+                    + "`CompaniesApi` module. Only supported request are: `CompaniesGetRequest`]");
         }
     }
 

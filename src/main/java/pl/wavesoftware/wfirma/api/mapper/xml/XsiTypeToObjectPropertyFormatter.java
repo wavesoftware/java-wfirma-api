@@ -30,7 +30,6 @@ import java.io.Writer;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.NoSuchElementException;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -98,29 +97,7 @@ public class XsiTypeToObjectPropertyFormatter implements XmlCustomFormatter {
 
             @Override
             public Iterator<Node> iterator() {
-                return new Iterator<Node>() {
-
-                    int index = 0;
-
-                    @Override
-                    public boolean hasNext() {
-                        return index < nodeList.getLength();
-                    }
-
-                    @Override
-                    public Node next() {
-                        if (hasNext()) {
-                            return nodeList.item(index++);
-                        } else {
-                            throw new NoSuchElementException();
-                        }
-                    }
-
-                    @Override
-                    public void remove() {
-                        throw new UnsupportedOperationException();
-                    }
-                };
+                return new NodeListIterator(nodeList);
             }
         };
     }

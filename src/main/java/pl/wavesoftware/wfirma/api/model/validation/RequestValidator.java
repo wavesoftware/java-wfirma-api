@@ -30,6 +30,7 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import junit.extensions.PA;
 import pl.wavesoftware.wfirma.api.mapper.Api;
 import pl.wavesoftware.wfirma.api.mapper.ApiModule;
 import pl.wavesoftware.wfirma.api.model.Request;
@@ -105,14 +106,10 @@ public class RequestValidator {
         }
         EditRequest<?> edit = (EditRequest<?>) request;
         Object entity = edit.getEntity();
-        try {
-            errs.addAll(validateNotReadOnly(entity, entity.getClass()));
-        } catch (IllegalArgumentException | IllegalAccessException ex) {
-            throw new RuntimeException("Should not happend! Bug! " + ex.getLocalizedMessage(), ex);
-        }
+        errs.addAll(validateNotReadOnly(entity, entity.getClass()));
     }
 
-    private static Collection<String> validateNotReadOnly(Object entity, Class<?> cls) throws IllegalArgumentException, IllegalAccessException {
+    private static Collection<String> validateNotReadOnly(Object entity, Class<?> cls) {
         checkArgument(cls.isAssignableFrom(entity.getClass()), "entity `%s` must be a instance of cls `%s`", entity, cls);
         Collection<String> out = new ArrayList<>();
         if (cls.getSuperclass() != null) {
@@ -120,10 +117,8 @@ public class RequestValidator {
         }
         for (Field field : cls.getDeclaredFields()) {
             if (isNonEmptyCollection(field, entity)) {
-                boolean access = field.isAccessible();
-                field.setAccessible(true);
-                Collection<?> col = Collection.class.cast(field.get(entity));
-                field.setAccessible(access);
+                Object value = PA.getValue(entity, field.getName());
+                Collection<?> col = Collection.class.cast(value);
                 for (Object object : col) {
                     out.addAll(validateNotReadOnly(object, object.getClass()));
                 }
@@ -132,10 +127,7 @@ public class RequestValidator {
             if (annot == null) {
                 continue;
             }
-            boolean access = field.isAccessible();
-            field.setAccessible(true);
-            Object value = field.get(entity);
-            field.setAccessible(access);
+            Object value = PA.getValue(entity, field.getName());
             if (value != null) {
                 String format = "The `%s` property of `%s` is read only";
                 out.add(String.format(format, field.getName(), entity.getClass().getSimpleName()));
@@ -144,15 +136,13 @@ public class RequestValidator {
         return out;
     }
 
-    private static boolean isNonEmptyCollection(Field field, Object entity) throws IllegalArgumentException, IllegalAccessException {
+    private static boolean isNonEmptyCollection(Field field, Object entity) {
         boolean ret = Collection.class.isAssignableFrom(field.getType());
         if (!ret) {
             return false;
         }
-        boolean access = field.isAccessible();
-        field.setAccessible(true);
-        Collection<?> col = Collection.class.cast(field.get(entity));
-        field.setAccessible(access);
+        Object value = PA.getValue(entity, field.getName());
+        Collection<?> col = Collection.class.cast(value);
         if (col == null || col.isEmpty()) {
             return false;
         }

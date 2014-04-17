@@ -21,46 +21,49 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package pl.wavesoftware.wfirma.api.model.contractors;
+package pl.wavesoftware.wfirma.api.mapper.xml;
 
-import com.openpojo.reflection.PojoClass;
-import com.openpojo.validation.PojoValidator;
-import java.util.Collection;
-import static org.assertj.core.api.Assertions.assertThat;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
-import org.junit.runners.Parameterized.Parameters;
-import pl.wavesoftware.wfirma.api.model.utils.PojoValidationFactory;
+import java.util.Iterator;
+import java.util.NoSuchElementException;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 /**
  *
  * @author Krzysztof Suszyński <krzysztof.suszynski@wavesoftware.pl>
  */
-@RunWith(Parameterized.class)
-public class ContractorsTest {
+class NodeListIterator implements Iterator<Node> {
 
-    private final PojoClass pojoClass;
+    private final NodeList nodeList;
 
-    private final PojoValidator pojoValidator = PojoValidationFactory.createPojoValidator();
+    private int index = 0;
 
-    @Parameters(name = "{0}")
-    public static Collection<Object[]> data() {
-        return PojoValidationFactory.createPojoClassList(
-                Contractor.class,
-                Contractors.class,
-                ContractorsApi.class
-        );
+    public NodeListIterator(NodeList nodeList) {
+        this.nodeList = nodeList;
     }
 
-    public ContractorsTest(String label, PojoClass pojoClass) {
-        this.pojoClass = pojoClass;
+    @Override
+    public boolean hasNext() {
+        return index < nodeList.getLength();
     }
 
-    @Test
-    public void testPojoStructureAndBehavior() {
-        assertThat(pojoClass).isNotNull();
-        pojoValidator.runValidation(pojoClass);
+    @Override
+    public Node next() {
+        return hasNext() ? nodeList.item(forward()) : empty();
     }
 
+    private Node empty() {
+        throw new NoSuchElementException("NodeList element `" + index + "` doesn't exists");
+    }
+
+    private int forward() {
+        int actual = index;
+        index++;
+        return actual;
+    }
+
+    @Override
+    public void remove() {
+        throw new UnsupportedOperationException();
+    }
 }

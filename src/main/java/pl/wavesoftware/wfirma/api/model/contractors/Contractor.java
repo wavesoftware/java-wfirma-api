@@ -29,242 +29,146 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+import static pl.wavesoftware.wfirma.api.mapper.Copier.copy;
 import pl.wavesoftware.wfirma.api.mapper.xml.BooleanToIntegerAdapter;
 import pl.wavesoftware.wfirma.api.mapper.xml.DateWithTimeAdapter;
 import pl.wavesoftware.wfirma.api.model.utils.ReadOnly;
+import pl.wavesoftware.wfirma.api.model.utils.Reference;
 
 /**
  * <p>
  * Java class for contractorType complex type.
  *
- * <p>
- * The following schema fragment specifies the expected content contained within this class.
- *
- * <pre>
- * &lt;complexType name="contractorType">
- *   &lt;complexContent>
- *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
- *       &lt;sequence>
- *         &lt;element name="id" type="{http://www.w3.org/2001/XMLSchema}long"/>
- *         &lt;element name="access" type="{http://www.w3.org/2001/XMLSchema}string"/>
- *         &lt;element name="name" type="{http://www.w3.org/2001/XMLSchema}string"/>
- *         &lt;element name="altname" type="{http://www.w3.org/2001/XMLSchema}string"/>
- *         &lt;element name="nip" type="{http://www.w3.org/2001/XMLSchema}string"/>
- *         &lt;element name="regon" type="{http://www.w3.org/2001/XMLSchema}string"/>
- *         &lt;element name="street" type="{http://www.w3.org/2001/XMLSchema}string"/>
- *         &lt;element name="zip" type="{http://www.w3.org/2001/XMLSchema}string"/>
- *         &lt;element name="city" type="{http://www.w3.org/2001/XMLSchema}string"/>
- *         &lt;element name="contact_name" type="{http://www.w3.org/2001/XMLSchema}string"/>
- *         &lt;element name="contact_street" type="{http://www.w3.org/2001/XMLSchema}string"/>
- *         &lt;element name="contact_zip" type="{http://www.w3.org/2001/XMLSchema}string"/>
- *         &lt;element name="contact_city" type="{http://www.w3.org/2001/XMLSchema}string"/>
- *         &lt;element name="contact_person" type="{http://www.w3.org/2001/XMLSchema}string"/>
- *         &lt;element name="phone" type="{http://www.w3.org/2001/XMLSchema}string"/>
- *         &lt;element name="fax" type="{http://www.w3.org/2001/XMLSchema}string"/>
- *         &lt;element name="email" type="{http://www.w3.org/2001/XMLSchema}string"/>
- *         &lt;element name="url" type="{http://www.w3.org/2001/XMLSchema}string"/>
- *         &lt;element name="description" type="{http://www.w3.org/2001/XMLSchema}string"/>
- *         &lt;element name="buyer" type="{http://www.w3.org/2001/XMLSchema}int"/>
- *         &lt;element name="seller" type="{http://www.w3.org/2001/XMLSchema}int"/>
- *         &lt;element name="discount_percent" type="{http://www.w3.org/2001/XMLSchema}int"/>
- *         &lt;element name="payment_days" type="{http://www.w3.org/2001/XMLSchema}int"/>
- *         &lt;element name="payment_method" type="{http://www.w3.org/2001/XMLSchema}string"/>
- *         &lt;element name="remind" type="{http://www.w3.org/2001/XMLSchema}int"/>
- *         &lt;element name="tags" type="{http://www.w3.org/2001/XMLSchema}string"/>
- *         &lt;element name="notes" type="{http://www.w3.org/2001/XMLSchema}int"/>
- *         &lt;element name="created" type="{http://www.w3.org/2001/XMLSchema}string"/>
- *         &lt;element name="modified" type="{http://www.w3.org/2001/XMLSchema}string"/>
- *         &lt;element name="provider" type="{http://www.w3.org/2001/XMLSchema}int"/>
- *         &lt;element name="translation_language">
- *           &lt;complexType>
- *             &lt;complexContent>
- *               &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
- *                 &lt;sequence>
- *                   &lt;element name="id" type="{http://www.w3.org/2001/XMLSchema}int"/>
- *                 &lt;/sequence>
- *               &lt;/restriction>
- *             &lt;/complexContent>
- *           &lt;/complexType>
- *         &lt;/element>
- *         &lt;element name="company_account">
- *           &lt;complexType>
- *             &lt;complexContent>
- *               &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
- *                 &lt;sequence>
- *                   &lt;element name="id" type="{http://www.w3.org/2001/XMLSchema}int"/>
- *                 &lt;/sequence>
- *               &lt;/restriction>
- *             &lt;/complexContent>
- *           &lt;/complexType>
- *         &lt;/element>
- *         &lt;element name="invoice_description">
- *           &lt;complexType>
- *             &lt;complexContent>
- *               &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
- *                 &lt;sequence>
- *                   &lt;element name="id" type="{http://www.w3.org/2001/XMLSchema}anyType"/>
- *                 &lt;/sequence>
- *               &lt;/restriction>
- *             &lt;/complexContent>
- *           &lt;/complexType>
- *         &lt;/element>
- *       &lt;/sequence>
- *     &lt;/restriction>
- *   &lt;/complexContent>
- * &lt;/complexType>
- * </pre>
- *
- *
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "contractorType", propOrder = {
-    "id",
-    "access",
-    "name",
-    "altname",
-    "nip",
-    "regon",
-    "street",
-    "zip",
-    "city",
-    "differentContactAddress",
-    "contactName",
-    "contactStreet",
-    "contactZip",
-    "contactCity",
-    "contactPerson",
-    "phone",
-    "fax",
-    "email",
-    "url",
-    "description",
-    "buyer",
-    "seller",
-    "discountPercent",
-    "paymentDays",
-    "paymentMethod",
-    "remind",
-    "tags",
-    "notes",
-    "created",
-    "modified",
-    "provider",
-    "translationLanguage",
-    "companyAccount",
-    "invoiceDescription"
-})
+@XmlType(name = "contractorType")
 public class Contractor {
 
     @ReadOnly
     @XmlElement
-    protected Long id;
+    private Long id;
 
     @XmlElement
-    protected String access;
+    private String access;
 
     @XmlElement(required = true)
-    protected String name;
+    private String name;
 
     @XmlElement
-    protected String altname;
+    private String altname;
 
     @XmlElement
-    protected String nip;
+    private String nip;
 
     @XmlElement
-    protected String regon;
+    private String regon;
 
     @XmlElement
-    protected String street;
+    private String street;
 
     @XmlElement
-    protected String zip;
+    private String zip;
 
     @XmlElement
-    protected String city;
+    private String city;
 
     @XmlJavaTypeAdapter(BooleanToIntegerAdapter.class)
     @XmlElement(name = "different_contact_address")
-    protected Boolean differentContactAddress;
+    private Boolean differentContactAddress;
 
     @XmlElement(name = "contact_name")
-    protected String contactName;
+    private String contactName;
 
     @XmlElement(name = "contact_street")
-    protected String contactStreet;
+    private String contactStreet;
 
     @XmlElement(name = "contact_zip")
-    protected String contactZip;
+    private String contactZip;
 
     @XmlElement(name = "contact_city")
-    protected String contactCity;
+    private String contactCity;
 
     @XmlElement(name = "contact_person")
-    protected String contactPerson;
+    private String contactPerson;
 
     @XmlElement
-    protected String phone;
+    private String phone;
 
     @XmlElement
-    protected String fax;
+    private String fax;
 
     @XmlElement
-    protected String email;
+    private String email;
 
     @XmlElement
-    protected String url;
+    private String url;
 
     @XmlElement
-    protected String description;
-
-    @XmlJavaTypeAdapter(BooleanToIntegerAdapter.class)
-    @XmlElement
-    protected Boolean buyer;
+    private String description;
 
     @XmlJavaTypeAdapter(BooleanToIntegerAdapter.class)
     @XmlElement
-    protected Boolean seller;
+    private Boolean buyer;
+
+    @XmlJavaTypeAdapter(BooleanToIntegerAdapter.class)
+    @XmlElement
+    private Boolean seller;
 
     @XmlElement(name = "discount_percent")
-    protected Integer discountPercent;
+    private Integer discountPercent;
 
     @XmlElement(name = "payment_days")
-    protected Integer paymentDays;
+    private Integer paymentDays;
 
     @XmlElement(name = "payment_method")
-    protected String paymentMethod;
+    private String paymentMethod;
 
     @XmlElement
-    protected Integer remind;
+    private Integer remind;
 
     @XmlElement
-    protected String tags;
-
-    @ReadOnly
-    @XmlElement
-    protected Integer notes;
+    private String tags;
 
     @ReadOnly
-    @XmlJavaTypeAdapter(DateWithTimeAdapter.class)
     @XmlElement
-    protected Date created;
+    private Integer notes;
 
     @ReadOnly
     @XmlJavaTypeAdapter(DateWithTimeAdapter.class)
     @XmlElement
-    protected Date modified;
+    private Date created;
+
+    @ReadOnly
+    @XmlJavaTypeAdapter(DateWithTimeAdapter.class)
+    @XmlElement
+    private Date modified;
 
     @XmlElement
-    protected Integer provider;
+    private Integer provider;
 
+    @ReadOnly
+    @XmlElement(name = "reference_company")
+    private Reference referenceCompany;
+
+    @ReadOnly
     @XmlElement(name = "translation_language")
-    protected Contractor.TranslationLanguage translationLanguage;
+    private Reference translationLanguage;
 
+    @ReadOnly
     @XmlElement(name = "company_account")
-    protected Contractor.CompanyAccount companyAccount;
+    private Reference companyAccount;
 
+    @ReadOnly
+    @XmlElement(name = "good_price_group")
+    private Reference goodPriceGroup;
+
+    @ReadOnly
     @XmlElement(name = "invoice_description")
-    protected Contractor.InvoiceDescription invoiceDescription;
+    private Reference invoiceDescription;
+
+    @ReadOnly
+    @XmlElement(name = "shop_buyer")
+    private Reference shopBuyer;
 
     /**
      * Gets the value of the id property.
@@ -807,7 +711,7 @@ public class Contractor {
      *
      */
     public Date getCreated() {
-        return created;
+        return copy(created);
     }
 
     /**
@@ -817,7 +721,7 @@ public class Contractor {
      *
      */
     public void setCreated(Date value) {
-        this.created = value;
+        this.created = copy(value);
     }
 
     /**
@@ -827,7 +731,7 @@ public class Contractor {
      *
      */
     public Date getModified() {
-        return modified;
+        return copy(modified);
     }
 
     /**
@@ -837,7 +741,7 @@ public class Contractor {
      *
      */
     public void setModified(Date value) {
-        this.modified = value;
+        this.modified = copy(value);
     }
 
     /**
@@ -859,207 +763,85 @@ public class Contractor {
     /**
      * Gets the value of the translationLanguage property.
      *
-     * @return possible object is {@link ContractorType.TranslationLanguage }
+     * @return possible object is {@link Reference}
      *
      */
-    public Contractor.TranslationLanguage getTranslationLanguage() {
+    public Reference getTranslationLanguage() {
         return translationLanguage;
     }
 
     /**
      * Sets the value of the translationLanguage property.
      *
-     * @param value allowed object is {@link ContractorType.TranslationLanguage }
+     * @param value allowed object is {@link Reference}
      *
      */
-    public void setTranslationLanguage(Contractor.TranslationLanguage value) {
+    public void setTranslationLanguage(Reference value) {
         this.translationLanguage = value;
     }
 
     /**
      * Gets the value of the companyAccount property.
      *
-     * @return possible object is {@link ContractorType.CompanyAccount }
+     * @return possible object is {@link Reference}
      *
      */
-    public Contractor.CompanyAccount getCompanyAccount() {
+    public Reference getCompanyAccount() {
         return companyAccount;
     }
 
     /**
      * Sets the value of the companyAccount property.
      *
-     * @param value allowed object is {@link ContractorType.CompanyAccount }
+     * @param value allowed object is {@link Reference}
      *
      */
-    public void setCompanyAccount(Contractor.CompanyAccount value) {
+    public void setCompanyAccount(Reference value) {
         this.companyAccount = value;
     }
 
     /**
      * Gets the value of the invoiceDescription property.
      *
-     * @return possible object is {@link ContractorType.InvoiceDescription }
+     * @return possible object is {@link Reference}
      *
      */
-    public Contractor.InvoiceDescription getInvoiceDescription() {
+    public Reference getInvoiceDescription() {
         return invoiceDescription;
     }
 
     /**
      * Sets the value of the invoiceDescription property.
      *
-     * @param value allowed object is {@link ContractorType.InvoiceDescription }
+     * @param value allowed object is {@link Reference}
      *
      */
-    public void setInvoiceDescription(Contractor.InvoiceDescription value) {
+    public void setInvoiceDescription(Reference value) {
         this.invoiceDescription = value;
     }
 
-    /**
-     * <p>
-     * Java class for anonymous complex type.
-     *
-     * <p>
-     * The following schema fragment specifies the expected content contained within this class.
-     *
-     * <pre>
-     * &lt;complexType>
-     *   &lt;complexContent>
-     *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
-     *       &lt;sequence>
-     *         &lt;element name="id" type="{http://www.w3.org/2001/XMLSchema}int"/>
-     *       &lt;/sequence>
-     *     &lt;/restriction>
-     *   &lt;/complexContent>
-     * &lt;/complexType>
-     * </pre>
-     *
-     *
-     */
-    @XmlAccessorType(XmlAccessType.FIELD)
-    @XmlType(name = "", propOrder = {
-        "id"
-    })
-    public static class CompanyAccount {
-
-        protected Integer id;
-
-        /**
-         * Gets the value of the id property.
-         *
-         */
-        public Integer getId() {
-            return id;
-        }
-
-        /**
-         * Sets the value of the id property.
-         *
-         */
-        public void setId(Integer value) {
-            this.id = value;
-        }
-
+    public Reference getReferenceCompany() {
+        return referenceCompany;
     }
 
-    /**
-     * <p>
-     * Java class for anonymous complex type.
-     *
-     * <p>
-     * The following schema fragment specifies the expected content contained within this class.
-     *
-     * <pre>
-     * &lt;complexType>
-     *   &lt;complexContent>
-     *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
-     *       &lt;sequence>
-     *         &lt;element name="id" type="{http://www.w3.org/2001/XMLSchema}anyType"/>
-     *       &lt;/sequence>
-     *     &lt;/restriction>
-     *   &lt;/complexContent>
-     * &lt;/complexType>
-     * </pre>
-     *
-     *
-     */
-    @XmlAccessorType(XmlAccessType.FIELD)
-    @XmlType(name = "", propOrder = {
-        "id"
-    })
-    public static class InvoiceDescription {
-
-        @XmlElement(required = true)
-        protected Object id;
-
-        /**
-         * Gets the value of the id property.
-         *
-         * @return possible object is {@link Object }
-         *
-         */
-        public Object getId() {
-            return id;
-        }
-
-        /**
-         * Sets the value of the id property.
-         *
-         * @param value allowed object is {@link Object }
-         *
-         */
-        public void setId(Object value) {
-            this.id = value;
-        }
-
+    public void setReferenceCompany(Reference referenceCompany) {
+        this.referenceCompany = referenceCompany;
     }
 
-    /**
-     * <p>
-     * Java class for anonymous complex type.
-     *
-     * <p>
-     * The following schema fragment specifies the expected content contained within this class.
-     *
-     * <pre>
-     * &lt;complexType>
-     *   &lt;complexContent>
-     *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
-     *       &lt;sequence>
-     *         &lt;element name="id" type="{http://www.w3.org/2001/XMLSchema}int"/>
-     *       &lt;/sequence>
-     *     &lt;/restriction>
-     *   &lt;/complexContent>
-     * &lt;/complexType>
-     * </pre>
-     *
-     *
-     */
-    @XmlAccessorType(XmlAccessType.FIELD)
-    @XmlType(name = "", propOrder = {
-        "id"
-    })
-    public static class TranslationLanguage {
+    public Reference getGoodPriceGroup() {
+        return goodPriceGroup;
+    }
 
-        protected Integer id;
+    public void setGoodPriceGroup(Reference goodPriceGroup) {
+        this.goodPriceGroup = goodPriceGroup;
+    }
 
-        /**
-         * Gets the value of the id property.
-         *
-         */
-        public Integer getId() {
-            return id;
-        }
+    public Reference getShopBuyer() {
+        return shopBuyer;
+    }
 
-        /**
-         * Sets the value of the id property.
-         *
-         */
-        public void setId(Integer value) {
-            this.id = value;
-        }
-
+    public void setShopBuyer(Reference shopBuyer) {
+        this.shopBuyer = shopBuyer;
     }
 
 }

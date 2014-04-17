@@ -14,7 +14,7 @@
     <name>A Java SDK for WFirma API2</name>
     <description>A Java SDK for WFirma API2</description>
     <url>http://doc.wfirma.pl</url>
-
+    
     <properties>
         <netbeans.hint.license>mit</netbeans.hint.license>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -35,6 +35,10 @@
         <developerConnection>scm:git:git@github.com:wavesoftware/java-wfirma-api.git</developerConnection>
         <url>https://github.com/wavesoftware/java-wfirma-api</url>
     </scm>
+    <ciManagement>
+        <system>travis-ci</system>
+        <url>https://travis-ci.org/wavesoftware/java-wfirma-api</url>
+    </ciManagement>
     
     <profiles>
         <profile>
@@ -173,6 +177,11 @@
             <groupId>org.joda</groupId>
             <artifactId>joda-money</artifactId>
             <version>0.9</version>
+        </dependency>
+        <dependency>
+            <groupId>com.e-movimento.tinytools</groupId>
+            <artifactId>privilegedaccessor</artifactId>
+            <version>1.2.2</version>
         </dependency>
 
         <!-- Tests -->

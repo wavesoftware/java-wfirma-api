@@ -37,7 +37,7 @@ import org.junit.Test;
 import pl.wavesoftware.wfirma.api.SimpleCredentials;
 import pl.wavesoftware.wfirma.api.model.WFirmaException;
 import pl.wavesoftware.wfirma.api.model.WFirmaSecurityException;
-import pl.wavesoftware.wfirma.api.model.companies.Companies;
+import pl.wavesoftware.wfirma.api.model.companies.CompaniesGetRequest;
 import pl.wavesoftware.wfirma.api.model.contractors.Contractors;
 import pl.wavesoftware.wfirma.api.model.logic.And;
 import pl.wavesoftware.wfirma.api.model.logic.Condition;
@@ -83,7 +83,7 @@ public class SimpleGatewayTest {
         SimpleCredentials creds = new SimpleCredentials("login@example.org", "a-user-password");
         SimpleGateway instance = new SimpleGateway(creds, mockAddress);
 
-        GetRequest<Companies> get = GetRequest.create(Companies.class, 1L);
+        CompaniesGetRequest get = CompaniesGetRequest.create();
         String result = instance.get(get);
         assertThat(result).isNotNull();
         assertThat(result).isEqualTo(expResult);
@@ -104,7 +104,7 @@ public class SimpleGatewayTest {
         SimpleCredentials creds = new SimpleCredentials("login@example.org", "a-user-password");
         SimpleGateway instance = new SimpleGateway(creds, mockAddress);
 
-        GetRequest<Companies> get = GetRequest.create(Companies.class, 1L);
+        CompaniesGetRequest get = CompaniesGetRequest.create();
         String result = instance.get(get);
         assertThat(result).isNotNull();
         assertThat(result).isEqualTo(expResult);
@@ -301,14 +301,14 @@ public class SimpleGatewayTest {
                 + "</api>\n"
                 + "";
 
-        stubFor(get(urlEqualTo("/companies/get/1"))
+        stubFor(get(urlEqualTo("/companies/get"))
                 .withHeader("Accept", equalTo(CONTENT_TYPE_TEXT_XML))
                 .withHeader("Authorization", equalTo("Basic bG9naW5AZXhhbXBsZS5vcmc6YS11c2VyLXBhc3N3b3Jk"))
                 .willReturn(aResponse()
                         .withStatus(200)
                         .withHeader("Content-Type", CONTENT_TYPE_TEXT_XML)
                         .withBody(expResult)));
-        stubFor(get(urlEqualTo("/companies/get/1"))
+        stubFor(get(urlEqualTo("/companies/get"))
                 .withHeader("Accept", equalTo(CONTENT_TYPE_TEXT_XML))
                 .withHeader("Authorization", notMatching("Basic bG9naW5AZXhhbXBsZS5vcmc6YS11c2VyLXBhc3N3b3Jk"))
                 .willReturn(aResponse()
@@ -352,7 +352,7 @@ public class SimpleGatewayTest {
         SimpleCredentials creds = new SimpleCredentials("login@example.org", "a-user-password");
         SimpleGateway instance = new SimpleGateway(creds, mockAddress);
         instance.addListener(listener);
-        GetRequest<Companies> get = GetRequest.create(Companies.class, 1L);
+        CompaniesGetRequest get = CompaniesGetRequest.create();
         instance.get(get);
         assertThat(sb.toString()).isEqualTo(expResult);
     }
@@ -371,7 +371,7 @@ public class SimpleGatewayTest {
         SimpleGateway instance = new SimpleGateway(creds, mockAddress);
         instance.addListener(listener);
         instance.removeListener(listener);
-        GetRequest<Companies> get = GetRequest.create(Companies.class, 1L);
+        CompaniesGetRequest get = CompaniesGetRequest.create();
         instance.get(get);
         assertThat(sb.toString()).isEqualTo("");
     }
@@ -380,7 +380,7 @@ public class SimpleGatewayTest {
     public void testGet() throws Exception {
         SimpleCredentials creds = new SimpleCredentials("login@example.org", "a-user-password");
         SimpleGateway instance = new SimpleGateway(creds, mockAddress);
-        GetRequest<Companies> get = GetRequest.create(Companies.class, 1L);
+        CompaniesGetRequest get = CompaniesGetRequest.create();
         String result = instance.get(get);
         assertThat(result).isEqualTo(expResult);
     }

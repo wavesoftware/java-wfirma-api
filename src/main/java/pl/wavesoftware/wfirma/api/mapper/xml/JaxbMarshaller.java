@@ -74,7 +74,7 @@ public class JaxbMarshaller<Type> {
         this.type = cls;
     }
 
-    private JAXBContext getContext() {
+    protected JAXBContext getContext() {
         try {
             final Package pack = type.getPackage();
             final ClassLoader loader = Thread.currentThread().getContextClassLoader();
@@ -154,12 +154,12 @@ public class JaxbMarshaller<Type> {
         }
     }
 
-    private String format(String input) {
+    protected String format(String input) {
         XmlCustomFormatter formatter = getFormatter();
         return (formatter != null) ? formatter.format(input) : input;
     }
 
-    private String unformat(String input) {
+    protected String unformat(String input) {
         XmlCustomFormatter formatter = getFormatter();
         return (formatter != null) ? formatter.unformat(input) : input;
     }

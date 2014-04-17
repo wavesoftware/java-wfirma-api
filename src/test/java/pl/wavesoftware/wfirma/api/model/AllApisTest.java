@@ -87,6 +87,7 @@ public class AllApisTest {
     }
 
     @Test
+    @SuppressWarnings("unchecked")
     public void testCreate() throws InstantiationException, IllegalAccessException {
         assertThat(label).isNotEmpty();
         @SuppressWarnings("unchecked")

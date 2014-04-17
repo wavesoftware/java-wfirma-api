@@ -21,50 +21,22 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package pl.wavesoftware.wfirma.api.model.logic;
+package pl.wavesoftware.wfirma.api.model.companies;
 
-import com.openpojo.reflection.PojoClass;
-import com.openpojo.validation.PojoValidator;
-import java.util.Collection;
 import static org.assertj.core.api.Assertions.assertThat;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
-import pl.wavesoftware.wfirma.api.model.utils.Reference;
-import pl.wavesoftware.wfirma.api.model.utils.PojoValidationFactory;
 
 /**
  *
  * @author Krzysztof Suszyński <krzysztof.suszynski@wavesoftware.pl>
  */
-@RunWith(Parameterized.class)
-public class LogicPojoValidationTest {
-
-    private final PojoClass pojoClass;
-
-    private final PojoValidator pojoValidator = PojoValidationFactory.createPojoValidator();
-
-    @Parameterized.Parameters(name = "{0}")
-    public static Collection<Object[]> data() {
-        return PojoValidationFactory.createPojoClassList(
-                Parameters.class,
-                Parameter.class,
-                Order.class,
-                Or.class,
-                Conditions.class,
-                Condition.class,
-                And.class,
-                Reference.class
-        );
-    }
-
-    public LogicPojoValidationTest(String label, PojoClass pojoClass) {
-        this.pojoClass = pojoClass;
-    }
+public class CompaniesGetRequestTest {
 
     @Test
-    public void testPojoStructureAndBehavior() {
-        assertThat(pojoClass).isNotNull();
-        pojoValidator.runValidation(pojoClass);
+    public void testGetAddress() {
+        CompaniesGetRequest result = CompaniesGetRequest.create();
+        assertThat(result).isNotNull();
+        assertThat(result.getAddress().toString()).isEqualTo("/companies/get");
     }
+
 }

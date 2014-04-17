@@ -39,6 +39,7 @@ import pl.wavesoftware.wfirma.api.model.Request;
 import pl.wavesoftware.wfirma.api.model.WFirmaException;
 import pl.wavesoftware.wfirma.api.model.WFirmaSecurityException;
 import pl.wavesoftware.wfirma.api.model.companies.Companies;
+import pl.wavesoftware.wfirma.api.model.companies.CompaniesGetRequest;
 import pl.wavesoftware.wfirma.api.model.contractors.Contractor;
 import pl.wavesoftware.wfirma.api.model.contractors.Contractors;
 import pl.wavesoftware.wfirma.api.model.contractors.ContractorsApi;
@@ -50,7 +51,6 @@ import pl.wavesoftware.wfirma.api.model.logic.Parameters;
 import pl.wavesoftware.wfirma.api.model.requests.AddRequest;
 import pl.wavesoftware.wfirma.api.model.requests.DeleteRequest;
 import pl.wavesoftware.wfirma.api.model.requests.FindRequest;
-import pl.wavesoftware.wfirma.api.model.requests.GetRequest;
 
 /**
  *
@@ -153,24 +153,12 @@ public class SimpleGatewayIT {
                 + "<documents>0</documents>\\s*"
                 + "<created>[0-9-]+ [0-9:]+</created>\\s*"
                 + "<modified>[0-9-]+ [0-9:]+</modified>\\s*"
-                + "<reference_company>\\s*"
-                + "<id>0</id>\\s*"
-                + "</reference_company>\\s*"
-                + "<translation_language>\\s*"
-                + "<id>0</id>\\s*"
-                + "</translation_language>\\s*"
-                + "<company_account>\\s*"
-                + "<id>0</id>\\s*"
-                + "</company_account>\\s*"
-                + "<good_price_group>\\s*"
-                + "<id>0</id>\\s*"
-                + "</good_price_group>\\s*"
-                + "<invoice_description>\\s*"
-                + "<id>0</id>\\s*"
-                + "</invoice_description>\\s*"
-                + "<shop_buyer>\\s*"
-                + "<id>0</id>\\s*"
-                + "</shop_buyer>\\s*"
+                + "<reference_company>\\s*<id>0</id>\\s*</reference_company>\\s*"
+                + "<translation_language>\\s*<id>0</id>\\s*</translation_language>\\s*"
+                + "<company_account>\\s*<id>0</id>\\s*</company_account>\\s*"
+                + "<good_price_group>\\s*<id>0</id>\\s*</good_price_group>\\s*"
+                + "<invoice_description>\\s*<id>0</id>\\s*</invoice_description>\\s*"
+                + "<shop_buyer>\\s*<id>0</id>\\s*</shop_buyer>\\s*"
                 + "</contractor>\\s*"
                 + "<parameters>\\s*"
                 + "<limit>\\d+</limit>\\s*"
@@ -189,9 +177,9 @@ public class SimpleGatewayIT {
         SimpleCredentials creds = new SimpleCredentials(correctLogin, correctPassword);
         SimpleGateway instance = new SimpleGateway(creds, GATEWAY_ADDRESS);
 
-        Request<Companies> get = GetRequest.create(Companies.class, 1L);
+        Request<Companies> get = CompaniesGetRequest.create();
         String result = instance.get(get);
-        assertNotNull(result);
+        assertThat(result).isNotNull();
         assertThat(result).matches(expResultRe);
     }
 
@@ -255,7 +243,7 @@ public class SimpleGatewayIT {
         };
         instance.addListener(listener);
         try {
-            Request<Companies> get = GetRequest.create(Companies.class, 2L);
+            Request<Companies> get = CompaniesGetRequest.create();
             instance.get(get);
             fail("Expected to throw a WFirmaSercurityException for invalid auth");
         } catch (WFirmaSecurityException ex) {

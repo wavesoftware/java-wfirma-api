@@ -21,58 +21,28 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package pl.wavesoftware.wfirma.api.model.requests;
+package pl.wavesoftware.wfirma.api.model.companies;
 
-import pl.wavesoftware.wfirma.api.mapper.Api;
 import pl.wavesoftware.wfirma.api.mapper.ApiModule;
 import pl.wavesoftware.wfirma.api.mapper.RequestPath;
-import pl.wavesoftware.wfirma.api.model.ApiEntityElement;
-import pl.wavesoftware.wfirma.api.model.Request;
+import pl.wavesoftware.wfirma.api.model.requests.GetRequest;
 
 /**
  *
  * @author Krzysztof Suszyński <krzysztof.suszynski@wavesoftware.pl>
- * @param <T> a type of request
  */
-public class GetRequest<T extends ApiEntityElement> implements Request<T> {
+public class CompaniesGetRequest extends GetRequest<Companies> {
 
-    private final Long wfirmaId;
-
-    private final Class<T> entityClass;
-
-    /**
-     * Constructor
-     *
-     * @param entityClass a entity class of api module
-     * @param wfirmaId a ID of wfirma
-     */
-    protected GetRequest(Class<T> entityClass, Long wfirmaId) {
-        this.entityClass = entityClass;
-        this.wfirmaId = wfirmaId;
+    protected CompaniesGetRequest() {
+        super(Companies.class, 0L);
     }
 
-    /**
-     * Creates a {@link GetRequest} for an entity
-     *
-     * @param entityClass a entity class of api module
-     * @param wfirmaId a ID of wfirma
-     * @param <T> a type of entity
-     * @return a request
-     */
-    public static <T extends ApiEntityElement> GetRequest<T> create(Class<T> entityClass, Long wfirmaId) {
-        GetRequest<T> obj = new GetRequest<>(entityClass, wfirmaId);
-        return obj;
+    public static CompaniesGetRequest create() {
+        return new CompaniesGetRequest();
     }
 
     @Override
     public RequestPath getAddress() {
-        Class<? extends Api> module = ApiModule.getModuleFor(entityClass);
-        return RequestPath.fromString(ApiModule.getRequestModulePath(module), "get", wfirmaId.toString());
+        return RequestPath.fromString(ApiModule.getRequestModulePath(CompaniesApi.class), "get");
     }
-
-    @Override
-    public Class<T> getEntityClass() {
-        return entityClass;
-    }
-
 }

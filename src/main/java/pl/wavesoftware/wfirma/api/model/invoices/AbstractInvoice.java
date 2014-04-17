@@ -37,6 +37,9 @@ import pl.wavesoftware.wfirma.api.mapper.xml.DateAdapter;
 import pl.wavesoftware.wfirma.api.mapper.xml.DateWithTimeAdapter;
 import pl.wavesoftware.wfirma.api.mapper.xml.MoneyAdapter;
 import pl.wavesoftware.wfirma.api.mapper.xml.TagsAdapter;
+import pl.wavesoftware.wfirma.api.model.companies.Company;
+import pl.wavesoftware.wfirma.api.model.contractors.Contractor;
+import pl.wavesoftware.wfirma.api.model.utils.Reference;
 import pl.wavesoftware.wfirma.api.model.utils.ReadOnly;
 
 /**
@@ -54,6 +57,13 @@ public abstract class AbstractInvoice {
 
     @XmlTransient
     protected TypeOfInvoice type;
+
+    @XmlElement(name = "contractor_detail")
+    private Contractor contractorDetail;
+
+    @ReadOnly
+    @XmlElement(name = "company_detail")
+    private Company companyDetail;
 
     @XmlElement(name = "paymentmethod")
     private PaymentMethod paymentMethod;
@@ -340,6 +350,58 @@ public abstract class AbstractInvoice {
     @XmlElement(name = "invoicecontents")
     private InvoiceContents invoiceContents;
 
+    @ReadOnly
+    @XmlElement
+    private Reference series;
+
+    @ReadOnly
+    @XmlElement
+    private Reference company;
+
+    @ReadOnly
+    @XmlElement
+    private Reference contractor;
+
+    @ReadOnly
+    @XmlElement
+    private Reference parent;
+
+    @ReadOnly
+    @XmlElement
+    private Reference order;
+
+    @ReadOnly
+    @XmlElement
+    private Reference cronemail;
+
+    @ReadOnly
+    @XmlElement
+    private Reference cronemail2;
+
+    @ReadOnly
+    @XmlElement
+    private Reference expenses;
+
+    @ReadOnly
+    @XmlElement(name = "company_accounts")
+    private Reference companyAccounts;
+
+    @ReadOnly
+    @XmlElement(name = "payment_cashboxes")
+    private Reference paymentCashboxes;
+
+    @ReadOnly
+    @XmlElement(name = "translation_languages")
+    private Reference translationLanguages;
+
+    @ReadOnly
+    @XmlElement(name = "postivo_shipments")
+    private Reference postivoShipments;
+
+    @ReadOnly
+    @XmlElement(name = "postivo_shipment_contents")
+    private Reference postivoShipmentContents;
+
     /**
      * Constructor
      *
@@ -363,6 +425,22 @@ public abstract class AbstractInvoice {
 
     public void setType(TypeOfInvoice type) {
         this.type = type;
+    }
+
+    public Contractor getContractorDetail() {
+        return contractorDetail;
+    }
+
+    public void setContractorDetail(Contractor contractor) {
+        this.contractorDetail = contractor;
+    }
+
+    public Company getCompanyDetail() {
+        return companyDetail;
+    }
+
+    public void setCompanyDetail(Company company) {
+        this.companyDetail = company;
     }
 
     public Date getPaymentDate() {
@@ -907,6 +985,110 @@ public abstract class AbstractInvoice {
 
     public void setInvoiceContents(InvoiceContents invoiceContents) {
         this.invoiceContents = invoiceContents;
+    }
+
+    public Reference getSeries() {
+        return series;
+    }
+
+    public void setSeries(Reference series) {
+        this.series = series;
+    }
+
+    public Reference getCompany() {
+        return company;
+    }
+
+    public void setCompany(Reference company) {
+        this.company = company;
+    }
+
+    public Reference getContractor() {
+        return contractor;
+    }
+
+    public void setContractor(Reference contractor) {
+        this.contractor = contractor;
+    }
+
+    public Reference getParent() {
+        return parent;
+    }
+
+    public void setParent(Reference parent) {
+        this.parent = parent;
+    }
+
+    public Reference getOrder() {
+        return order;
+    }
+
+    public void setOrder(Reference order) {
+        this.order = order;
+    }
+
+    public Reference getCronemail() {
+        return cronemail;
+    }
+
+    public void setCronemail(Reference cronemail) {
+        this.cronemail = cronemail;
+    }
+
+    public Reference getCronemail2() {
+        return cronemail2;
+    }
+
+    public void setCronemail2(Reference cronemail2) {
+        this.cronemail2 = cronemail2;
+    }
+
+    public Reference getExpenses() {
+        return expenses;
+    }
+
+    public void setExpenses(Reference expenses) {
+        this.expenses = expenses;
+    }
+
+    public Reference getCompanyAccounts() {
+        return companyAccounts;
+    }
+
+    public void setCompanyAccounts(Reference companyAccounts) {
+        this.companyAccounts = companyAccounts;
+    }
+
+    public Reference getPaymentCashboxes() {
+        return paymentCashboxes;
+    }
+
+    public void setPaymentCashboxes(Reference paymentCashboxes) {
+        this.paymentCashboxes = paymentCashboxes;
+    }
+
+    public Reference getTranslationLanguages() {
+        return translationLanguages;
+    }
+
+    public void setTranslationLanguages(Reference translationLanguages) {
+        this.translationLanguages = translationLanguages;
+    }
+
+    public Reference getPostivoShipments() {
+        return postivoShipments;
+    }
+
+    public void setPostivoShipments(Reference postivoShipments) {
+        this.postivoShipments = postivoShipments;
+    }
+
+    public Reference getPostivoShipmentContents() {
+        return postivoShipmentContents;
+    }
+
+    public void setPostivoShipmentContents(Reference postivoShipmentContents) {
+        this.postivoShipmentContents = postivoShipmentContents;
     }
 
     /**

@@ -33,6 +33,7 @@ import org.joda.money.Money;
 import static pl.wavesoftware.wfirma.api.mapper.Copier.copy;
 import pl.wavesoftware.wfirma.api.mapper.xml.DateWithTimeAdapter;
 import pl.wavesoftware.wfirma.api.mapper.xml.MoneyAdapter;
+import pl.wavesoftware.wfirma.api.model.utils.Reference;
 import pl.wavesoftware.wfirma.api.model.utils.ReadOnly;
 
 /**
@@ -84,6 +85,25 @@ public class InvoiceContent {
 
     @XmlElement
     private Integer lumpcode;
+
+    @XmlElement
+    private Reference good;
+
+    @ReadOnly
+    @XmlElement
+    private Reference invoice;
+
+    @ReadOnly
+    @XmlElement(name = "fixed_asset")
+    private Reference fixedAsset;
+
+    @ReadOnly
+    @XmlElement
+    private Reference equipment;
+
+    @ReadOnly
+    @XmlElement(name = "warehouse_document_content")
+    private Reference warehouseDocumentContent;
 
     @ReadOnly
     @XmlJavaTypeAdapter(DateWithTimeAdapter.class)
@@ -189,6 +209,46 @@ public class InvoiceContent {
 
     public void setLumpcode(Integer lumpcode) {
         this.lumpcode = lumpcode;
+    }
+
+    public Reference getGood() {
+        return good;
+    }
+
+    public void setGood(Reference good) {
+        this.good = good;
+    }
+
+    public Reference getInvoice() {
+        return invoice;
+    }
+
+    public void setInvoice(Reference invoice) {
+        this.invoice = invoice;
+    }
+
+    public Reference getFixedAsset() {
+        return fixedAsset;
+    }
+
+    public void setFixedAsset(Reference fixedAsset) {
+        this.fixedAsset = fixedAsset;
+    }
+
+    public Reference getEquipment() {
+        return equipment;
+    }
+
+    public void setEquipment(Reference equipment) {
+        this.equipment = equipment;
+    }
+
+    public Reference getWarehouseDocumentContent() {
+        return warehouseDocumentContent;
+    }
+
+    public void setWarehouseDocumentContent(Reference warehouseDocumentContent) {
+        this.warehouseDocumentContent = warehouseDocumentContent;
     }
 
     public Date getCreated() {

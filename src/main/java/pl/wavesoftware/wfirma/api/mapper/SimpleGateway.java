@@ -26,7 +26,6 @@ package pl.wavesoftware.wfirma.api.mapper;
 import com.google.common.base.Charsets;
 import java.io.IOException;
 import java.net.URI;
-import java.nio.charset.Charset;
 import java.util.HashSet;
 import java.util.Set;
 import javax.annotation.Nonnull;
@@ -153,12 +152,12 @@ class SimpleGateway implements WFirmaGateway {
             case 200:
                 HttpEntity entity = response.getEntity();
                 try {
-                    String content = EntityUtils.toString(entity, Charset.forName("UTF-8"));
+                    String content = EntityUtils.toString(entity, Charsets.UTF_8);
                     for (ResponseListener responseListener : listeners) {
                         responseListener.responseRecived(content);
                     }
                     return statusParser.checkedForStatus(credentials.getConsumerKey(), content);
-                } catch (IOException | IllegalStateException ex) {
+                } catch (IOException ex) {
                     throw new RuntimeException(ex);
                 }
             case 403:

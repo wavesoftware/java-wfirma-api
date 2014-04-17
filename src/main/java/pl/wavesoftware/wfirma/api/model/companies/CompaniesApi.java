@@ -33,7 +33,6 @@ import javax.xml.bind.annotation.XmlType;
 import pl.wavesoftware.wfirma.api.mapper.Api;
 import static pl.wavesoftware.wfirma.api.mapper.ApiModule.collectRequests;
 import pl.wavesoftware.wfirma.api.model.Request;
-import pl.wavesoftware.wfirma.api.model.requests.GetRequest;
 
 /**
  * <p>
@@ -77,7 +76,7 @@ public class CompaniesApi implements Api<Companies> {
     @Override
     @XmlTransient
     public Collection<Class<? extends Request>> getSupportedRequests() {
-        return collectRequests(GetRequest.class);
+        return collectRequests(CompaniesGetRequest.class);
     }
 
     @Override

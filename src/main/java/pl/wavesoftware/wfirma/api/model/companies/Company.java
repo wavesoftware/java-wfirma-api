@@ -55,15 +55,7 @@ import pl.wavesoftware.wfirma.api.model.utils.ReadOnly;
  * </pre>
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "companyType", propOrder = {
-    "id",
-    "name",
-    "altname",
-    "nip",
-    "vatPayer",
-    "tax",
-    "registered"
-})
+@XmlType(name = "companyType")
 public class Company {
 
     @ReadOnly
@@ -89,7 +81,7 @@ public class Company {
 
     @ReadOnly
     @XmlElement(required = false)
-    protected String tax;
+    protected TaxType tax;
 
     @ReadOnly
     @XmlJavaTypeAdapter(BooleanToIntegerAdapter.class)
@@ -197,18 +189,18 @@ public class Company {
     /**
      * Gets the value of the tax property.
      *
-     * @return possible object is {@link String}
+     * @return possible object is {@link TaxType}
      */
-    public String getTax() {
+    public TaxType getTax() {
         return tax;
     }
 
     /**
      * Sets the value of the tax property.
      *
-     * @param tax allowed object is {@link String}
+     * @param tax allowed object is {@link TaxType}
      */
-    public void setTax(String tax) {
+    public void setTax(TaxType tax) {
         this.tax = tax;
     }
 
@@ -228,6 +220,11 @@ public class Company {
      */
     public void setRegistered(Boolean registered) {
         this.registered = registered;
+    }
+
+    public static enum TaxType {
+
+        taxregister, lumpregister
     }
 
 }
