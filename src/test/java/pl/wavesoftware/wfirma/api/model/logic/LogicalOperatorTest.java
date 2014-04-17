@@ -21,11 +21,11 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-
 package pl.wavesoftware.wfirma.api.model.logic;
 
 import java.util.Arrays;
 import java.util.List;
+import org.assertj.core.api.Assertions;
 import static org.assertj.core.api.Assertions.assertThat;
 import org.junit.Test;
 
@@ -68,6 +68,16 @@ public class LogicalOperatorTest {
     public void testFromValue() {
         LogicalOperator result = LogicalOperator.fromValue("not like");
         assertThat(result).isEqualTo(LogicalOperator.NOT_LIKE);
+    }
+
+    @Test
+    public void testFromValueInvalid() {
+        try {
+            LogicalOperator.fromValue("this not exists");
+            Assertions.failBecauseExceptionWasNotThrown(IllegalArgumentException.class);
+        } catch (IllegalArgumentException iae) {
+            assertThat(iae).hasMessage("There is no enum value for `this not exists` string representaion");
+        }
     }
 
 }

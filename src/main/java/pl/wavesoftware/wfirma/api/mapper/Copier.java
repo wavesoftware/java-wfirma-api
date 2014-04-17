@@ -23,56 +23,43 @@
  */
 package pl.wavesoftware.wfirma.api.mapper;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import javax.annotation.Nullable;
+
 /**
  *
  * @author Krzysztof Suszyński <krzysztof.suszynski@wavesoftware.pl>
  */
-public class RequestPath {
+public final class Copier {
 
-    private final String path;
-
-    /**
-     * A constructor
-     *
-     * @param path a input path
-     */
-    public RequestPath(String path) {
-        this.path = path;
+    protected Copier() {
     }
 
     /**
-     * Gets a corrected path for request
+     * Gets a copy of passed object
      *
-     * @return a corrected path
+     * @param <T> a type of object
+     * @param input a object to be copied
+     * @return a copy of input object
      */
-    public String getCorrectedPath() {
-        String corrected;
-        if ("/".equals(this.path.substring(0, 1))) {
-            corrected = this.path;
+    @Nullable
+    public static <T extends Cloneable> T copy(@Nullable T input) {
+        T ret;
+        if (input == null) {
+            ret = null;
         } else {
-            corrected = "/" + this.path;
+            try {
+                Method method = input.getClass().getDeclaredMethod("clone");
+                Object clone = method.invoke(input);
+                @SuppressWarnings("unchecked")
+                T casted = (T) clone;
+                ret = casted;
+            } catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
+                throw new IllegalStateException(ex);
+            }
         }
-        return corrected;
-    }
-
-    /**
-     * Builder form list of strings as parts of the address path
-     *
-     * @param path a list of string as parts
-     * @return a request path
-     */
-    public static RequestPath fromString(String... path) {
-        StringBuilder builder = new StringBuilder();
-        for (String onePath : path) {
-            builder.append("/");
-            builder.append(onePath);
-        }
-        return new RequestPath(builder.toString());
-    }
-
-    @Override
-    public String toString() {
-        return getCorrectedPath();
+        return ret;
     }
 
 }

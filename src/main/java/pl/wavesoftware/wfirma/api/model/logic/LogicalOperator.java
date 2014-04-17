@@ -23,6 +23,7 @@
  */
 package pl.wavesoftware.wfirma.api.model.logic;
 
+import static java.lang.String.format;
 import javax.xml.bind.annotation.XmlEnum;
 import javax.xml.bind.annotation.XmlEnumValue;
 import javax.xml.bind.annotation.XmlType;
@@ -36,10 +37,9 @@ import javax.xml.bind.annotation.XmlType;
  * <p>
  * <
  * pre>
- * &lt;simpleType name="logicalOperator"> &lt;restriction base="{http://www.w3.org/2001/XMLSchema}string">
- * &lt;enumeration value="eq"/> &lt;enumeration value="ne"/> &lt;enumeration value="lt"/> &lt;enumeration value="le"/>
- * &lt;enumeration value="gt"/> &lt;enumeration value="ge"/> &lt;enumeration value="like"/> &lt;enumeration value="not
- * like"/> &lt;/restriction> &lt;/simpleType>
+ * &lt;simpleType name="logicalOperator"> &lt;restriction base="{http://www.w3.org/2001/XMLSchema}string"> &lt;enumeration value="eq"/>
+ * &lt;enumeration value="ne"/> &lt;enumeration value="lt"/> &lt;enumeration value="le"/> &lt;enumeration value="gt"/> &lt;enumeration
+ * value="ge"/> &lt;enumeration value="like"/> &lt;enumeration value="not like"/> &lt;/restriction> &lt;/simpleType>
  * </pre>
  *
  */
@@ -80,7 +80,7 @@ public enum LogicalOperator {
                 return c;
             }
         }
-        throw new IllegalArgumentException(value);
+        throw new IllegalArgumentException(format("There is no enum value for `%s` string representaion", value));
     }
 
 }

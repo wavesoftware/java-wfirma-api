@@ -53,7 +53,7 @@ public class PojoGettersSettersTester implements Tester {
     private void run(PojoClass pojoClass, Object instance) {
         for (final PojoField fieldEntry : pojoClass.getPojoFields()) {
             if (fieldEntry.hasGetter()) {
-                Object value = fieldEntry.get(instance);
+                Object value = fieldEntry.invokeGetter(instance);
 
                 if (!fieldEntry.isFinal()) {
                     value = RandomFactory.getRandomValue(fieldEntry.getType());

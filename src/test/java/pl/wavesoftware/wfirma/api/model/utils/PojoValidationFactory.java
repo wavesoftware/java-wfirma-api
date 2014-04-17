@@ -33,8 +33,6 @@ import com.openpojo.validation.rule.impl.NoPrimitivesRule;
 import com.openpojo.validation.rule.impl.NoPublicFieldsRule;
 import com.openpojo.validation.rule.impl.NoStaticExceptFinalRule;
 import com.openpojo.validation.rule.impl.SetterMustExistRule;
-import com.openpojo.validation.test.impl.GetterTester;
-import com.openpojo.validation.test.impl.SetterTester;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -88,8 +86,6 @@ public final class PojoValidationFactory {
         pojoValidator.addRule(new SetterMustExistRule());
 
         // Create Testers to validate behaviour for POJO_PACKAGE
-        pojoValidator.addTester(new SetterTester());
-        pojoValidator.addTester(new GetterTester());
         pojoValidator.addTester(new PojoGettersSettersTester());
 
         RandomGeneratorService service = ServiceRegistrar.getInstance().getRandomGeneratorService();

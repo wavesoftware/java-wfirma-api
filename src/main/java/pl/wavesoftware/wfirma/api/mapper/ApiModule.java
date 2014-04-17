@@ -38,7 +38,7 @@ import pl.wavesoftware.wfirma.api.model.Request;
  */
 public final class ApiModule {
 
-    private ApiModule() {
+    protected ApiModule() {
     }
 
     /**

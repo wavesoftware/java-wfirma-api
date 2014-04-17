@@ -30,6 +30,7 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import org.joda.money.Money;
+import static pl.wavesoftware.wfirma.api.mapper.Copier.copy;
 import pl.wavesoftware.wfirma.api.mapper.xml.DateWithTimeAdapter;
 import pl.wavesoftware.wfirma.api.mapper.xml.MoneyAdapter;
 import pl.wavesoftware.wfirma.api.model.utils.ReadOnly;
@@ -191,19 +192,19 @@ public class InvoiceContent {
     }
 
     public Date getCreated() {
-        return Date.class.cast(created.clone());
+        return copy(created);
     }
 
     public void setCreated(Date created) {
-        this.created = Date.class.cast(created.clone());
+        this.created = copy(created);
     }
 
     public Date getModified() {
-        return Date.class.cast(modified.clone());
+        return copy(modified);
     }
 
     public void setModified(Date modified) {
-        this.modified = Date.class.cast(modified.clone());
+        this.modified = copy(modified);
     }
 
 }

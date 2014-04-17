@@ -21,7 +21,6 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-
 package pl.wavesoftware.wfirma.api.model.requests;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -65,6 +64,21 @@ public class AddRequestTest {
         AddRequest<Contractors> instance = AddRequest.create(contractors);
         Object result = instance.getEntity();
         assertThat(result).isEqualTo(contractors);
+    }
+
+    @Test
+    public void testCreate() {
+        Contractors entity = new Contractors();
+        AddRequest<Contractors> result = AddRequest.create(entity);
+        assertThat(result).isNotNull();
+    }
+
+    @Test
+    public void testGetEntityClass() {
+        Contractors entity = new Contractors();
+        AddRequest<Contractors> instance = AddRequest.create(entity);
+        Class<Contractors> result = instance.getEntityClass();
+        assertThat(result).isEqualTo(Contractors.class);
     }
 
 }

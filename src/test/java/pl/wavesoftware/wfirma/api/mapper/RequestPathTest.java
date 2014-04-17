@@ -23,56 +23,34 @@
  */
 package pl.wavesoftware.wfirma.api.mapper;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import org.junit.Test;
+
 /**
  *
  * @author Krzysztof Suszyński <krzysztof.suszynski@wavesoftware.pl>
  */
-public class RequestPath {
+public class RequestPathTest {
 
-    private final String path;
+    @Test
+    public void testGetCorrectedPath() {
+        String input = "/ala/ma/kota";
+        String expected = input;
+        RequestPath instance = new RequestPath(input);
+        String result = instance.getCorrectedPath();
+        assertThat(result).isEqualTo(expected);
 
-    /**
-     * A constructor
-     *
-     * @param path a input path
-     */
-    public RequestPath(String path) {
-        this.path = path;
+        input = "ala/ma/kota";
+        instance = new RequestPath(input);
+        result = instance.getCorrectedPath();
+        assertThat(result).isEqualTo(expected);
     }
 
-    /**
-     * Gets a corrected path for request
-     *
-     * @return a corrected path
-     */
-    public String getCorrectedPath() {
-        String corrected;
-        if ("/".equals(this.path.substring(0, 1))) {
-            corrected = this.path;
-        } else {
-            corrected = "/" + this.path;
-        }
-        return corrected;
-    }
-
-    /**
-     * Builder form list of strings as parts of the address path
-     *
-     * @param path a list of string as parts
-     * @return a request path
-     */
-    public static RequestPath fromString(String... path) {
-        StringBuilder builder = new StringBuilder();
-        for (String onePath : path) {
-            builder.append("/");
-            builder.append(onePath);
-        }
-        return new RequestPath(builder.toString());
-    }
-
-    @Override
-    public String toString() {
-        return getCorrectedPath();
+    @Test
+    public void testFromString() {
+        RequestPath result = RequestPath.fromString("ala", "ma", "kota");
+        String empty = "";
+        assertThat(result + empty).isEqualTo("/ala/ma/kota");
     }
 
 }

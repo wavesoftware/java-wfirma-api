@@ -23,8 +23,6 @@
  */
 package pl.wavesoftware.wfirma.api.model.logic;
 
-import javax.xml.bind.JAXBElement;
-import javax.xml.bind.annotation.XmlElementDecl;
 import javax.xml.bind.annotation.XmlRegistry;
 import javax.xml.namespace.QName;
 
@@ -32,10 +30,9 @@ import javax.xml.namespace.QName;
  * This object contains factory methods for each Java content interface and Java element interface generated in the
  * pl.wavesoftware.wfirma.api.model.logic package.
  * <p>
- * An ObjectFactory allows you to programatically construct new instances of the Java representation for XML content.
- * The Java representation of XML content can consist of schema derived interfaces and classes representing the binding
- * of schema type definitions, element declarations and model groups. Factory methods for each of these are provided in
- * this class.
+ * An ObjectFactory allows you to programatically construct new instances of the Java representation for XML content. The Java
+ * representation of XML content can consist of schema derived interfaces and classes representing the binding of schema type definitions,
+ * element declarations and model groups. Factory methods for each of these are provided in this class.
  *
  */
 @XmlRegistry
@@ -119,17 +116,6 @@ public class ObjectFactory {
      */
     public Conditions createConditionsType() {
         return new Conditions();
-    }
-
-    /**
-     * Create an instance of {@link JAXBElement }{@code <}{@link Parameters }{@code >}}
-     *
-     * @param value parameters
-     * @return a jaxb type
-     */
-    @XmlElementDecl(namespace = "", name = "parameters")
-    public JAXBElement<Parameters> createParameters(Parameters value) {
-        return new JAXBElement<>(_PARAMETERS_QNAME, Parameters.class, null, value);
     }
 
 }

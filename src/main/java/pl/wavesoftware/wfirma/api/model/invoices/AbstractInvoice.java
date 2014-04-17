@@ -30,6 +30,7 @@ import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import org.joda.money.CurrencyUnit;
 import org.joda.money.Money;
+import static pl.wavesoftware.wfirma.api.mapper.Copier.copy;
 import pl.wavesoftware.wfirma.api.mapper.xml.BooleanToIntegerAdapter;
 import pl.wavesoftware.wfirma.api.mapper.xml.CurrencyAdapter;
 import pl.wavesoftware.wfirma.api.mapper.xml.DateAdapter;
@@ -365,11 +366,11 @@ public abstract class AbstractInvoice {
     }
 
     public Date getPaymentDate() {
-        return Date.class.cast(paymentDate.clone());
+        return copy(paymentDate);
     }
 
     public void setPaymentDate(Date paymentDate) {
-        this.paymentDate = Date.class.cast(paymentDate.clone());
+        this.paymentDate = copy(paymentDate);
     }
 
     public PaymentState getPaymentState() {
@@ -397,19 +398,19 @@ public abstract class AbstractInvoice {
     }
 
     public Date getDisposalDate() {
-        return Date.class.cast(disposalDate.clone());
+        return copy(disposalDate);
     }
 
     public void setDisposalDate(Date disposalDate) {
-        this.disposalDate = Date.class.cast(disposalDate.clone());
+        this.disposalDate = copy(disposalDate);
     }
 
     public Date getDate() {
-        return Date.class.cast(date.clone());
+        return copy(date);
     }
 
     public void setDate(Date date) {
-        this.date = Date.class.cast(date.clone());
+        this.date = copy(date);
     }
 
     public Integer getPeriod() {

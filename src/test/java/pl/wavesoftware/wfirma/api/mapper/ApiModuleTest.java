@@ -44,6 +44,11 @@ import pl.wavesoftware.wfirma.api.model.requests.GetRequest;
 public class ApiModuleTest {
 
     @Test
+    public void testInstantinate() {
+        assertThat(new ApiModule()).isNotNull();
+    }
+
+    @Test
     public void testCollectRequests() {
         Collection<Class<? extends Request>> result = ApiModule.collectRequests(GetRequest.class, FindRequest.class);
         assertThat(result).hasSize(2);
