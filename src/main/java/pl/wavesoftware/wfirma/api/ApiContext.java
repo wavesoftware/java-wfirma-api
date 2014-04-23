@@ -23,13 +23,16 @@
  */
 package pl.wavesoftware.wfirma.api;
 
+import java.io.Serializable;
 import pl.wavesoftware.wfirma.api.model.Credentials;
 
 /**
  *
  * @author Krzysztof Suszyński <krzysztof.suszynski@wavesoftware.pl>
  */
-public class ApiContext {
+public class ApiContext implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     private final Credentials credentials;
 

@@ -107,4 +107,10 @@ public class FindRequest<T extends ApiEntityElement> implements PostRequest<T> {
         return entityClass;
     }
 
+    @Override
+    public String getScope() {
+        Class<? extends Api> module = ApiModule.getModuleFor(entityClass);
+        return ApiModule.getScope(ApiModule.ScopeMode.READ, module);
+    }
+
 }

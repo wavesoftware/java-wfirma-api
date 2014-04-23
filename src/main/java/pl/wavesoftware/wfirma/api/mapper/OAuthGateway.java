@@ -24,6 +24,14 @@
 package pl.wavesoftware.wfirma.api.mapper;
 
 import java.net.URI;
+import org.scribe.builder.ServiceBuilder;
+import org.scribe.builder.api.DefaultApi10a;
+import org.scribe.model.OAuthRequest;
+import org.scribe.model.Response;
+import org.scribe.model.Token;
+import org.scribe.model.Verb;
+import org.scribe.model.Verifier;
+import org.scribe.oauth.OAuthService;
 import pl.wavesoftware.wfirma.api.model.PostRequest;
 import pl.wavesoftware.wfirma.api.model.Request;
 import pl.wavesoftware.wfirma.api.model.WFirmaException;
@@ -48,10 +56,26 @@ class OAuthGateway implements WFirmaGateway {
         this.gateway = gateway;
     }
 
+    private String getAddress(Request<?> request) {
+        StringBuilder builder = new StringBuilder(gateway.toString());
+        builder.append(request.getAddress());
+        return builder.toString();
+    }
+
     @Override
     public String get(Request<?> request) throws WFirmaException {
-        // FIXME: Not yet implemented!!!
-        throw new UnsupportedOperationException("Not supported yet.");
+        OAuthService service = new ServiceBuilder()
+            .provider(WFirmaProvider.class)
+            .apiKey(credentials.getKey())
+            .apiSecret(credentials.getSecret())
+            .build();
+        Token token = service.getRequestToken();
+        Verifier v = new Verifier("verifier you got from the user");
+        Token accessToken = service.getAccessToken(token, v);
+        OAuthRequest orequest = new OAuthRequest(Verb.GET, getAddress(request));
+        service.signRequest(accessToken, orequest);
+        Response response = orequest.send();
+        return response.getBody();
     }
 
     @Override
@@ -70,6 +94,25 @@ class OAuthGateway implements WFirmaGateway {
     public void removeListener(ResponseListener listener) {
         // FIXME: Not yet implemented!!!
         throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    private static class WFirmaProvider extends DefaultApi10a {
+
+        @Override
+        public String getRequestTokenEndpoint() {
+            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        }
+
+        @Override
+        public String getAccessTokenEndpoint() {
+            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        }
+
+        @Override
+        public String getAuthorizationUrl(Token requestToken) {
+            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        }
+
     }
 
 }

@@ -31,6 +31,8 @@ import pl.wavesoftware.wfirma.api.model.Credentials;
  */
 public class SimpleCredentials implements Credentials {
 
+    private static final long serialVersionUID = 1L;
+
     private final String password;
 
     private final String login;

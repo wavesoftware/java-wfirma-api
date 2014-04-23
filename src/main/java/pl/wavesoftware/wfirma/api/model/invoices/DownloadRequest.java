@@ -67,7 +67,7 @@ public final class DownloadRequest implements PostRequest<Invoices> {
      * @return a request
      */
     public static DownloadRequest create(Long wFirmaId, InvoicePage page, boolean printAddress, boolean printLeaflet,
-            boolean printAsDuplicate) {
+        boolean printAsDuplicate) {
         return new DownloadRequest(wFirmaId, page, printAddress, printLeaflet, printAsDuplicate);
     }
 
@@ -76,7 +76,7 @@ public final class DownloadRequest implements PostRequest<Invoices> {
     }
 
     private DownloadRequest(Long wFirmaId, InvoicePage page, boolean printAddress, boolean printLeaflet,
-            boolean printAsDuplicate) {
+        boolean printAsDuplicate) {
         this.wFirmaId = wFirmaId;
         this.invoices = new Invoices();
         Parameters params = new Parameters();
@@ -105,6 +105,11 @@ public final class DownloadRequest implements PostRequest<Invoices> {
     @Override
     public Class<Invoices> getEntityClass() {
         return Invoices.class;
+    }
+
+    @Override
+    public String getScope() {
+        return ApiModule.getScope(ApiModule.ScopeMode.READ, InvoicesApi.class);
     }
 
     /**

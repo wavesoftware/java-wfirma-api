@@ -23,16 +23,22 @@
  */
 package pl.wavesoftware.wfirma.api;
 
+import java.util.Properties;
 import pl.wavesoftware.wfirma.api.model.Credentials;
+import pl.wavesoftware.wfirma.api.model.Credentials.HasProperties;
 
 /**
  * @author Krzysztof Suszyński <krzysztof.suszynski@wavesoftware.pl>
  */
-public class OAuthCredentials implements Credentials {
+public class OAuthCredentials implements Credentials, HasProperties {
+
+    private static final long serialVersionUID = 1L;
 
     private final String consumerSecret;
 
     private final String consumerKey;
+
+    private Properties properties;
 
     /**
      * Default constructor
@@ -53,5 +59,13 @@ public class OAuthCredentials implements Credentials {
     @Override
     public String getConsumerSecret() {
         return consumerSecret;
+    }
+
+    @Override
+    public Properties getProperties() {
+        if (this.properties == null) {
+            this.properties = new Properties();
+        }
+        return this.properties;
     }
 }

@@ -40,6 +40,13 @@ public interface Request<T extends ApiEntityElement> {
     RequestPath getAddress();
 
     /**
+     * Gets a scope for OAuth request
+     *
+     * @return a scope for OAuth request
+     */
+    String getScope();
+
+    /**
      * Gets a entity class
      *
      * @return a entity class

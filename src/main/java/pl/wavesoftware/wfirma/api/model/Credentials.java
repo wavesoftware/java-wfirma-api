@@ -23,11 +23,14 @@
  */
 package pl.wavesoftware.wfirma.api.model;
 
+import java.io.Serializable;
+import java.util.Properties;
+
 /**
  *
  * @author Krzysztof Suszyński <krzysztof.suszynski@wavesoftware.pl>
  */
-public interface Credentials {
+public interface Credentials extends Serializable {
 
     /**
      * Geta a consumer key for an aplication
@@ -42,5 +45,18 @@ public interface Credentials {
      * @return a consumer secret
      */
     String getConsumerSecret();
+
+    /**
+     * Interface that contains properties
+     */
+    interface HasProperties {
+
+        /**
+         * Gets a object custom properies
+         *
+         * @return a custom properties object
+         */
+        Properties getProperties();
+    }
 
 }

@@ -37,14 +37,27 @@ final class CredentialsBuilder {
 
     private final String key;
 
+    private Credentials credentials;
+
     private CredentialsBuilder(final OAuthCredentials credentials) {
         this.key = credentials.getConsumerKey();
         this.secret = credentials.getConsumerSecret();
+        this.credentials = credentials;
     }
 
     private CredentialsBuilder(final SimpleCredentials credentials) {
         this.key = credentials.getLogin();
         this.secret = credentials.getPassword();
+        this.credentials = credentials;
+    }
+
+    /**
+     * Gets credentials from object
+     *
+     * @return a credentials
+     */
+    Credentials getCredentials() {
+        return this.credentials;
     }
 
     /**

@@ -80,4 +80,9 @@ public class AddRequest<T extends ApiEntityElement> implements PostRequest<T> {
         return cls;
     }
 
+    @Override
+    public String getScope() {
+        return ApiModule.getScope(ApiModule.ScopeMode.WRITE, module.getClass());
+    }
+
 }

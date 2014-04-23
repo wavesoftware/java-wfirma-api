@@ -25,6 +25,7 @@ package pl.wavesoftware.wfirma.api.mapper;
 
 import com.google.common.base.CaseFormat;
 import com.google.common.base.Preconditions;
+import static java.lang.String.format;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -76,6 +77,18 @@ public final class ApiModule {
         } catch (InstantiationException | IllegalAccessException ex) {
             throw new RuntimeException(ex);
         }
+    }
+
+    /**
+     * Geta a scope for a api module and scope
+     *
+     * @param mode a mode
+     * @param apiClass a api module class
+     * @return a wfirma scope
+     */
+    @Nonnull
+    public static String getScope(@Nonnull ScopeMode mode, @Nonnull Class<? extends Api> apiClass) {
+        return format("%s-%s", getRequestModulePath(apiClass), mode.name().toLowerCase());
     }
 
     /**
@@ -140,6 +153,11 @@ public final class ApiModule {
         } catch (InstantiationException | IllegalAccessException ex) {
             throw new RuntimeException(ex);
         }
+    }
+
+    public static enum ScopeMode {
+
+        READ, WRITE
     }
 
 }
