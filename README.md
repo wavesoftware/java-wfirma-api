@@ -1,7 +1,7 @@
 Java SDK for WFirma API
 =======================
 
-[![Build Status](https://travis-ci.org/wavesoftware/java-wfirma-api.png)](https://travis-ci.org/wavesoftware/java-wfirma-api) [![Coverage Status](https://coveralls.io/repos/wavesoftware/java-wfirma-api/badge.png?branch=master)](https://coveralls.io/r/wavesoftware/java-wfirma-api?branch=master)
+[![Build Status](https://travis-ci.org/wavesoftware/java-wfirma-api.png?branch=master)](https://travis-ci.org/wavesoftware/java-wfirma-api?branch=master) [![Coverage Status](https://coveralls.io/repos/wavesoftware/java-wfirma-api/badge.png?branch=master)](https://coveralls.io/r/wavesoftware/java-wfirma-api?branch=master)
 
 ## Work in progress, not ready to be used! ##
 
