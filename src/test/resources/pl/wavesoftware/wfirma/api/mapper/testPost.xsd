@@ -1,0 +1,143 @@
+<?xml version="1.0"?>
+<!--
+The MIT License
+
+Copyright 2015 Krzysztof Suszyński <krzysztof.suszynski@wavesoftware.pl>.
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+-->
+
+<xs:schema version="1.0"
+           xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           elementFormDefault="qualified">
+    <xs:element name="api">
+        <xs:complexType>
+            <xs:all>
+                <xs:element name="contractors">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="contractor" maxOccurs="unbounded" minOccurs="0">
+                                <xs:complexType>
+                                    <xs:all>
+                                        <xs:element type="xs:int" name="id"/>
+                                        <xs:element type="xs:string" name="tax_id_type"/>
+                                        <xs:element type="xs:string" name="name"/>
+                                        <xs:element type="xs:string" name="altname"/>
+                                        <xs:element type="xs:long" name="nip"/>
+                                        <xs:element type="xs:string" name="regon"/>
+                                        <xs:element type="xs:string" name="street"/>
+                                        <xs:element type="xs:string" name="zip"/>
+                                        <xs:element type="xs:string" name="city"/>
+                                        <xs:element type="xs:string" name="country"/>
+                                        <xs:element type="xs:byte" name="different_contact_address"/>
+                                        <xs:element type="xs:string" name="contact_name"/>
+                                        <xs:element type="xs:string" name="contact_street"/>
+                                        <xs:element type="xs:string" name="contact_zip"/>
+                                        <xs:element type="xs:string" name="contact_city"/>
+                                        <xs:element type="xs:string" name="contact_country"/>
+                                        <xs:element type="xs:string" name="contact_person"/>
+                                        <xs:element type="xs:string" name="phone"/>
+                                        <xs:element type="xs:string" name="skype"/>
+                                        <xs:element type="xs:string" name="fax"/>
+                                        <xs:element type="xs:string" name="email"/>
+                                        <xs:element type="xs:string" name="url"/>
+                                        <xs:element type="xs:string" name="description"/>
+                                        <xs:element type="xs:byte" name="buyer"/>
+                                        <xs:element type="xs:byte" name="seller"/>
+                                        <xs:element type="xs:float" name="discount_percent"/>
+                                        <xs:element type="xs:byte" name="payment_days"/>
+                                        <xs:element type="xs:string" name="payment_method"/>
+                                        <xs:element type="xs:string" name="account_number"/>
+                                        <xs:element type="xs:byte" name="remind"/>
+                                        <xs:element type="xs:string" name="hash"/>
+                                        <xs:element type="xs:string" name="avatar_filename"/>
+                                        <xs:element type="xs:string" name="source"/>
+                                        <xs:element type="xs:string" name="tags"/>
+                                        <xs:element type="xs:byte" name="notes"/>
+                                        <xs:element type="xs:byte" name="documents"/>
+                                        <xs:element type="xs:string" name="created"/>
+                                        <xs:element type="xs:string" name="modified"/>
+                                        <xs:element name="reference_company">
+                                            <xs:complexType>
+                                                <xs:all>
+                                                    <xs:element type="xs:byte" name="id"/>
+                                                </xs:all>
+                                            </xs:complexType>
+                                        </xs:element>
+                                        <xs:element name="translation_language">
+                                            <xs:complexType>
+                                                <xs:all>
+                                                    <xs:element type="xs:byte" name="id"/>
+                                                </xs:all>
+                                            </xs:complexType>
+                                        </xs:element>
+                                        <xs:element name="company_account">
+                                            <xs:complexType>
+                                                <xs:all>
+                                                    <xs:element type="xs:byte" name="id"/>
+                                                </xs:all>
+                                            </xs:complexType>
+                                        </xs:element>
+                                        <xs:element name="good_price_group">
+                                            <xs:complexType>
+                                                <xs:all>
+                                                    <xs:element type="xs:byte" name="id"/>
+                                                </xs:all>
+                                            </xs:complexType>
+                                        </xs:element>
+                                        <xs:element name="invoice_description">
+                                            <xs:complexType>
+                                                <xs:all>
+                                                    <xs:element type="xs:byte" name="id"/>
+                                                </xs:all>
+                                            </xs:complexType>
+                                        </xs:element>
+                                        <xs:element name="shop_buyer">
+                                            <xs:complexType>
+                                                <xs:all>
+                                                    <xs:element type="xs:byte" name="id"/>
+                                                </xs:all>
+                                            </xs:complexType>
+                                        </xs:element>
+                                    </xs:all>
+                                </xs:complexType>
+                            </xs:element>
+                            <xs:element name="parameters">
+                                <xs:complexType>
+                                    <xs:all>
+                                        <xs:element type="xs:byte" name="limit"/>
+                                        <xs:element type="xs:byte" name="page"/>
+                                        <xs:element type="xs:byte" name="total"/>
+                                    </xs:all>
+                                </xs:complexType>
+                            </xs:element>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="status">
+                    <xs:complexType>
+                        <xs:all>
+                            <xs:element type="xs:string" name="code"/>
+                        </xs:all>
+                    </xs:complexType>
+                </xs:element>
+            </xs:all>
+        </xs:complexType>
+    </xs:element>
+</xs:schema>

@@ -94,10 +94,10 @@ class SimpleGateway implements WFirmaGateway {
         HttpHost target = getTargetHost();
         CredentialsProvider credsProvider = new BasicCredentialsProvider();
         credsProvider.setCredentials(
-                new AuthScope(target.getHostName(), target.getPort()),
-                new UsernamePasswordCredentials(credentials.getKey(), credentials.getSecret()));
+            new AuthScope(target.getHostName(), target.getPort()),
+            new UsernamePasswordCredentials(credentials.getKey(), credentials.getSecret()));
         try (CloseableHttpClient httpclient = HttpClients.custom()
-                .setDefaultCredentialsProvider(credsProvider).build()) {
+            .setDefaultCredentialsProvider(credsProvider).build()) {
 
             // Create AuthCache instance
             AuthCache authCache = new BasicAuthCache();
@@ -140,7 +140,7 @@ class SimpleGateway implements WFirmaGateway {
                     break;
                 default:
                     throw new RuntimeException("Unsupported URI scheme: "
-                            + gateway.getScheme() + ", supporting only: `http` and `https`");
+                        + gateway.getScheme() + ", supporting only: `http` and `https`");
             }
         }
         return new HttpHost(gateway.getHost(), port, gateway.getScheme());
@@ -157,14 +157,14 @@ class SimpleGateway implements WFirmaGateway {
                     }
                     return statusParser.checkedForStatus(credentials.getKey(), content);
                 } catch (IOException ex) {
-                    throw new RuntimeException(ex);
+                    throw new WFirmaException(ex);
                 }
             case 403:
                 throw new WFirmaSecurityException("Auth failed for user: `%s`", credentials.getKey());
             default:
                 StatusLine status = response.getStatusLine();
                 throw new WFirmaException("Connection error: %d - %s", status.getStatusCode(),
-                        status.getReasonPhrase());
+                    status.getReasonPhrase());
         }
     }
 

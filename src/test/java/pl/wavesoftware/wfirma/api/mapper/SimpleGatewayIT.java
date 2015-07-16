@@ -23,10 +23,11 @@
  */
 package pl.wavesoftware.wfirma.api.mapper;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+import java.io.InputStream;
 import java.net.URI;
 import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.*;
 import org.junit.Assume;
 import org.junit.Before;
@@ -51,6 +52,7 @@ import pl.wavesoftware.wfirma.api.model.logic.Parameters;
 import pl.wavesoftware.wfirma.api.model.requests.AddRequest;
 import pl.wavesoftware.wfirma.api.model.requests.DeleteRequest;
 import pl.wavesoftware.wfirma.api.model.requests.FindRequest;
+import static pl.wavesoftware.wfirma.api.unittests.XsdValidatorAssert.assertThat;
 
 /**
  *
@@ -60,13 +62,9 @@ public class SimpleGatewayIT {
 
     private String expResultAuth;
 
-    private String expResultRe;
-
     private String correctLogin;
 
     private String correctPassword;
-
-    private String expResultPost;
 
     private static final String EXAMPLE_NIP = "5272516453";
 
@@ -81,95 +79,21 @@ public class SimpleGatewayIT {
         boolean passCond = (correctPassword == null || "".equals(correctPassword.trim()));
         if (loginCond) {
             logger.warn("Please set environment variable `WFIRMA_LOGIN`"
-                    + " before running this intergration test, skipping!");
+                + " before running this intergration test, skipping!");
         }
         Assume.assumeFalse(loginCond);
         if (passCond) {
             logger.warn("Please set environment variable `WFIRMA_PASSWORD`"
-                    + " before running this intergration test, skipping!");
+                + " before running this intergration test, skipping!");
         }
         Assume.assumeFalse(passCond);
 
         expResultAuth = "<\\?xml version=\"1\\.0\" encoding=\"UTF-8\"\\?>\\s*"
-                + "<api>\\s*"
-                + "<status>\\s*"
-                + "<code>AUTH</code>\\s*"
-                + "</status>\\s*"
-                + "</api>\\s*";
-        expResultRe = "<\\?xml version=\"1\\.0\" encoding=\"UTF-8\"\\?>\\s*"
-                + "<api>\\s*"
-                + "<companies>\\s*"
-                + "<company>\\s*"
-                + "<id>\\d+</id>\\s*"
-                + "<name>.*</name>\\s*"
-                + "<altname>.*</altname>\\s*"
-                + "<nip>.*</nip>\\s*"
-                + "<vat_payer>(?:1|0)</vat_payer>\\s*"
-                + "<tax>taxregister</tax>\\s*"
-                + "<is_registered>(?:1|0)</is_registered>\\s*"
-                + "</company>\\s*"
-                + "</companies>\\s*"
-                + "<status>\\s*"
-                + "<code>OK</code>\\s*"
-                + "</status>\\s*"
-                + "</api>\\s*";
-        expResultPost = "<\\?xml version=\"1\\.0\" encoding=\"UTF-8\"\\?>\\s*"
-                + "<api>\\s*"
-                + "<contractors>\\s*"
-                + "<contractor>\\s*"
-                + "<id>\\d+</id>\\s*"
-                + "<tax_id_type>.*?</tax_id_type>\\s*"
-                + "<name>Wave Software</name>\\s*"
-                + "<altname>Wave Software</altname>\\s*"
-                + "<nip>" + EXAMPLE_NIP + "</nip>\\s*"
-                + "<regon></regon>\\s*"
-                + "<street></street>\\s*"
-                + "<zip></zip>\\s*"
-                + "<city></city>\\s*"
-                + "<country>PL</country>\\s*"
-                + "<different_contact_address>0</different_contact_address>\\s*"
-                + "<contact_name></contact_name>\\s*"
-                + "<contact_street></contact_street>\\s*"
-                + "<contact_zip></contact_zip>\\s*"
-                + "<contact_city></contact_city>\\s*"
-                + "<contact_country>PL</contact_country>\\s*"
-                + "<contact_person></contact_person>\\s*"
-                + "<phone></phone>\\s*"
-                + "<skype></skype>\\s*"
-                + "<fax></fax>\\s*"
-                + "<email></email>\\s*"
-                + "<url></url>\\s*"
-                + "<description></description>\\s*"
-                + "<buyer>\\d</buyer>\\s*"
-                + "<seller>\\d</seller>\\s*"
-                + "<discount_percent>\\d+.00</discount_percent>\\s*"
-                + "<payment_days>\\d+</payment_days>\\s*"
-                + "<payment_method></payment_method>\\s*"
-                + "<account_number></account_number>\\s*"
-                + "<remind>\\d</remind>\\s*"
-                + "<hash>[0-9a-f]+</hash>\\s*"
-                + "<tags></tags>\\s*"
-                + "<notes>0</notes>\\s*"
-                + "<documents>0</documents>\\s*"
-                + "<created>[0-9-]+ [0-9:]+</created>\\s*"
-                + "<modified>[0-9-]+ [0-9:]+</modified>\\s*"
-                + "<reference_company>\\s*<id>0</id>\\s*</reference_company>\\s*"
-                + "<translation_language>\\s*<id>0</id>\\s*</translation_language>\\s*"
-                + "<company_account>\\s*<id>0</id>\\s*</company_account>\\s*"
-                + "<good_price_group>\\s*<id>0</id>\\s*</good_price_group>\\s*"
-                + "<invoice_description>\\s*<id>0</id>\\s*</invoice_description>\\s*"
-                + "<shop_buyer>\\s*<id>0</id>\\s*</shop_buyer>\\s*"
-                + "</contractor>\\s*"
-                + "<parameters>\\s*"
-                + "<limit>\\d+</limit>\\s*"
-                + "<page>1</page>\\s*"
-                + "<total>1</total>\\s*"
-                + "</parameters>\\s*"
-                + "</contractors>\\s*"
-                + "<status>\\s*"
-                + "<code>OK</code>\\s*"
-                + "</status>\\s*"
-                + "</api>\\s*";
+            + "<api>\\s*"
+            + "<status>\\s*"
+            + "<code>AUTH</code>\\s*"
+            + "</status>\\s*"
+            + "</api>\\s*";
     }
 
     private SimpleGateway instance(String login, String password) {
@@ -185,7 +109,8 @@ public class SimpleGatewayIT {
         Request<Companies> get = CompaniesGetRequest.create();
         String result = instance.get(get);
         assertThat(result).isNotNull();
-        assertThat(result).matches(expResultRe);
+        assertThat(result).isWellFormedXml();
+        assertThat(result).isValidByXsd(getTestFetchXsd());
     }
 
     @Test
@@ -211,7 +136,8 @@ public class SimpleGatewayIT {
         result = instance.post(addRequest);
         assertThat(result).isNotEmpty();
         result = instance.post(findRequest);
-        assertThat(result).matches(expResultPost);
+        assertThat(result).isWellFormedXml();
+        assertThat(result).isValidByXsd(getTestPostXsd());
         assertThat(result).contains(EXAMPLE_NIP);
         api = JaxbMarshaller.create(ContractorsApi.class).unmarshal(result);
         deleteRequest = createDeleteRequest(api.getContractors().getContractor().iterator().next());
@@ -219,7 +145,8 @@ public class SimpleGatewayIT {
         assertThat(result).isNotEmpty();
         assertThat(result).containsSequence("Kontrahent: ", " został usunięty.");
         result = instance.post(findRequest);
-        assertThat(result).doesNotMatch(expResultPost);
+        assertThat(result).isWellFormedXml();
+        assertThat(result).isValidByXsd(getTestPostXsd());
         assertThat(result).doesNotContain(EXAMPLE_NIP);
     }
 
@@ -232,7 +159,7 @@ public class SimpleGatewayIT {
         boolean cond = current - lastRun > 5 * 60 * 1000;
         if (!cond) {
             LoggerFactory.getLogger(this.getClass()).warn(
-                    "Invalid login testing on WFirma API is possible no more often then 5min interval, skipping test!");
+                "Invalid login testing on WFirma API is possible no more often then 5min interval, skipping test!");
         }
         Assume.assumeTrue(cond);
         SimpleGateway instance = instance("non-existing-login-2@example.org", "invalid-password");
@@ -285,6 +212,14 @@ public class SimpleGatewayIT {
 
     private DeleteRequest<Contractors> createDeleteRequest(Contractor contractor) {
         return DeleteRequest.create(Contractors.class, contractor.getId());
+    }
+
+    private InputStream getTestPostXsd() {
+        return checkNotNull(this.getClass().getResourceAsStream("testPost.xsd"));
+    }
+
+    private InputStream getTestFetchXsd() {
+        return checkNotNull(this.getClass().getResourceAsStream("testFetch.xsd"));
     }
 
 }
