@@ -1,25 +1,17 @@
 /*
- * The MIT License
+ * Copyright (c) 2014 Krzysztof Suszyński <krzysztof.suszynski@wavesoftware.pl>
  *
- * Copyright 2014 Krzysztof Suszyński <krzysztof.suszynski@gmail.com>.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
+ *      http://www.apache.org/licenses/LICENSE-2.0
  *
- * The above copyright notice and this permission notice shall be included in
- * all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
- * THE SOFTWARE.
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package pl.wavesoftware.wfirma.api.mapper.xml;
 
@@ -36,13 +28,16 @@ import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 import org.assertj.core.api.Assertions;
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.custommonkey.xmlunit.XMLAssert.*;
 import org.custommonkey.xmlunit.XMLUnit;
+import org.hamcrest.CoreMatchers;
 import org.joda.money.CurrencyUnit;
 import org.joda.money.Money;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import static org.mockito.Mockito.*;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
@@ -64,6 +59,7 @@ import pl.wavesoftware.wfirma.api.model.logic.LogicalOperator;
 import pl.wavesoftware.wfirma.api.model.logic.ObjectFactory;
 import pl.wavesoftware.wfirma.api.model.logic.Or;
 import pl.wavesoftware.wfirma.api.model.logic.Parameters;
+import pl.wavesoftware.wfirma.api.runtime.FatalSdkException;
 
 /**
  *
@@ -72,6 +68,9 @@ import pl.wavesoftware.wfirma.api.model.logic.Parameters;
 public class JaxbMarshallerTest {
 
     private String expectedXml;
+
+    @Rule
+    public ExpectedException thrown = ExpectedException.none();
 
     @Before
     public void setUp() throws IOException {
@@ -156,16 +155,16 @@ public class JaxbMarshallerTest {
         companies.getCompany().add(company);
         String output = instance.marshal(api);
         String expOutputFull = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n"
-                + "<api>\n"
-                + "    <companies>\n"
-                + "        <company>\n"
-                + "            <name>Coca Cola</name>\n"
-                + "            <nip>123-45-67-890</nip>\n"
-                + "            <vat_payer>0</vat_payer>\n"
-                + "            <is_registered>1</is_registered>\n"
-                + "        </company>\n"
-                + "    </companies>\n"
-                + "</api>\n";
+            + "<api>\n"
+            + "    <companies>\n"
+            + "        <company>\n"
+            + "            <name>Coca Cola</name>\n"
+            + "            <nip>123-45-67-890</nip>\n"
+            + "            <vat_payer>0</vat_payer>\n"
+            + "            <is_registered>1</is_registered>\n"
+            + "        </company>\n"
+            + "    </companies>\n"
+            + "</api>\n";
         assertThat(output).isEqualTo(expOutputFull);
         CompaniesApi resultApi = instance.unmarshal(expOutputFull);
         assertReflectionEquals(api, resultApi);
@@ -175,24 +174,24 @@ public class JaxbMarshallerTest {
         companies.getCompany().add(company);
         output = instance.marshal(api);
         assertThat(output).isEqualTo("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n"
-                + "<api>\n"
-                + "    <companies>\n"
-                + "        <company>\n"
-                + "            <is_registered>1</is_registered>\n"
-                + "        </company>\n"
-                + "    </companies>\n"
-                + "</api>\n");
+            + "<api>\n"
+            + "    <companies>\n"
+            + "        <company>\n"
+            + "            <is_registered>1</is_registered>\n"
+            + "        </company>\n"
+            + "    </companies>\n"
+            + "</api>\n");
     }
 
-    @Test(expected = IllegalStateException.class)
+    @Test(expected = FatalSdkException.class)
     public void testOnInvalidInputString() {
         JaxbMarshaller<CompaniesApi> instance = JaxbMarshaller.create(CompaniesApi.class);
         String expOutputFull = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n"
-                + "<apis>\n"
-                + "    <companies>\n"
-                + "        <company />\n"
-                + "    </companies>\n"
-                + "</apis>\n";
+            + "<apis>\n"
+            + "    <companies>\n"
+            + "        <company />\n"
+            + "    </companies>\n"
+            + "</apis>\n";
         assertThat(instance.unmarshal(expOutputFull)).isNull();
     }
 
@@ -225,31 +224,31 @@ public class JaxbMarshallerTest {
         invoices.getInvoice().add(invoice);
         String result = instance.marshal(api);
         String expected = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n"
-                + "<api>\n"
-                + "    <invoices>\n"
-                + "        <invoice>\n"
-                + "            <id>13</id>\n"
-                + "            <paymentmethod>payment_card</paymentmethod>\n"
-                + "            <paymentstate>unpaid</paymentstate>\n"
-                + "            <disposaldate_form>month</disposaldate_form>\n"
-                + "            <disposaldate_empty>1</disposaldate_empty>\n"
-                + "            <disposaldate>2014-04-11</disposaldate>\n"
-                + "            <date>2014-04-11</date>\n"
-                + "            <total>932.00</total>\n"
-                + "            <alreadypaid>932.00</alreadypaid>\n"
-                + "            <alreadypaid_initial>932.00</alreadypaid_initial>\n"
-                + "            <remaining>0.00</remaining>\n"
-                + "            <number>3</number>\n"
-                + "            <day>11</day>\n"
-                + "            <month>4</month>\n"
-                + "            <year>2014</year>\n"
-                + "            <semitemplatenumber>FV [number]/[year]</semitemplatenumber>\n"
-                + "            <tags>(fun),(new),(tags)</tags>\n"
-                + "            <fullnumber>FV 3/2014</fullnumber>\n"
-                + "            <type>normal</type>\n"
-                + "        </invoice>\n"
-                + "    </invoices>\n"
-                + "</api>\n";
+            + "<api>\n"
+            + "    <invoices>\n"
+            + "        <invoice>\n"
+            + "            <id>13</id>\n"
+            + "            <paymentmethod>payment_card</paymentmethod>\n"
+            + "            <paymentstate>unpaid</paymentstate>\n"
+            + "            <disposaldate_form>month</disposaldate_form>\n"
+            + "            <disposaldate_empty>1</disposaldate_empty>\n"
+            + "            <disposaldate>2014-04-11</disposaldate>\n"
+            + "            <date>2014-04-11</date>\n"
+            + "            <total>932.00</total>\n"
+            + "            <alreadypaid>932.00</alreadypaid>\n"
+            + "            <alreadypaid_initial>932.00</alreadypaid_initial>\n"
+            + "            <remaining>0.00</remaining>\n"
+            + "            <number>3</number>\n"
+            + "            <day>11</day>\n"
+            + "            <month>4</month>\n"
+            + "            <year>2014</year>\n"
+            + "            <semitemplatenumber>FV [number]/[year]</semitemplatenumber>\n"
+            + "            <tags>(fun),(new),(tags)</tags>\n"
+            + "            <fullnumber>FV 3/2014</fullnumber>\n"
+            + "            <type>normal</type>\n"
+            + "        </invoice>\n"
+            + "    </invoices>\n"
+            + "</api>\n";
         assertThat(result).isEqualTo(expected);
         InvoicesApi resultApi = instance.unmarshal(expected);
         assertThat(resultApi).isNotNull();
@@ -264,15 +263,15 @@ public class JaxbMarshallerTest {
     @Test
     public void testUnMarshalInheritance() {
         String input = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n"
-                + "<api>\n"
-                + "    <invoices>\n"
-                + "        <invoice>\n"
-                + "            <id>13</id>\n"
-                + "            <paymentmethod>cash</paymentmethod>\n"
-                + "            <type>proforma</type>\n"
-                + "        </invoice>\n"
-                + "    </invoices>\n"
-                + "</api>\n";
+            + "<api>\n"
+            + "    <invoices>\n"
+            + "        <invoice>\n"
+            + "            <id>13</id>\n"
+            + "            <paymentmethod>cash</paymentmethod>\n"
+            + "            <type>proforma</type>\n"
+            + "        </invoice>\n"
+            + "    </invoices>\n"
+            + "</api>\n";
         JaxbMarshaller<InvoicesApi> instance = JaxbMarshaller.create(InvoicesApi.class);
         InvoicesApi resultApi = instance.unmarshal(input);
         assertThat(resultApi).isNotNull();
@@ -294,11 +293,11 @@ public class JaxbMarshallerTest {
             instance.marshal(entity);
             Assertions.failBecauseExceptionWasNotThrown(RuntimeException.class);
         } catch (RuntimeException ex) {
-            assertThat(ex).isExactlyInstanceOf(RuntimeException.class);
+            assertThat(ex).isExactlyInstanceOf(FatalSdkException.class);
             assertThat(ex).hasCauseInstanceOf(JAXBException.class);
-            assertThat(ex).hasMessage("javax.xml.bind.JAXBException\n"
-                    + " - with linked exception:\n"
-                    + "[java.lang.ClassNotFoundException: pl.wave.nonexisting.JaxbContextFactory]");
+            assertThat(ex).hasMessage("[20150716:113108]: javax.xml.bind.JAXBException\n"
+                + " - with linked exception:\n"
+                + "[java.lang.ClassNotFoundException: pl.wave.nonexisting.JaxbContextFactory]");
         }
     }
 
@@ -313,10 +312,10 @@ public class JaxbMarshallerTest {
             instance.marshal(entity);
             Assertions.failBecauseExceptionWasNotThrown(RuntimeException.class);
         } catch (RuntimeException ex) {
-            assertThat(ex).isExactlyInstanceOf(IllegalStateException.class);
+            assertThat(ex).isExactlyInstanceOf(FatalSdkException.class);
             assertThat(ex).hasCauseInstanceOf(JAXBException.class);
-            assertThat(ex.getLocalizedMessage()).contains("javax.xml.bind.MarshalException",
-                    "java.lang.IllegalArgumentException: Not supported, on purpuse.");
+            assertThat(ex.getLocalizedMessage()).contains("[20150719:181250]: javax.xml.bind.MarshalException",
+                "java.lang.IllegalArgumentException: Not supported, on purpuse.");
         }
     }
 
@@ -326,45 +325,40 @@ public class JaxbMarshallerTest {
             JaxbMarshaller<JaxbInvalidEntity> instance = JaxbMarshaller.create(JaxbInvalidEntity.class);
             assertThat(instance).isNotNull();
             String xml = "<jaxbInvalidEntity>\n"
-                    + "    <price>USD 920.78</price>\n"
-                    + "    <name>sample</name>\n"
-                    + "</jaxbInvalidEntity>";
+                + "    <price>USD 920.78</price>\n"
+                + "    <name>sample</name>\n"
+                + "</jaxbInvalidEntity>";
             JaxbInvalidEntity entity = instance.unmarshal(xml);
             assertThat(entity).isNotNull();
             assertThat(entity.getName()).isEqualTo("sample");
             assertThat(entity.getPrice()).isNull();
             xml = "<jaxbInvalidEntity>\n"
-                    + "    <price>USD 920.78\n"
-                    + "    <name>sample</name>\n"
-                    + "</jaxbInvalidEntity>";
+                + "    <price>USD 920.78\n"
+                + "    <name>sample</name>\n"
+                + "</jaxbInvalidEntity>";
             instance.unmarshal(xml);
             Assertions.failBecauseExceptionWasNotThrown(RuntimeException.class);
-        } catch (RuntimeException ex) {
-            assertThat(ex).isExactlyInstanceOf(IllegalStateException.class);
+        } catch (FatalSdkException ex) {
             assertThat(ex).hasCauseInstanceOf(JAXBException.class);
             assertThat(ex.getLocalizedMessage()).contains("javax.xml.bind.UnmarshalException",
-                    "org.xml.sax.SAXParseException; lineNumber: 4; columnNumber: 3; The element type"
-                    + " \"price\" must be terminated by the matching end-tag \"</price>\"");
+                "org.xml.sax.SAXParseException; lineNumber: 4; columnNumber: 3; The element type"
+                + " \"price\" must be terminated by the matching end-tag \"</price>\"");
         }
     }
 
     @Test
     public void testMarshalOnInvalidFormatter() {
-        try {
-            JaxbMarshaller<JaxbEntityWithInvalidFormatter> instance = JaxbMarshaller.create(JaxbEntityWithInvalidFormatter.class);
-            assertThat(instance).isNotNull();
-            JaxbEntityWithInvalidFormatter entity = new JaxbEntityWithInvalidFormatter();
-            entity.setName(RandomFactory.getRandomValue(String.class));
-            String xml = instance.marshal(entity);
-            assertThat(xml).isEqualTo("");
-            Assertions.failBecauseExceptionWasNotThrown(RuntimeException.class);
-        } catch (RuntimeException ex) {
-            assertThat(ex).hasCauseInstanceOf(IllegalAccessException.class);
-            assertThat(ex).hasMessage("java.lang.IllegalAccessException: Class pl.wavesoftware.wfirma.api.mapper.xml."
-                    + "JaxbMarshaller can not access a member of class pl.wavesoftware.wfirma.api.mapper.xml."
-                    + "invalidjaxbformatter.JaxbEntityWithInvalidFormatter$InvalidJaxbFormatter with modifiers"
-                    + " \"private\"");
-        }
+        thrown.expect(FatalSdkException.class);
+        thrown.expectCause(CoreMatchers.isA(IllegalAccessException.class));
+        thrown.expectMessage("[20150716:113119]: java.lang.IllegalAccessException: Class pl.wavesoftware.wfirma.api.mapper.xml" +
+                ".JaxbMarshaller can not access a member of class pl.wavesoftware.wfirma.api.mapper.xml.invalidjaxbformatter" +
+                ".JaxbEntityWithInvalidFormatter$InvalidJaxbFormatter with modifiers \"private\"");
+        JaxbMarshaller<JaxbEntityWithInvalidFormatter> instance = JaxbMarshaller.create(JaxbEntityWithInvalidFormatter.class);
+        assertThat(instance).isNotNull();
+        JaxbEntityWithInvalidFormatter entity = new JaxbEntityWithInvalidFormatter();
+        entity.setName(RandomFactory.getRandomValue(String.class));
+        String xml = instance.marshal(entity);
+        assertThat(xml).isEqualTo("");
     }
 
     @Test

@@ -1,25 +1,17 @@
 /*
- * The MIT License
+ * Copyright (c) 2014 Krzysztof Suszyński <krzysztof.suszynski@wavesoftware.pl>
  *
- * Copyright 2014 Krzysztof Suszyński <krzysztof.suszynski@wavesoftware.pl>.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
+ *      http://www.apache.org/licenses/LICENSE-2.0
  *
- * The above copyright notice and this permission notice shall be included in
- * all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
- * THE SOFTWARE.
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package pl.wavesoftware.wfirma.api.mapper.xml;
 
@@ -31,8 +23,17 @@ import mockit.Deencapsulation;
 import org.assertj.core.api.Assertions;
 import static org.assertj.core.api.Assertions.assertThat;
 import org.assertj.core.data.MapEntry;
+import static org.hamcrest.CoreMatchers.any;
+import static org.hamcrest.CoreMatchers.isA;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
+import org.w3c.dom.Document;
 import pl.wavesoftware.wfirma.api.mapper.xml.UsesXmlCustomFormatter.Param;
+import pl.wavesoftware.wfirma.api.runtime.FatalSdkException;
 
 /**
  *
@@ -40,68 +41,71 @@ import pl.wavesoftware.wfirma.api.mapper.xml.UsesXmlCustomFormatter.Param;
  */
 public class XsiTypeToObjectPropertyFormatterTest {
 
+    @Rule
+    public ExpectedException thrown = ExpectedException.none();
+
     private static final String TYPE = "type";
 
     private static final String UN_FORMATTED = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n"
-            + "<api>\n"
-            + "    <invoices>\n"
-            + "        <invoice xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:type=\"normal\">\n"
-            + "            <id>13</id>\n"
-            + "            <paymentmethod>payment_card</paymentmethod>\n"
-            + "        </invoice>\n"
-            + "        <invoice xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:type=\"proforma\">\n"
-            + "            <id>13</id>\n"
-            + "            <paymentmethod>cash</paymentmethod>\n"
-            + "        </invoice>\n"
-            + "    </invoices>\n"
-            + "</api>\n";
+        + "<api>\n"
+        + "    <invoices>\n"
+        + "        <invoice xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:type=\"normal\">\n"
+        + "            <id>13</id>\n"
+        + "            <paymentmethod>payment_card</paymentmethod>\n"
+        + "        </invoice>\n"
+        + "        <invoice xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:type=\"proforma\">\n"
+        + "            <id>13</id>\n"
+        + "            <paymentmethod>cash</paymentmethod>\n"
+        + "        </invoice>\n"
+        + "    </invoices>\n"
+        + "</api>\n";
 
     private static final String QUASI_FORMATTED = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n"
-            + "<api>\n"
-            + "    <invoices>\n"
-            + "        <invoice xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:type=\"normal\">\n"
-            + "            <id>13</id>\n"
-            + "            <paymentmethod>payment_card</paymentmethod>\n"
-            + "            <type>normal</type>\n"
-            + "        </invoice>\n"
-            + "        <invoice xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:type=\"proforma\">\n"
-            + "            <id>13</id>\n"
-            + "            <paymentmethod>cash</paymentmethod>\n"
-            + "        </invoice>\n"
-            + "    </invoices>\n"
-            + "</api>\n";
+        + "<api>\n"
+        + "    <invoices>\n"
+        + "        <invoice xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:type=\"normal\">\n"
+        + "            <id>13</id>\n"
+        + "            <paymentmethod>payment_card</paymentmethod>\n"
+        + "            <type>normal</type>\n"
+        + "        </invoice>\n"
+        + "        <invoice xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:type=\"proforma\">\n"
+        + "            <id>13</id>\n"
+        + "            <paymentmethod>cash</paymentmethod>\n"
+        + "        </invoice>\n"
+        + "    </invoices>\n"
+        + "</api>\n";
 
     private static final String FORMATTED = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n"
-            + "<api>\n"
-            + "    <invoices>\n"
-            + "        <invoice>\n"
-            + "            <id>13</id>\n"
-            + "            <paymentmethod>payment_card</paymentmethod>\n"
-            + "            <type>normal</type>\n"
-            + "        </invoice>\n"
-            + "        <invoice>\n"
-            + "            <id>13</id>\n"
-            + "            <paymentmethod>cash</paymentmethod>\n"
-            + "            <type>proforma</type>\n"
-            + "        </invoice>\n"
-            + "    </invoices>\n"
-            + "</api>\n";
+        + "<api>\n"
+        + "    <invoices>\n"
+        + "        <invoice>\n"
+        + "            <id>13</id>\n"
+        + "            <paymentmethod>payment_card</paymentmethod>\n"
+        + "            <type>normal</type>\n"
+        + "        </invoice>\n"
+        + "        <invoice>\n"
+        + "            <id>13</id>\n"
+        + "            <paymentmethod>cash</paymentmethod>\n"
+        + "            <type>proforma</type>\n"
+        + "        </invoice>\n"
+        + "    </invoices>\n"
+        + "</api>\n";
 
     private static final String FORMATTED_CDATA = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n"
-            + "<api>\n"
-            + "    <invoices>\n"
-            + "        <invoice>\n"
-            + "            <id>13</id>\n"
-            + "            <paymentmethod>payment_card</paymentmethod>\n"
-            + "            <type><![CDATA[normal]]></type>\n"
-            + "        </invoice>\n"
-            + "        <invoice>\n"
-            + "            <id>13</id>\n"
-            + "            <paymentmethod>cash</paymentmethod>\n"
-            + "            <type>proforma</type>\n"
-            + "        </invoice>\n"
-            + "    </invoices>\n"
-            + "</api>\n";
+        + "<api>\n"
+        + "    <invoices>\n"
+        + "        <invoice>\n"
+        + "            <id>13</id>\n"
+        + "            <paymentmethod>payment_card</paymentmethod>\n"
+        + "            <type><![CDATA[normal]]></type>\n"
+        + "        </invoice>\n"
+        + "        <invoice>\n"
+        + "            <id>13</id>\n"
+        + "            <paymentmethod>cash</paymentmethod>\n"
+        + "            <type>proforma</type>\n"
+        + "        </invoice>\n"
+        + "    </invoices>\n"
+        + "</api>\n";
 
     @Test
     public void testFormat() {
@@ -208,19 +212,30 @@ public class XsiTypeToObjectPropertyFormatterTest {
 
     @Test
     public void testGetDoc() throws IOException {
-        try {
-            XsiTypeToObjectPropertyFormatter instance = new XsiTypeToObjectPropertyFormatter();
-            String sample = "sample";
-            StringReader reader = new StringReader(sample);
-            assertThat(reader.read()).inHexadecimal().isEqualTo(0x73);
-            reader.close();
-            instance.getDoc(reader);
-            Assertions.failBecauseExceptionWasNotThrown(RuntimeException.class);
-        } catch (RuntimeException ex) {
-            assertThat(ex).isExactlyInstanceOf(RuntimeException.class);
-            assertThat(ex).hasCauseExactlyInstanceOf(IOException.class);
-            assertThat(ex).hasMessage("java.io.IOException: Stream closed");
-        }
+        thrown.expect(FatalSdkException.class);
+        thrown.expectMessage("[20150716:113147]: java.io.IOException: Stream closed");
+        thrown.expectCause(any(IOException.class));
+
+        XsiTypeToObjectPropertyFormatter instance = new XsiTypeToObjectPropertyFormatter();
+        String sample = "sample";
+        StringReader reader = new StringReader(sample);
+        assertThat(reader.read()).inHexadecimal().isEqualTo(0x73);
+        reader.close();
+        instance.getDoc(reader);
+    }
+
+    @Test
+    public void testDumpXml_Invalid() {
+        // given
+        XsiTypeToObjectPropertyFormatter instance = new XsiTypeToObjectPropertyFormatter();
+        Document doc = mock(Document.class);
+        when(doc.getNodeType()).thenThrow(InstantiationException.class);
+        // then
+        thrown.expect(FatalSdkException.class);
+        thrown.expectMessage("[20150716:113135]: java.lang.InstantiationException");
+        thrown.expectCause(isA(InstantiationException.class));
+        // when
+        instance.dumpXml(doc);
     }
 
 }

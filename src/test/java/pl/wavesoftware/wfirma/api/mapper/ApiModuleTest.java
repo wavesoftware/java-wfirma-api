@@ -1,31 +1,26 @@
 /*
- * The MIT License
+ * Copyright (c) 2014 Krzysztof Suszyński <krzysztof.suszynski@wavesoftware.pl>
  *
- * Copyright 2014 Krzysztof Suszyński <krzysztof.suszynski@wavesoftware.pl>.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
+ *      http://www.apache.org/licenses/LICENSE-2.0
  *
- * The above copyright notice and this permission notice shall be included in
- * all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
- * THE SOFTWARE.
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package pl.wavesoftware.wfirma.api.mapper;
 
 import java.util.Collection;
+
 import org.assertj.core.api.Assertions;
+
 import static org.assertj.core.api.Assertions.assertThat;
+
 import org.junit.Test;
 import pl.wavesoftware.wfirma.api.model.ApiEntityElement;
 import pl.wavesoftware.wfirma.api.model.Request;
@@ -38,7 +33,6 @@ import pl.wavesoftware.wfirma.api.model.requests.FindRequest;
 import pl.wavesoftware.wfirma.api.model.requests.GetRequest;
 
 /**
- *
  * @author Krzysztof Suszyński <krzysztof.suszynski@wavesoftware.pl>
  */
 public class ApiModuleTest {
@@ -119,9 +113,9 @@ public class ApiModuleTest {
             Assertions.failBecauseExceptionWasNotThrown(RuntimeException.class);
         } catch (RuntimeException ex) {
             assertThat(ex).hasCauseExactlyInstanceOf(IllegalAccessException.class);
-            assertThat(ex).hasMessage("java.lang.IllegalAccessException: Class pl.wavesoftware.wfirma.api.mapper."
-                    + "ApiModule can not access a member of class pl.wavesoftware.wfirma.api.mapper.ApiModuleTest"
-                    + "$SampleApiEntityElement with modifiers \"private\"");
+            assertThat(ex).hasMessage("[20150716:113015]: java.lang.IllegalAccessException: Class pl.wavesoftware.wfirma.api" +
+                    ".mapper.ApiModule can not access a member of class pl.wavesoftware.wfirma.api.mapper" +
+                    ".ApiModuleTest$SampleApiEntityElement with modifiers \"private\"");
         }
     }
 
@@ -144,7 +138,8 @@ public class ApiModuleTest {
             Assertions.failBecauseExceptionWasNotThrown(RuntimeException.class);
         } catch (RuntimeException ex) {
             assertThat(ex).hasCauseExactlyInstanceOf(IllegalAccessException.class);
-            assertThat(ex).hasMessage("java.lang.IllegalAccessException: Class pl.wavesoftware.wfirma.api.mapper."
+            assertThat(ex).hasMessage(
+                    "[20150716:113030]: java.lang.IllegalAccessException: Class pl.wavesoftware.wfirma.api.mapper."
                     + "ApiModule can not access a member of class pl.wavesoftware.wfirma.api.mapper.ApiModuleTest"
                     + "$SampleApi with modifiers \"private\"");
         }
@@ -165,9 +160,9 @@ public class ApiModuleTest {
             Assertions.failBecauseExceptionWasNotThrown(RuntimeException.class);
         } catch (RuntimeException ex) {
             assertThat(ex).hasCauseExactlyInstanceOf(IllegalAccessException.class);
-            assertThat(ex).hasMessage("java.lang.IllegalAccessException: Class pl.wavesoftware.wfirma.api.mapper."
-                    + "ApiModule can not access a member of class pl.wavesoftware.wfirma.api.mapper.ApiModuleTest"
-                    + "$SampleApiEntityElement with modifiers \"private\"");
+            assertThat(ex).hasMessage("[20150716:113042]: java.lang.IllegalAccessException: Class pl.wavesoftware.wfirma.api" +
+                    ".mapper.ApiModule can not access a member of class pl.wavesoftware.wfirma.api.mapper" +
+                    ".ApiModuleTest$SampleApiEntityElement with modifiers \"private\"");
         }
     }
 
@@ -184,9 +179,9 @@ public class ApiModuleTest {
             Assertions.failBecauseExceptionWasNotThrown(RuntimeException.class);
         } catch (RuntimeException ex) {
             assertThat(ex).hasCauseExactlyInstanceOf(IllegalAccessException.class);
-            assertThat(ex).hasMessage("java.lang.IllegalAccessException: Class pl.wavesoftware.wfirma.api.mapper."
-                    + "ApiModule can not access a member of class pl.wavesoftware.wfirma.api.mapper.ApiModuleTest"
-                    + "$SampleApiEntityElement with modifiers \"private\"");
+            assertThat(ex).hasMessage("[20150716:113042]: java.lang.IllegalAccessException: Class pl.wavesoftware.wfirma.api" +
+                    ".mapper.ApiModule can not access a member of class pl.wavesoftware.wfirma.api.mapper" +
+                    ".ApiModuleTest$SampleApiEntityElement with modifiers \"private\"");
         }
     }
 

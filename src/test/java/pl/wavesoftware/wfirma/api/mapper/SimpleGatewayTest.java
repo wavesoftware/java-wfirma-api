@@ -1,25 +1,17 @@
 /*
- * The MIT License
+ * Copyright (c) 2014 Krzysztof Suszyński <krzysztof.suszynski@wavesoftware.pl>
  *
- * Copyright 2014 Krzysztof Suszyński <krzysztof.suszynski@wavesoftware.pl>.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
+ *      http://www.apache.org/licenses/LICENSE-2.0
  *
- * The above copyright notice and this permission notice shall be included in
- * all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
- * THE SOFTWARE.
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package pl.wavesoftware.wfirma.api.mapper;
 
@@ -34,6 +26,7 @@ import static org.assertj.core.api.Assertions.*;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import pl.wavesoftware.wfirma.api.SimpleCredentials;
 import pl.wavesoftware.wfirma.api.model.WFirmaException;
 import pl.wavesoftware.wfirma.api.model.WFirmaSecurityException;
@@ -46,6 +39,7 @@ import pl.wavesoftware.wfirma.api.model.logic.LogicalOperator;
 import pl.wavesoftware.wfirma.api.model.logic.Parameters;
 import pl.wavesoftware.wfirma.api.model.requests.FindRequest;
 import pl.wavesoftware.wfirma.api.model.requests.GetRequest;
+import pl.wavesoftware.wfirma.api.runtime.FatalSdkException;
 
 /**
  *
@@ -65,6 +59,9 @@ public class SimpleGatewayTest {
 
     @Rule
     public WireMockRule wireMockRule = new WireMockRule(PORT);
+
+    @Rule
+    public ExpectedException thrown = ExpectedException.none();
 
     private final URI mockAddress = URI.create("http://localhost:" + PORT);
 
@@ -177,169 +174,164 @@ public class SimpleGatewayTest {
         assertThat(host.getPort()).isEqualTo(443);
 
         instance = instance("login@example.org", "a-user-password", URI.create("ajp://localhost"));
-        try {
-            Deencapsulation.invoke(instance, "getTargetHost");
-            fail("Expected to throw a WFirmaException for invalid scheme");
-        } catch (Exception ex) {
-            assertThat(ex).isExactlyInstanceOf(RuntimeException.class);
-            assertThat(ex.getLocalizedMessage()).contains(
-                    "Unsupported URI scheme: ajp, supporting only: `http` and `https`");
-        }
+        thrown.expect(FatalSdkException.class);
+        thrown.expectMessage("[20150716:113056]: Unsupported URI scheme: ajp, supporting only: `http` and `https`");
+        Deencapsulation.invoke(instance, "getTargetHost");
     }
 
     @Before
     public void before() {
         expResultAuth = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
-                + "<api>\n"
-                + "    <status>\n"
-                + "        <code>AUTH</code>\n"
-                + "    </status>\n"
-                + "</api>\n"
-                + " \n";
+            + "<api>\n"
+            + "    <status>\n"
+            + "        <code>AUTH</code>\n"
+            + "    </status>\n"
+            + "</api>\n"
+            + " \n";
         expResult = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
-                + "<api>\n"
-                + "    <companies>\n"
-                + "        <company>\n"
-                + "            <id>70572</id>\n"
-                + "            <name></name>\n"
-                + "            <altname></altname>\n"
-                + "            <nip></nip>\n"
-                + "            <vat_payer>1</vat_payer>\n"
-                + "            <tax>taxregister</tax>\n"
-                + "            <is_registered>0</is_registered>\n"
-                + "        </company>\n"
-                + "    </companies>\n"
-                + "    <status>\n"
-                + "        <code>OK</code>\n"
-                + "    </status>\n"
-                + "</api>\n"
-                + "\n";
+            + "<api>\n"
+            + "    <companies>\n"
+            + "        <company>\n"
+            + "            <id>70572</id>\n"
+            + "            <name></name>\n"
+            + "            <altname></altname>\n"
+            + "            <nip></nip>\n"
+            + "            <vat_payer>1</vat_payer>\n"
+            + "            <tax>taxregister</tax>\n"
+            + "            <is_registered>0</is_registered>\n"
+            + "        </company>\n"
+            + "    </companies>\n"
+            + "    <status>\n"
+            + "        <code>OK</code>\n"
+            + "    </status>\n"
+            + "</api>\n"
+            + "\n";
         expPostResult = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
-                + "<api>\n"
-                + "    <contractors>\n"
-                + "        <contractor>\n"
-                + "            <id>11111111111</id>\n"
-                + "            <tax_id_type>nip</tax_id_type>\n"
-                + "            <name>SomeSuper Business Ltd.</name>\n"
-                + "            <altname>SomeSuper Business Ltd.</altname>\n"
-                + "            <nip>1112233444</nip>\n"
-                + "            <regon></regon>\n"
-                + "            <street>ul. Przykładowa 13</street>\n"
-                + "            <zip>12-345</zip>\n"
-                + "            <city>Przykładów</city>\n"
-                + "            <country>PL</country>\n"
-                + "            <different_contact_address>0</different_contact_address>\n"
-                + "            <contact_name></contact_name>\n"
-                + "            <contact_street></contact_street>\n"
-                + "            <contact_zip></contact_zip>\n"
-                + "            <contact_city></contact_city>\n"
-                + "            <contact_country>PL</contact_country>\n"
-                + "            <contact_person></contact_person>\n"
-                + "            <phone></phone>\n"
-                + "            <skype></skype>\n"
-                + "            <fax></fax>\n"
-                + "            <email></email>\n"
-                + "            <url></url>\n"
-                + "            <description></description>\n"
-                + "            <buyer>1</buyer>\n"
-                + "            <seller>1</seller>\n"
-                + "            <discount_percent>5.00</discount_percent>\n"
-                + "            <payment_days>7</payment_days>\n"
-                + "            <payment_method></payment_method>\n"
-                + "            <account_number></account_number>\n"
-                + "            <remind>1</remind>\n"
-                + "            <hash>8c3268dbcc1961af03b94d2f938c7902</hash>\n"
-                + "            <tags></tags>\n"
-                + "            <notes>0</notes>\n"
-                + "            <documents>0</documents>\n"
-                + "            <created>2014-03-15 19:23:39</created>\n"
-                + "            <modified>2014-03-15 19:24:53</modified>\n"
-                + "            <reference_company>\n"
-                + "                <id>0</id>\n"
-                + "            </reference_company>\n"
-                + "            <translation_language>\n"
-                + "                <id>0</id>\n"
-                + "            </translation_language>\n"
-                + "            <company_account>\n"
-                + "                <id>0</id>\n"
-                + "            </company_account>\n"
-                + "            <good_price_group>\n"
-                + "                <id>0</id>\n"
-                + "            </good_price_group>\n"
-                + "            <invoice_description>\n"
-                + "                <id>0</id>\n"
-                + "            </invoice_description>\n"
-                + "            <shop_buyer>\n"
-                + "                <id>0</id>\n"
-                + "            </shop_buyer>\n"
-                + "        </contractor>\n"
-                + "        <parameters>\n"
-                + "            <limit>0</limit>\n"
-                + "            <page>1</page>\n"
-                + "            <total>1</total>\n"
-                + "        </parameters>\n"
-                + "    </contractors>\n"
-                + "    <status>\n"
-                + "        <code>OK</code>\n"
-                + "    </status>\n"
-                + "</api>\n"
-                + " \n";
+            + "<api>\n"
+            + "    <contractors>\n"
+            + "        <contractor>\n"
+            + "            <id>11111111111</id>\n"
+            + "            <tax_id_type>nip</tax_id_type>\n"
+            + "            <name>SomeSuper Business Ltd.</name>\n"
+            + "            <altname>SomeSuper Business Ltd.</altname>\n"
+            + "            <nip>1112233444</nip>\n"
+            + "            <regon></regon>\n"
+            + "            <street>ul. Przykładowa 13</street>\n"
+            + "            <zip>12-345</zip>\n"
+            + "            <city>Przykładów</city>\n"
+            + "            <country>PL</country>\n"
+            + "            <different_contact_address>0</different_contact_address>\n"
+            + "            <contact_name></contact_name>\n"
+            + "            <contact_street></contact_street>\n"
+            + "            <contact_zip></contact_zip>\n"
+            + "            <contact_city></contact_city>\n"
+            + "            <contact_country>PL</contact_country>\n"
+            + "            <contact_person></contact_person>\n"
+            + "            <phone></phone>\n"
+            + "            <skype></skype>\n"
+            + "            <fax></fax>\n"
+            + "            <email></email>\n"
+            + "            <url></url>\n"
+            + "            <description></description>\n"
+            + "            <buyer>1</buyer>\n"
+            + "            <seller>1</seller>\n"
+            + "            <discount_percent>5.00</discount_percent>\n"
+            + "            <payment_days>7</payment_days>\n"
+            + "            <payment_method></payment_method>\n"
+            + "            <account_number></account_number>\n"
+            + "            <remind>1</remind>\n"
+            + "            <hash>8c3268dbcc1961af03b94d2f938c7902</hash>\n"
+            + "            <tags></tags>\n"
+            + "            <notes>0</notes>\n"
+            + "            <documents>0</documents>\n"
+            + "            <created>2014-03-15 19:23:39</created>\n"
+            + "            <modified>2014-03-15 19:24:53</modified>\n"
+            + "            <reference_company>\n"
+            + "                <id>0</id>\n"
+            + "            </reference_company>\n"
+            + "            <translation_language>\n"
+            + "                <id>0</id>\n"
+            + "            </translation_language>\n"
+            + "            <company_account>\n"
+            + "                <id>0</id>\n"
+            + "            </company_account>\n"
+            + "            <good_price_group>\n"
+            + "                <id>0</id>\n"
+            + "            </good_price_group>\n"
+            + "            <invoice_description>\n"
+            + "                <id>0</id>\n"
+            + "            </invoice_description>\n"
+            + "            <shop_buyer>\n"
+            + "                <id>0</id>\n"
+            + "            </shop_buyer>\n"
+            + "        </contractor>\n"
+            + "        <parameters>\n"
+            + "            <limit>0</limit>\n"
+            + "            <page>1</page>\n"
+            + "            <total>1</total>\n"
+            + "        </parameters>\n"
+            + "    </contractors>\n"
+            + "    <status>\n"
+            + "        <code>OK</code>\n"
+            + "    </status>\n"
+            + "</api>\n"
+            + " \n";
         contractorsFindBody = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n"
-                + "<api>\n"
-                + "    <contractors>\n"
-                + "        <parameters>\n"
-                + "            <conditions>\n"
-                + "                <and>\n"
-                + "                    <condition>\n"
-                + "                        <field>nip</field>\n"
-                + "                        <operator>eq</operator>\n"
-                + "                        <value>1112233444</value>\n"
-                + "                    </condition>\n"
-                + "                </and>\n"
-                + "            </conditions>\n"
-                + "            <page>0</page>\n"
-                + "            <limit>20</limit>\n"
-                + "        </parameters>\n"
-                + "    </contractors>\n"
-                + "</api>\n"
-                + "";
+            + "<api>\n"
+            + "    <contractors>\n"
+            + "        <parameters>\n"
+            + "            <conditions>\n"
+            + "                <and>\n"
+            + "                    <condition>\n"
+            + "                        <field>nip</field>\n"
+            + "                        <operator>eq</operator>\n"
+            + "                        <value>1112233444</value>\n"
+            + "                    </condition>\n"
+            + "                </and>\n"
+            + "            </conditions>\n"
+            + "            <page>0</page>\n"
+            + "            <limit>20</limit>\n"
+            + "        </parameters>\n"
+            + "    </contractors>\n"
+            + "</api>\n"
+            + "";
 
         stubFor(get(urlEqualTo("/companies/get"))
-                .withHeader("Accept", equalTo(CONTENT_TYPE_TEXT_XML))
-                .withHeader("Authorization", equalTo("Basic bG9naW5AZXhhbXBsZS5vcmc6YS11c2VyLXBhc3N3b3Jk"))
-                .willReturn(aResponse()
-                        .withStatus(200)
-                        .withHeader("Content-Type", CONTENT_TYPE_TEXT_XML)
-                        .withBody(expResult)));
+            .withHeader("Accept", equalTo(CONTENT_TYPE_TEXT_XML))
+            .withHeader("Authorization", equalTo("Basic bG9naW5AZXhhbXBsZS5vcmc6YS11c2VyLXBhc3N3b3Jk"))
+            .willReturn(aResponse()
+                .withStatus(200)
+                .withHeader("Content-Type", CONTENT_TYPE_TEXT_XML)
+                .withBody(expResult)));
         stubFor(get(urlEqualTo("/companies/get"))
-                .withHeader("Accept", equalTo(CONTENT_TYPE_TEXT_XML))
-                .withHeader("Authorization", notMatching("Basic bG9naW5AZXhhbXBsZS5vcmc6YS11c2VyLXBhc3N3b3Jk"))
-                .willReturn(aResponse()
-                        .withStatus(200)
-                        .withHeader("Content-Type", CONTENT_TYPE_TEXT_XML)
-                        .withBody(expResultAuth)));
+            .withHeader("Accept", equalTo(CONTENT_TYPE_TEXT_XML))
+            .withHeader("Authorization", notMatching("Basic bG9naW5AZXhhbXBsZS5vcmc6YS11c2VyLXBhc3N3b3Jk"))
+            .willReturn(aResponse()
+                .withStatus(200)
+                .withHeader("Content-Type", CONTENT_TYPE_TEXT_XML)
+                .withBody(expResultAuth)));
         stubFor(get(urlEqualTo("/contractors/get/1"))
-                .withHeader("Accept", equalTo(CONTENT_TYPE_TEXT_XML))
-                .withHeader("Authorization", notMatching("Basic bG9naW5AZXhhbXBsZS5vcmc6YS11c2VyLXBhc3N3b3Jk"))
-                .willReturn(aResponse()
-                        .withStatus(403)
-                        .withHeader("Content-Type", CONTENT_TYPE_TEXT_XML)
-                        .withBody(expResultAuth)));
+            .withHeader("Accept", equalTo(CONTENT_TYPE_TEXT_XML))
+            .withHeader("Authorization", notMatching("Basic bG9naW5AZXhhbXBsZS5vcmc6YS11c2VyLXBhc3N3b3Jk"))
+            .willReturn(aResponse()
+                .withStatus(403)
+                .withHeader("Content-Type", CONTENT_TYPE_TEXT_XML)
+                .withBody(expResultAuth)));
         stubFor(get(urlEqualTo("/contractors/find"))
-                .withHeader("Accept", equalTo(CONTENT_TYPE_TEXT_XML))
-                .withHeader("Authorization", notMatching("Basic bG9naW5AZXhhbXBsZS5vcmc6YS11c2VyLXBhc3N3b3Jk"))
-                .willReturn(aResponse()
-                        .withStatus(500)
-                        .withHeader("Content-Type", CONTENT_TYPE_TEXT_XML)
-                        .withBody("")));
+            .withHeader("Accept", equalTo(CONTENT_TYPE_TEXT_XML))
+            .withHeader("Authorization", notMatching("Basic bG9naW5AZXhhbXBsZS5vcmc6YS11c2VyLXBhc3N3b3Jk"))
+            .willReturn(aResponse()
+                .withStatus(500)
+                .withHeader("Content-Type", CONTENT_TYPE_TEXT_XML)
+                .withBody("")));
         stubFor(post(urlEqualTo("/contractors/find"))
-                .withRequestBody(equalTo(contractorsFindBody))
-                .withHeader("Accept", equalTo(CONTENT_TYPE_TEXT_XML))
-                .withHeader("Authorization", equalTo("Basic bG9naW5AZXhhbXBsZS5vcmc6YS11c2VyLXBhc3N3b3Jk"))
-                .willReturn(aResponse()
-                        .withStatus(200)
-                        .withHeader("Content-Type", CONTENT_TYPE_TEXT_XML)
-                        .withBody(expPostResult)));
+            .withRequestBody(equalTo(contractorsFindBody))
+            .withHeader("Accept", equalTo(CONTENT_TYPE_TEXT_XML))
+            .withHeader("Authorization", equalTo("Basic bG9naW5AZXhhbXBsZS5vcmc6YS11c2VyLXBhc3N3b3Jk"))
+            .willReturn(aResponse()
+                .withStatus(200)
+                .withHeader("Content-Type", CONTENT_TYPE_TEXT_XML)
+                .withBody(expPostResult)));
     }
 
     @Test

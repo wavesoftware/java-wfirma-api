@@ -1,25 +1,17 @@
 /*
- * The MIT License
+ * Copyright (c) 2014 Krzysztof Suszyński <krzysztof.suszynski@wavesoftware.pl>
  *
- * Copyright 2014 Krzysztof Suszyński <krzysztof.suszynski@wavesoftware.pl>.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
+ *      http://www.apache.org/licenses/LICENSE-2.0
  *
- * The above copyright notice and this permission notice shall be included in
- * all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
- * THE SOFTWARE.
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package pl.wavesoftware.wfirma.api.mapper;
 
@@ -48,6 +40,7 @@ import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
+import pl.wavesoftware.wfirma.api.runtime.FatalSdkException;
 import pl.wavesoftware.wfirma.api.model.PostRequest;
 import pl.wavesoftware.wfirma.api.model.Request;
 import pl.wavesoftware.wfirma.api.model.WFirmaException;
@@ -112,8 +105,6 @@ class SimpleGateway implements WFirmaGateway {
 
             try (CloseableHttpResponse response = httpclient.execute(target, httpRequest, localContext)) {
                 return getContent(response);
-            } catch (IOException ioe) {
-                throw new WFirmaException(ioe);
             }
         } catch (IOException ioe) {
             throw new WFirmaException(ioe);
@@ -139,26 +130,17 @@ class SimpleGateway implements WFirmaGateway {
                     port = 443;
                     break;
                 default:
-                    throw new RuntimeException("Unsupported URI scheme: "
+                    throw new FatalSdkException("20150716:113056", "Unsupported URI scheme: "
                         + gateway.getScheme() + ", supporting only: `http` and `https`");
             }
         }
         return new HttpHost(gateway.getHost(), port, gateway.getScheme());
     }
 
-    private String getContent(CloseableHttpResponse response) throws WFirmaException {
+    private String getContent(CloseableHttpResponse response) throws WFirmaException, IOException {
         switch (response.getStatusLine().getStatusCode()) {
             case 200:
-                HttpEntity entity = response.getEntity();
-                try {
-                    String content = EntityUtils.toString(entity, Charsets.UTF_8);
-                    for (ResponseListener responseListener : listeners) {
-                        responseListener.responseRecived(content);
-                    }
-                    return statusParser.checkedForStatus(credentials.getKey(), content);
-                } catch (IOException ex) {
-                    throw new WFirmaException(ex);
-                }
+                return handleCode200OK(response);
             case 403:
                 throw new WFirmaSecurityException("Auth failed for user: `%s`", credentials.getKey());
             default:
@@ -166,6 +148,15 @@ class SimpleGateway implements WFirmaGateway {
                 throw new WFirmaException("Connection error: %d - %s", status.getStatusCode(),
                     status.getReasonPhrase());
         }
+    }
+
+    private String handleCode200OK(CloseableHttpResponse response) throws IOException, WFirmaException {
+        HttpEntity entity = response.getEntity();
+        String content = EntityUtils.toString(entity, Charsets.UTF_8);
+        for (ResponseListener responseListener : listeners) {
+            responseListener.responseRecived(content);
+        }
+        return statusParser.checkedForStatus(credentials.getKey(), content);
     }
 
     @Override

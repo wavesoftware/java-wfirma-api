@@ -1,25 +1,17 @@
 /*
- * The MIT License
+ * Copyright (c) 2014 Krzysztof Suszyński <krzysztof.suszynski@wavesoftware.pl>
  *
- * Copyright 2014 Krzysztof Suszyński <krzysztof.suszynski@gmail.com>.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
+ *      http://www.apache.org/licenses/LICENSE-2.0
  *
- * The above copyright notice and this permission notice shall be included in
- * all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
- * THE SOFTWARE.
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package pl.wavesoftware.wfirma.api.mapper.xml;
 
@@ -35,6 +27,7 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 import pl.wavesoftware.wfirma.api.mapper.Api;
+import pl.wavesoftware.wfirma.api.runtime.FatalSdkException;
 
 /**
  *
@@ -53,8 +46,7 @@ public class JaxbMarshaller<Type> {
      * @return marshaller for type
      */
     public static <T> JaxbMarshaller<T> create(Class<T> cls) {
-        JaxbMarshaller<T> marshaller = new JaxbMarshaller<>(cls);
-        return marshaller;
+        return new JaxbMarshaller<>(cls);
     }
 
     /**
@@ -79,7 +71,7 @@ public class JaxbMarshaller<Type> {
             final Package pack = type.getPackage();
             final ClassLoader loader = Thread.currentThread().getContextClassLoader();
 
-            Set<Class<? extends Object>> classes = new HashSet<>();
+            Set<Class<?>> classes = new HashSet<>();
             for (final ClassPath.ClassInfo info : ClassPath.from(loader).getTopLevelClasses()) {
                 if (info.getName().startsWith(pack.getName()) && !info.getName().endsWith("Test")) {
                     classes.add(info.load());
@@ -89,7 +81,7 @@ public class JaxbMarshaller<Type> {
             classes.toArray(arr);
             return JAXBContext.newInstance(arr);
         } catch (JAXBException | IOException ex) {
-            throw new RuntimeException(ex);
+            throw new FatalSdkException("20150716:113108", ex);
         }
     }
 
@@ -111,7 +103,7 @@ public class JaxbMarshaller<Type> {
             jaxbMarshaller.marshal(object, sw);
             return format(sw.toString());
         } catch (JAXBException ex) {
-            throw new IllegalStateException(ex);
+            throw new FatalSdkException("20150719:181250", ex);
         }
     }
 
@@ -136,7 +128,7 @@ public class JaxbMarshaller<Type> {
                 return type.cast(element);
             }
         } catch (JAXBException ex) {
-            throw new IllegalStateException(ex);
+            throw new FatalSdkException("20150716:115101", ex);
         }
     }
 
@@ -150,7 +142,7 @@ public class JaxbMarshaller<Type> {
             }
             return formatter;
         } catch (InstantiationException | IllegalAccessException ex) {
-            throw new RuntimeException(ex);
+            throw new FatalSdkException("20150716:113119", ex);
         }
     }
 
