@@ -15,29 +15,22 @@
  */
 package pl.wavesoftware.wfirma.api;
 
+import com.google.common.annotations.VisibleForTesting;
+import pl.wavesoftware.wfirma.api.core.model.*;
+import pl.wavesoftware.wfirma.api.core.mapper.xml.JaxbResponse;
+
 import java.net.URI;
-import pl.wavesoftware.wfirma.api.mapper.AbstractWFirmaGatewayFactory;
-import pl.wavesoftware.wfirma.api.mapper.Api;
-import pl.wavesoftware.wfirma.api.mapper.ApiModule;
-import pl.wavesoftware.wfirma.api.mapper.WFirmaGateway;
-import pl.wavesoftware.wfirma.api.mapper.xml.JaxbMarshaller;
-import pl.wavesoftware.wfirma.api.model.ApiEntityElement;
-import pl.wavesoftware.wfirma.api.model.Credentials;
-import pl.wavesoftware.wfirma.api.model.Request;
-import pl.wavesoftware.wfirma.api.model.Response;
-import pl.wavesoftware.wfirma.api.model.WFirmaException;
 
 /**
- *
  * @author Krzysztof Suszyński <krzysztof.suszynski@wavesoftware.pl>
  */
-public class ApiExecutor extends AbstractWFirmaGatewayFactory {
+public class ApiExecutor {
 
     private final ApiContext context;
 
-    private WFirmaGateway gatewayInstance;
+    private Gateway gatewayInstance;
 
-    protected String address = WFirmaGateway.GATEWAY_ADDRESS;
+    private String address;
 
     /**
      * Default constructor for API executor
@@ -50,66 +43,50 @@ public class ApiExecutor extends AbstractWFirmaGatewayFactory {
     }
 
     /**
-     * Execute a {@link Request} throuth WFirma API2 and fetches a {@link Response} with objects that are being unpacked from response XML
+     * Execute a {@link Request} throuth WFirma API2 and fetches a {@link Response} with objects that are being unpacked from
+     * response XML
      *
-     * @param <T> a type of API entity element - the main element type.
+     * @param <T>     a type of API entity element - the main element type.
      * @param request a request to be executed
      * @return a response from API
-     * @throws WFirmaException if anything goes wrong. {@link pl.wavesoftware.wfirma.api.model.WFirmaSecurityException} is thrown if there
-     * ware problem with security credentials.
+     * @throws WFirmaException if anything goes wrong. {@link WFirmaSecurityException} is thrown
+     *      if there ware problem with security credentials.
      */
     public <T extends ApiEntityElement> Response<T> execute(Request<T> request) throws WFirmaException {
         String responseOutput = execute(getGateway(), request);
-        JaxbResponse<T> response = new JaxbResponse<>(request.getEntityClass(), responseOutput);
+        return new JaxbResponse<>(request.getEntityClass(), responseOutput);
+    }
+
+    @VisibleForTesting
+    protected static String execute(Gateway gateway, Request<?> request) throws WFirmaException {
+        String response;
+        if (request instanceof PostRequest) {
+            response = gateway.post(PostRequest.class.cast(request));
+        } else {
+            response = gateway.get(request);
+        }
         return response;
     }
 
-    private WFirmaGateway getGateway() {
+    @VisibleForTesting
+    protected void setAddress(String address) {
+        this.address = address;
+    }
+
+    private Gateway getGateway() {
         if (gatewayInstance == null) {
-            URI gatewayAddress = URI.create(address);
-            gatewayInstance = create(context.getCredentials(), gatewayAddress);
+            GatewayFactory factory = prepare(context.getGatewayFactory());
+            gatewayInstance = factory.produce();
         }
         return gatewayInstance;
     }
 
-    @Override
-    protected Class<? extends Credentials> getTypeForSimpleGateway() {
-        return SimpleCredentials.class;
-    }
-
-    @Override
-    protected Class<? extends Credentials> getTypeForOAuthGateway() {
-        return OAuthCredentials.class;
-    }
-
-    private static class JaxbResponse<T extends ApiEntityElement> implements Response<T> {
-
-        private final Class<T> entityClass;
-
-        private final String response;
-
-        private T entity;
-
-        private boolean fetched = false;
-
-        JaxbResponse(Class<T> entityClass, String response) {
-            this.entityClass = entityClass;
-            this.response = response;
+    private GatewayFactory prepare(GatewayFactory factory) {
+        if (address != null) {
+            URI gatewayAddress = URI.create(address);
+            factory.setAlternativeAddress(gatewayAddress);
         }
-
-        @Override
-        public T getEntity() {
-            if (!fetched) {
-                Class<? extends Api<T>> module = ApiModule.getModuleFor(entityClass);
-                JaxbMarshaller<? extends Api> marshaller = JaxbMarshaller.create(module);
-                Api api = marshaller.unmarshal(response);
-                @SuppressWarnings("unchecked")
-                T en = (T) api.getEntityElement();
-                entity = en;
-                fetched = true;
-            }
-            return entity;
-        }
-
+        return factory;
     }
+
 }

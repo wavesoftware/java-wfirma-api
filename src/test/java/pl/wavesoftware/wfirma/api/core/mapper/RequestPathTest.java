@@ -13,12 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package pl.wavesoftware.wfirma.api;
+package pl.wavesoftware.wfirma.api.core.mapper;
 
 import org.junit.Test;
-import pl.wavesoftware.wfirma.api.core.model.GatewayFactory;
-import pl.wavesoftware.wfirma.api.oauth.model.OAuthCredentials;
-import pl.wavesoftware.wfirma.api.simple.model.SimpleCredentials;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -26,22 +23,27 @@ import static org.assertj.core.api.Assertions.assertThat;
  *
  * @author Krzysztof Suszyński <krzysztof.suszynski@wavesoftware.pl>
  */
-public class ApiContextTest {
+public class RequestPathTest {
 
     @Test
-    public void testCreate() {
-        ApiContext context = new ApiContext(new OAuthCredentials("key", "secret"));
-        assertThat(context).isNotNull();
-        context = new ApiContext(new SimpleCredentials("login", "password"));
-        assertThat(context).isNotNull();
+    public void testGetCorrectedPath() {
+        String input = "/ala/ma/kota";
+        String expected = input;
+        RequestPath instance = new RequestPath(input);
+        String result = instance.getCorrectedPath();
+        assertThat(result).isEqualTo(expected);
+
+        input = "ala/ma/kota";
+        instance = new RequestPath(input);
+        result = instance.getCorrectedPath();
+        assertThat(result).isEqualTo(expected);
     }
 
     @Test
-    public void testGatewayFactory() {
-        SimpleCredentials input = new SimpleCredentials("login2", "password2");
-        ApiContext instance = new ApiContext(input);
-        GatewayFactory result = instance.getGatewayFactory();
-        assertThat(result).isNotNull();
+    public void testFromString() {
+        RequestPath result = RequestPath.fromString("ala", "ma", "kota");
+        String empty = "";
+        assertThat(result + empty).isEqualTo("/ala/ma/kota");
     }
 
 }

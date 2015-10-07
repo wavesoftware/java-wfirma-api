@@ -25,7 +25,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.reflections.Reflections;
-import pl.wavesoftware.wfirma.api.mapper.Api;
+import pl.wavesoftware.wfirma.api.core.model.Api;
+import pl.wavesoftware.wfirma.api.core.model.ApiEntityElement;
 
 /**
  *

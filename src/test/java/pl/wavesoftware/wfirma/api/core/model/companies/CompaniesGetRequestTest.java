@@ -13,35 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package pl.wavesoftware.wfirma.api;
-
-import org.junit.Test;
-import pl.wavesoftware.wfirma.api.core.model.GatewayFactory;
-import pl.wavesoftware.wfirma.api.oauth.model.OAuthCredentials;
-import pl.wavesoftware.wfirma.api.simple.model.SimpleCredentials;
+package pl.wavesoftware.wfirma.api.core.model.companies;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import org.junit.Test;
 
 /**
  *
  * @author Krzysztof Suszyński <krzysztof.suszynski@wavesoftware.pl>
  */
-public class ApiContextTest {
+public class CompaniesGetRequestTest {
 
     @Test
-    public void testCreate() {
-        ApiContext context = new ApiContext(new OAuthCredentials("key", "secret"));
-        assertThat(context).isNotNull();
-        context = new ApiContext(new SimpleCredentials("login", "password"));
-        assertThat(context).isNotNull();
-    }
-
-    @Test
-    public void testGatewayFactory() {
-        SimpleCredentials input = new SimpleCredentials("login2", "password2");
-        ApiContext instance = new ApiContext(input);
-        GatewayFactory result = instance.getGatewayFactory();
+    public void testGetAddress() {
+        CompaniesGetRequest result = CompaniesGetRequest.create();
         assertThat(result).isNotNull();
+        assertThat(result.getAddress().toString()).isEqualTo("/companies/get");
     }
 
 }

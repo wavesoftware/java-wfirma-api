@@ -15,22 +15,24 @@
  */
 package pl.wavesoftware.wfirma.api;
 
-import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
-import java.io.IOException;
-import java.net.ServerSocket;
-import static org.assertj.core.api.Assertions.assertThat;
 import org.joda.money.CurrencyUnit;
 import org.joda.money.Money;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
-import pl.wavesoftware.wfirma.api.model.Credentials;
-import pl.wavesoftware.wfirma.api.model.Response;
-import pl.wavesoftware.wfirma.api.model.invoices.AbstractInvoice;
-import pl.wavesoftware.wfirma.api.model.invoices.Invoices;
-import pl.wavesoftware.wfirma.api.model.invoices.NormalInvoice;
-import pl.wavesoftware.wfirma.api.model.requests.GetRequest;
+import pl.wavesoftware.wfirma.api.core.model.Response;
+import pl.wavesoftware.wfirma.api.core.model.invoices.AbstractInvoice;
+import pl.wavesoftware.wfirma.api.core.model.invoices.Invoices;
+import pl.wavesoftware.wfirma.api.core.model.invoices.NormalInvoice;
+import pl.wavesoftware.wfirma.api.core.model.requests.GetRequest;
+import pl.wavesoftware.wfirma.api.simple.model.SimpleCredentials;
+
+import java.io.IOException;
+import java.net.ServerSocket;
+
+import static com.github.tomakehurst.wiremock.client.WireMock.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  *
@@ -56,7 +58,7 @@ public class ApiExecutorTest {
     @Before
     public void before() {
         String expResultGateway = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
-                + "<api>\n"
+                + "<domain>\n"
                 + "    <invoices>\n"
                 + "        <invoice>\n"
                 + "            <id>6</id>\n"
@@ -68,7 +70,7 @@ public class ApiExecutorTest {
                 + "    <status>\n"
                 + "        <code>OK</code>\n"
                 + "    </status>\n"
-                + "</api>\n"
+                + "</domain>\n"
                 + "\n";
         stubFor(get(urlEqualTo("/invoices/get/6"))
                 .withHeader("Accept", equalTo("text/xml"))
@@ -83,7 +85,7 @@ public class ApiExecutorTest {
     public void testExecute() throws Exception {
         ApiContext ctx = new ApiContext(new SimpleCredentials("login1", "pass1"));
         ApiExecutor instance = new ApiExecutor(ctx);
-        instance.address = mockAddress;
+        instance.setAddress(mockAddress);
         GetRequest<Invoices> request = GetRequest.create(Invoices.class, 6L);
         Response<Invoices> result = instance.execute(request);
         assertThat(result).isNotNull();
@@ -95,24 +97,6 @@ public class ApiExecutorTest {
         assertThat(invoice.getId()).isEqualTo(6);
         assertThat(invoice.getPaymentState()).isEqualTo(AbstractInvoice.PaymentState.unpaid);
         assertThat(invoice.getNetto()).isEqualTo(Money.of(CurrencyUnit.of("PLN"), 765.45d));
-    }
-
-    @Test
-    public void testGetTypeForSimpleGateway() {
-        ApiContext ctx = new ApiContext(new SimpleCredentials("login1", "pass1"));
-        ApiExecutor instance = new ApiExecutor(ctx);
-        Class<? extends Credentials> expResult = SimpleCredentials.class;
-        Class<? extends Credentials> result = instance.getTypeForSimpleGateway();
-        assertThat(result).isEqualTo(expResult);
-    }
-
-    @Test
-    public void testGetTypeForOAuthGateway() {
-        ApiContext ctx = new ApiContext(new SimpleCredentials("login1", "pass1"));
-        ApiExecutor instance = new ApiExecutor(ctx);
-        Class<? extends Credentials> expResult = OAuthCredentials.class;
-        Class<? extends Credentials> result = instance.getTypeForOAuthGateway();
-        assertThat(result).isEqualTo(expResult);
     }
 
 }
