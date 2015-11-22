@@ -14,19 +14,31 @@
  * limitations under the License.
  */
 
-package pl.wavesoftware.wfirma.api.core.model.validation;
+package pl.wavesoftware.wfirma.api.simple.mapper;
 
-import pl.wavesoftware.wfirma.api.core.model.WFirmaException;
+import org.junit.Test;
+import pl.wavesoftware.wfirma.api.core.model.Gateway;
+import pl.wavesoftware.wfirma.api.simple.model.SimpleCredentials;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * @author Krzysztof Suszyński <krzysztof.suszynski@wavesoftware.pl>
- * @since 2015-08-20
+ * @since 2015-11-22
  */
-public class RemoteGatewayException extends WFirmaException {
-    /**
-     * {@inheritDoc}
-     */
-    public RemoteGatewayException(Throwable cause) {
-        super(cause);
+public class SimpleGatewayFactoryTest {
+
+    @Test
+    public void testProduce() throws Exception {
+        // given
+        SimpleCredentials credentials = new SimpleCredentials("login", "passwd");
+        SimpleGatewayFactory factory = new SimpleGatewayFactory(credentials);
+
+        // when
+        Gateway gateway = factory.produce();
+
+        // then
+        assertThat(gateway).isNotNull();
+        assertThat(gateway).isInstanceOf(SimpleGateway.class);
     }
 }

@@ -15,16 +15,18 @@
  */
 package pl.wavesoftware.wfirma.api.core.model.companies;
 
-import java.util.Collection;
+import pl.wavesoftware.wfirma.api.core.model.Api;
+import pl.wavesoftware.wfirma.api.core.model.Request;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
-import pl.wavesoftware.wfirma.api.core.model.Api;
+import java.util.Collection;
+
 import static pl.wavesoftware.wfirma.api.core.model.ApiModule.collectRequests;
-import pl.wavesoftware.wfirma.api.core.model.Request;
 
 /**
  * <p>
@@ -49,7 +51,7 @@ import pl.wavesoftware.wfirma.api.core.model.Request;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "companiesApiType")
-@XmlRootElement(name = "domain")
+@XmlRootElement(name = Api.ROOT_ELEMENT)
 public class CompaniesApi implements Api<Companies> {
 
     @XmlElement(nillable = false)

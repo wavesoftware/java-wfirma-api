@@ -15,8 +15,10 @@
  */
 package pl.wavesoftware.wfirma.api.core.model;
 
-import org.assertj.core.api.Assertions;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
+import pl.wavesoftware.eid.exceptions.EidIllegalArgumentException;
 import pl.wavesoftware.wfirma.api.core.model.companies.CompaniesApi;
 import pl.wavesoftware.wfirma.api.core.model.contractors.Contractors;
 import pl.wavesoftware.wfirma.api.core.model.contractors.ContractorsApi;
@@ -28,12 +30,16 @@ import pl.wavesoftware.wfirma.api.core.model.requests.GetRequest;
 import java.util.Collection;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.CoreMatchers.containsString;
+import static org.hamcrest.CoreMatchers.isA;
 
 /**
  * @author Krzysztof Suszyński <krzysztof.suszynski@wavesoftware.pl>
  */
 public class ApiModuleTest {
 
+    @Rule
+    public ExpectedException thrown = ExpectedException.none();
     @Test
     public void testInstantinate() {
         assertThat(new ApiModule()).isNotNull();
@@ -49,16 +55,17 @@ public class ApiModuleTest {
 
     @Test
     public void testCollectRequestsInvalid() {
-        try {
-            ApiModule.collectRequests(
-                    GetRequest.class,
-                    this.getClass()
-            );
-            Assertions.failBecauseExceptionWasNotThrown(RuntimeException.class);
-        } catch (RuntimeException ex) {
-            assertThat(ex).hasNoCause();
-            assertThat(ex).hasMessage("Class `class pl.wavesoftware.wfirma.domain.mapper.ApiModuleTest` is not instance of Request");
-        }
+        // then
+        thrown.expect(EidIllegalArgumentException.class);
+        thrown.expectMessage(containsString("Class `class pl.wavesoftware.wfirma.api.core.model.ApiModuleTest` " +
+                "is not instance of Request"));
+        thrown.expectMessage(containsString("20150820:004549"));
+
+        // when
+        ApiModule.collectRequests(
+                GetRequest.class,
+                this.getClass()
+        );
     }
 
     @Test
@@ -104,16 +111,19 @@ public class ApiModuleTest {
 
     @Test
     public void testCreateSampleApiInvalid() {
-        try {
-            Class<? extends ApiEntityElement> entityClass = SampleApiEntityElement.class;
-            ApiModule.createSampleApi(entityClass);
-            Assertions.failBecauseExceptionWasNotThrown(RuntimeException.class);
-        } catch (RuntimeException ex) {
-            assertThat(ex).hasCauseExactlyInstanceOf(IllegalAccessException.class);
-            assertThat(ex).hasMessage("[20150716:113015]: java.lang.IllegalAccessException: Class pl.wavesoftware.wfirma.domain" +
-                    ".mapper.ApiModule can not access a member of class pl.wavesoftware.wfirma.domain.mapper" +
-                    ".ApiModuleTest$SampleApiEntityElement with modifiers \"private\"");
-        }
+        // given
+        Class<? extends ApiEntityElement> entityClass = SampleApiEntityElement.class;
+
+        // then
+        thrown.expect(EidIllegalArgumentException.class);
+        thrown.expectCause(isA(IllegalAccessException.class));
+        thrown.expectMessage(containsString("20150716:113042"));
+        thrown.expectMessage(containsString("Class pl.wavesoftware.wfirma.api.core.model.ApiModule can not access a" +
+                " member of class pl.wavesoftware.wfirma.api.core.model.ApiModuleTest$SampleApiEntityElement with " +
+                "modifiers \"private\""));
+
+        // when
+        ApiModule.createSampleApi(entityClass);
     }
 
     @Test
@@ -130,16 +140,16 @@ public class ApiModuleTest {
 
     @Test
     public void testGetEntityClassInvalid() {
-        try {
-            ApiModule.getEntityClass(SampleApi.class);
-            Assertions.failBecauseExceptionWasNotThrown(RuntimeException.class);
-        } catch (RuntimeException ex) {
-            assertThat(ex).hasCauseExactlyInstanceOf(IllegalAccessException.class);
-            assertThat(ex).hasMessage(
-                    "[20150716:113030]: java.lang.IllegalAccessException: Class pl.wavesoftware.wfirma.domain.mapper."
-                    + "ApiModule can not access a member of class pl.wavesoftware.wfirma.domain.mapper.ApiModuleTest"
-                    + "$SampleApi with modifiers \"private\"");
-        }
+        // then
+        thrown.expect(EidIllegalArgumentException.class);
+        thrown.expectCause(isA(IllegalAccessException.class));
+        thrown.expectMessage(containsString("20150716:113042"));
+        thrown.expectMessage(containsString("Class pl.wavesoftware.wfirma.api.core.model.ApiModule can not access " +
+                "a member of class pl.wavesoftware.wfirma.api.core.model.ApiModuleTest$SampleApi with " +
+                "modifiers \"private\""));
+
+        // when
+        ApiModule.getEntityClass(SampleApi.class);
     }
 
     @Test
@@ -151,16 +161,19 @@ public class ApiModuleTest {
 
     @Test
     public void testGetModuleFor_ApiEntityElement_Invalid() {
-        try {
-            ApiEntityElement entity = new SampleApiEntityElement();
-            ApiModule.getModuleFor(entity);
-            Assertions.failBecauseExceptionWasNotThrown(RuntimeException.class);
-        } catch (RuntimeException ex) {
-            assertThat(ex).hasCauseExactlyInstanceOf(IllegalAccessException.class);
-            assertThat(ex).hasMessage("[20150716:113042]: java.lang.IllegalAccessException: Class pl.wavesoftware.wfirma.domain" +
-                    ".mapper.ApiModule can not access a member of class pl.wavesoftware.wfirma.domain.mapper" +
-                    ".ApiModuleTest$SampleApiEntityElement with modifiers \"private\"");
-        }
+        // given
+        ApiEntityElement entity = new SampleApiEntityElement();
+
+        // then
+        thrown.expect(EidIllegalArgumentException.class);
+        thrown.expectCause(isA(IllegalAccessException.class));
+        thrown.expectMessage(containsString("20150716:113042"));
+        thrown.expectMessage(containsString("Class pl.wavesoftware.wfirma.api.core.model.ApiModule can not " +
+                "access a member of class pl.wavesoftware.wfirma.api.core.model.ApiModuleTest$SampleApiEntityElement " +
+                "with modifiers \"private\""));
+
+        // when
+        ApiModule.getModuleFor(entity);
     }
 
     @Test
@@ -171,15 +184,16 @@ public class ApiModuleTest {
 
     @Test
     public void testGetModuleFor_Class_Invalid() {
-        try {
-            ApiModule.getModuleFor(SampleApiEntityElement.class);
-            Assertions.failBecauseExceptionWasNotThrown(RuntimeException.class);
-        } catch (RuntimeException ex) {
-            assertThat(ex).hasCauseExactlyInstanceOf(IllegalAccessException.class);
-            assertThat(ex).hasMessage("[20150716:113042]: java.lang.IllegalAccessException: Class pl.wavesoftware.wfirma.domain" +
-                    ".mapper.ApiModule can not access a member of class pl.wavesoftware.wfirma.domain.mapper" +
-                    ".ApiModuleTest$SampleApiEntityElement with modifiers \"private\"");
-        }
+        // then
+        thrown.expect(EidIllegalArgumentException.class);
+        thrown.expectCause(isA(IllegalAccessException.class));
+        thrown.expectMessage(containsString("20150716:113042"));
+        thrown.expectMessage(containsString("Class pl.wavesoftware.wfirma.api.core.model.ApiModule can not access" +
+                " a member of class pl.wavesoftware.wfirma.api.core.model.ApiModuleTest$SampleApiEntityElement " +
+                "with modifiers \"private\""));
+
+        // when
+        ApiModule.getModuleFor(SampleApiEntityElement.class);
     }
 
 }

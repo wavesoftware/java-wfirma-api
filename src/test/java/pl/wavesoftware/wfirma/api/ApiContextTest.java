@@ -15,12 +15,17 @@
  */
 package pl.wavesoftware.wfirma.api;
 
+import org.hamcrest.CoreMatchers;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
+import pl.wavesoftware.eid.exceptions.EidRuntimeException;
 import pl.wavesoftware.wfirma.api.core.model.GatewayFactory;
 import pl.wavesoftware.wfirma.api.oauth.model.OAuthCredentials;
 import pl.wavesoftware.wfirma.api.simple.model.SimpleCredentials;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.CoreMatchers.containsString;
 
 /**
  *
@@ -28,12 +33,22 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 public class ApiContextTest {
 
+    @Rule
+    public ExpectedException thrown = ExpectedException.none();
+
     @Test
     public void testCreate() {
-        ApiContext context = new ApiContext(new OAuthCredentials("key", "secret"));
-        assertThat(context).isNotNull();
-        context = new ApiContext(new SimpleCredentials("login", "password"));
-        assertThat(context).isNotNull();
+        // given
+        OAuthCredentials credentials = new OAuthCredentials("key", "secret");
+
+        // then
+        thrown.expect(EidRuntimeException.class);
+        thrown.expectMessage(containsString("20151007:235712"));
+        thrown.expectMessage(containsString("OAuth method is not yet implemented"));
+        thrown.expectCause(CoreMatchers.<Throwable>instanceOf(UnsupportedOperationException.class));
+
+        // when
+        new ApiContext(credentials);
     }
 
     @Test

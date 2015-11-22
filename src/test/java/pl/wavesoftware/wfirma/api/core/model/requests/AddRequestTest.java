@@ -42,11 +42,11 @@ public class AddRequestTest {
         AddRequest<Contractors> instance = AddRequest.create(contractors);
         String result = instance.getBody();
         assertThat(result).isEqualTo("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n"
-                + "<domain>\n"
+                + "<api>\n"
                 + "    <contractors>\n"
                 + "        <contractor/>\n"
                 + "    </contractors>\n"
-                + "</domain>\n");
+                + "</api>\n");
     }
 
     @Test

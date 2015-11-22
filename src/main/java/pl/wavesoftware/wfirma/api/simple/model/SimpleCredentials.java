@@ -38,24 +38,6 @@ public class SimpleCredentials implements Credentials {
         this.password = password;
     }
 
-    /**
-     * Gets a login to service
-     *
-     * @return a login to service
-     */
-    public String getLogin() {
-        return getConsumerKey();
-    }
-
-    /**
-     * Gets a password to service
-     *
-     * @return a password to service
-     */
-    public String getPassword() {
-        return getConsumerSecret();
-    }
-
     @Override
     public String getConsumerKey() {
         return login;

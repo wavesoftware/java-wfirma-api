@@ -45,13 +45,13 @@ public class EditRequestTest {
         EditRequest<Contractors> instance = EditRequest.create(contractors, 456L);
         String result = instance.getBody();
         assertThat(result).isEqualTo("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n"
-                + "<domain>\n"
+                + "<api>\n"
                 + "    <contractors>\n"
                 + "        <contractor>\n"
                 + "            <name>It will be 456L</name>\n"
                 + "        </contractor>\n"
                 + "    </contractors>\n"
-                + "</domain>\n");
+                + "</api>\n");
     }
 
     @Test

@@ -24,6 +24,8 @@ import java.util.Collection;
  */
 public interface Api<T extends ApiEntityElement> {
 
+    String ROOT_ELEMENT = "api";
+
     /**
      * Gets a entity class for API
      *

@@ -165,30 +165,31 @@ public class SimpleGatewayTest {
     @Test
     public void testGetTargetHost() {
         SimpleGateway instance = instance("login@example.org", "a-user-password", URI.create("http://localhost"));
-        HttpHost host = (HttpHost) Deencapsulation.invoke(instance, "getTargetHost");
+
+        HttpHost host = Deencapsulation.invoke(instance, "getTargetHost");
         assertThat(host.getPort()).isEqualTo(80);
 
         instance = instance("login@example.org", "a-user-password", URI.create("https://localhost"));
-        host = (HttpHost) Deencapsulation.invoke(instance, "getTargetHost");
+        host = Deencapsulation.invoke(instance, "getTargetHost");
         assertThat(host.getPort()).isEqualTo(443);
 
         instance = instance("login@example.org", "a-user-password", URI.create("ajp://localhost"));
-        thrown.expect(IllegalStateException.class);
-        thrown.expectMessage("[20150716:113056]: Unsupported URI scheme: ajp, supporting only: `http` and `https`");
+        thrown.expect(WFirmaException.class);
+        thrown.expectMessage("Unsupported URI scheme: ajp, supporting only: `http` and `https`");
         Deencapsulation.invoke(instance, "getTargetHost");
     }
 
     @Before
     public void before() {
         String expResultAuth = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
-                + "<domain>\n"
+                + "<api>\n"
                 + "    <status>\n"
                 + "        <code>AUTH</code>\n"
                 + "    </status>\n"
-                + "</domain>\n"
+                + "</api>\n"
                 + " \n";
         expResult = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
-            + "<domain>\n"
+            + "<api>\n"
             + "    <companies>\n"
             + "        <company>\n"
             + "            <id>70572</id>\n"
@@ -203,10 +204,10 @@ public class SimpleGatewayTest {
             + "    <status>\n"
             + "        <code>OK</code>\n"
             + "    </status>\n"
-            + "</domain>\n"
+            + "</api>\n"
             + "\n";
         expPostResult = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
-            + "<domain>\n"
+            + "<api>\n"
             + "    <contractors>\n"
             + "        <contractor>\n"
             + "            <id>11111111111</id>\n"
@@ -273,10 +274,10 @@ public class SimpleGatewayTest {
             + "    <status>\n"
             + "        <code>OK</code>\n"
             + "    </status>\n"
-            + "</domain>\n"
+            + "</api>\n"
             + " \n";
         String contractorsFindBody = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n"
-                + "<domain>\n"
+                + "<api>\n"
                 + "    <contractors>\n"
                 + "        <parameters>\n"
                 + "            <conditions>\n"
@@ -292,7 +293,7 @@ public class SimpleGatewayTest {
                 + "            <limit>20</limit>\n"
                 + "        </parameters>\n"
                 + "    </contractors>\n"
-                + "</domain>\n"
+                + "</api>\n"
                 + "";
 
         stubFor(get(urlEqualTo("/companies/get"))

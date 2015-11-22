@@ -16,6 +16,7 @@
 package pl.wavesoftware.wfirma.api.core.model;
 
 import com.google.common.base.CaseFormat;
+import pl.wavesoftware.eid.exceptions.Eid;
 import pl.wavesoftware.eid.exceptions.EidIllegalArgumentException;
 
 import javax.annotation.Nonnull;
@@ -48,7 +49,8 @@ public final class ApiModule {
                 Class<? extends Request> casted = (Class<? extends Request>) class1;
                 out.add(casted);
             } else {
-                throw new EidIllegalArgumentException("20150820:004549", "Class `" + class1 + "` is not instance of Request");
+                throw new EidIllegalArgumentException(new Eid("20150820:004549"),
+                        "Class `%s` is not instance of Request", class1);
             }
         }
         return out;

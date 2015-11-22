@@ -16,16 +16,21 @@
 
 package pl.wavesoftware.wfirma.api.core.mapper;
 
-import java.util.Arrays;
-import java.util.Collection;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.fail;
+import org.junit.AfterClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
+import pl.wavesoftware.eid.exceptions.Eid;
+import pl.wavesoftware.eid.exceptions.EidIllegalStateException;
 import pl.wavesoftware.wfirma.api.core.model.WFirmaException;
 import pl.wavesoftware.wfirma.api.core.model.WFirmaSecurityException;
+
+import java.util.Arrays;
+import java.util.Collection;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.fail;
 
 /**
  *
@@ -35,6 +40,7 @@ import pl.wavesoftware.wfirma.api.core.model.WFirmaSecurityException;
 public class ResponseCheckerTest {
 
     private static final String INVALID_INPUT_PHP = "<html><h1>PHP Error: Internal Server Error</h1></html>";
+    private static Eid.UniqIdGenerator generator;
 
     private final Throwable thowable;
 
@@ -51,11 +57,11 @@ public class ResponseCheckerTest {
 
     private static String in(String code, String couse) {
         String template = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
-                + "<domain>\n"
+                + "<api>\n"
                 + "    <status>\n"
                 + "        <code>%s</code>\n"
                 + "    </status>\n%s"
-                + "</domain>";
+                + "</api>";
         String couseIn = couse == null ? ""
                 : String.format(
                         "    <errors>\n"
@@ -69,6 +75,12 @@ public class ResponseCheckerTest {
 
     @Parameters(name = "{0}")
     public static Collection<Object[]> data() {
+        generator = Eid.setUniqIdGenerator(new Eid.UniqIdGenerator() {
+            @Override
+            public String generateUniqId() {
+                return "static";
+            }
+        });
         Object[][] data = new Object[][]{
             {"OK", in("OK"), null},
             {"AUTH", in("AUTH"), new WFirmaSecurityException("Auth failed for user: `test-user`")},
@@ -81,12 +93,19 @@ public class ResponseCheckerTest {
             {"OUT OF SERVICE", in("OUT OF SERVICE"), new WFirmaException("OUT OF SERVICE")},
             {"DENIED SCOPE REQUESTED", in("DENIED SCOPE REQUESTED"), new WFirmaException("DENIED SCOPE REQUESTED")},
             {"UNKNOWN ERROR", in("UNKNOWN ERROR"), new WFirmaException("Unknown status code: UNKNOWN ERROR")},
-            {"Invalid input PHP", INVALID_INPUT_PHP, new IllegalStateException("Invalid WFirma output: "
-                + "<html><h1>PHP Error: Internal Server Error</h1></html>")},
-            {"Invalid input - xml error", "<domain>\n←", new IllegalStateException("Invalid WFirma output: "
-                + "XML document structures must start and end within the same entity.")}
+            {"Invalid input PHP", INVALID_INPUT_PHP, new EidIllegalStateException(new Eid("20150925:224454"),
+                    "Unexpected WForma output: <html><h1>PHP Error: Internal Server Error</h1></html>")},
+            {"Invalid input - xml error", "<api>\n←", new EidIllegalStateException(new Eid("20150925:225028"),
+                    "Invalid WFirma output: XML document structures must start and end within the same entity.")}
         };
         return Arrays.asList(data);
+    }
+
+    @AfterClass
+    public static void after() {
+        if (generator != null) {
+            Eid.setUniqIdGenerator(generator);
+        }
     }
 
     /**
@@ -103,7 +122,7 @@ public class ResponseCheckerTest {
             try {
                 instance.checkedForStatus(login, input);
                 fail("Expected exception, but didn't thrown! => " + thowable);
-            } catch (WFirmaException | IllegalStateException | UnsupportedOperationException ex) {
+            } catch (WFirmaException | EidIllegalStateException ex) {
                 assertThat(ex.getClass()).isEqualTo(thowable.getClass());
                 assertThat(ex.getLocalizedMessage()).isEqualTo(thowable.getLocalizedMessage());
             }

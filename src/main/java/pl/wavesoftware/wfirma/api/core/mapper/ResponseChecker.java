@@ -15,6 +15,7 @@
  */
 package pl.wavesoftware.wfirma.api.core.mapper;
 
+import lombok.extern.slf4j.Slf4j;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
@@ -29,12 +30,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static java.util.Locale.US;
+import static pl.wavesoftware.eid.utils.EidPreconditions.checkArgument;
 import static pl.wavesoftware.eid.utils.EidPreconditions.checkNotNull;
 import static pl.wavesoftware.eid.utils.EidPreconditions.checkState;
 
 /**
  * @author Krzysztof Suszyński <krzysztof.suszynski@gmail.com>
  */
+@Slf4j
 public class ResponseChecker {
 
     /**
@@ -50,19 +53,22 @@ public class ResponseChecker {
             return execute(login, content);
         } catch (XPathExpressionException ex) {
             String message = "Invalid WFirma output: " + ex.getCause().getLocalizedMessage();
-            throw new EidIllegalStateException("20150925:225028", message, ex);
+            String id = "20150925:225028";
+            log.trace(id, ex);
+            throw new EidIllegalStateException(new Eid(id), message);
         }
     }
 
     private String execute(String login, String content) throws XPathExpressionException, WFirmaException {
+        checkArgument(!content.isEmpty(), "20151010:184513");
         XPathFactory factory = XPathFactory.newInstance();
         XPath xpath = factory.newXPath();
         XPathExpression expr = xpath.compile("/api/status/code");
         InputSource source = new InputSource();
         source.setCharacterStream(new StringReader(content));
         NodeList nodes = (NodeList) expr.evaluate(source, XPathConstants.NODESET);
-        checkState(nodes.getLength() != 1, new Eid("20150925:224454", errorMessage(content)));
-        Node node = checkNotNull(nodes.item(0), new Eid("20151005:221513", errorMessage(content)));
+        checkState(nodes.getLength() == 1, new Eid("20150925:224454"), errorMessage(content));
+        Node node = checkNotNull(nodes.item(0), new Eid("20151005:221513"), errorMessage(content));
         String code = node.getTextContent().toUpperCase(US);
         return switchAtCode(xpath, content, code, login);
     }

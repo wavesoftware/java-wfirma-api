@@ -25,6 +25,8 @@ import org.w3c.dom.ls.LSOutput;
 import org.w3c.dom.ls.LSSerializer;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
+import pl.wavesoftware.eid.exceptions.Eid;
+import pl.wavesoftware.eid.exceptions.EidIllegalStateException;
 import pl.wavesoftware.wfirma.api.core.mapper.xml.UsesXmlCustomFormatter.Param;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -37,6 +39,9 @@ import java.io.Writer;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+
+import static pl.wavesoftware.eid.utils.EidPreconditions.checkState;
+
 
 /**
  *
@@ -81,7 +86,7 @@ public class XsiTypeToObjectPropertyFormatter implements XmlCustomFormatter {
             writer.write(document, lsOutput);
             return stringWriter.toString().replace("\"?>", "\" standalone=\"yes\"?>");
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | ClassCastException ex) {
-            throw new IllegalStateException("20150716:113135:" + ex.getLocalizedMessage(), ex);
+            throw new EidIllegalStateException("20150716:113135", ex);
         }
     }
 
@@ -108,7 +113,7 @@ public class XsiTypeToObjectPropertyFormatter implements XmlCustomFormatter {
             doc.setXmlStandalone(true);
             return doc;
         } catch (SAXException | IOException | ParserConfigurationException ex) {
-            throw new IllegalStateException("20150716:113147:" + ex.getLocalizedMessage(), ex);
+            throw new EidIllegalStateException("20150716:113147", ex);
         }
     }
 
@@ -138,11 +143,9 @@ public class XsiTypeToObjectPropertyFormatter implements XmlCustomFormatter {
     }
 
     private String getConfig(String key) {
-        if (configuration.containsKey(key)) {
-            return configuration.get(key);
-        } else {
-            throw new IllegalStateException("Value for `" + key + "` param is required, but not set!");
-        }
+        checkState(configuration.containsKey(key), new Eid("20151122:172000"),
+                "Value for `%s` param is required, but not set!", key);
+        return configuration.get(key);
     }
 
     private void formatElement(Document document, Element el) {

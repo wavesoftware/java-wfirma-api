@@ -80,11 +80,11 @@ public class SimpleGatewayIT {
         Assume.assumeFalse(passCond);
 
         expResultAuth = "<\\?xml version=\"1\\.0\" encoding=\"UTF-8\"\\?>\\s*"
-            + "<domain>\\s*"
+            + "<api>\\s*"
             + "<status>\\s*"
             + "<code>AUTH</code>\\s*"
             + "</status>\\s*"
-            + "</domain>\\s*";
+            + "</api>\\s*";
     }
 
     private SimpleGateway instance(String login, String password) {

@@ -15,11 +15,13 @@
  */
 package pl.wavesoftware.wfirma.api.core.model.invoices;
 
-import java.util.List;
 import mockit.Deencapsulation;
-import static org.assertj.core.api.Assertions.assertThat;
 import org.junit.Test;
 import pl.wavesoftware.wfirma.api.core.model.logic.Parameter;
+
+import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  *
@@ -70,7 +72,7 @@ public class DownloadRequestTest {
     public void testGetBody() {
         DownloadRequest instance = DownloadRequest.create(67L);
         String expResult = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n"
-                + "<domain>\n"
+                + "<api>\n"
                 + "    <invoices>\n"
                 + "        <parameters>\n"
                 + "            <parameter>\n"
@@ -93,7 +95,7 @@ public class DownloadRequestTest {
                 + "            <limit>20</limit>\n"
                 + "        </parameters>\n"
                 + "    </invoices>\n"
-                + "</domain>\n";
+                + "</api>\n";
         String result = instance.getBody();
         assertThat(result).isEqualTo(expResult);
     }

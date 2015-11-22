@@ -58,7 +58,7 @@ public class ApiExecutorTest {
     @Before
     public void before() {
         String expResultGateway = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
-                + "<domain>\n"
+                + "<api>\n"
                 + "    <invoices>\n"
                 + "        <invoice>\n"
                 + "            <id>6</id>\n"
@@ -70,7 +70,7 @@ public class ApiExecutorTest {
                 + "    <status>\n"
                 + "        <code>OK</code>\n"
                 + "    </status>\n"
-                + "</domain>\n"
+                + "</api>\n"
                 + "\n";
         stubFor(get(urlEqualTo("/invoices/get/6"))
                 .withHeader("Accept", equalTo("text/xml"))

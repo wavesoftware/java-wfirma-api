@@ -15,21 +15,23 @@
  */
 package pl.wavesoftware.wfirma.api.core.model.contractors;
 
-import java.util.Collection;
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
-import javax.xml.bind.annotation.XmlType;
 import pl.wavesoftware.wfirma.api.core.model.Api;
-import static pl.wavesoftware.wfirma.api.core.model.ApiModule.collectRequests;
 import pl.wavesoftware.wfirma.api.core.model.Request;
 import pl.wavesoftware.wfirma.api.core.model.requests.AddRequest;
 import pl.wavesoftware.wfirma.api.core.model.requests.DeleteRequest;
 import pl.wavesoftware.wfirma.api.core.model.requests.EditRequest;
 import pl.wavesoftware.wfirma.api.core.model.requests.FindRequest;
 import pl.wavesoftware.wfirma.api.core.model.requests.GetRequest;
+
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
+import javax.xml.bind.annotation.XmlType;
+import java.util.Collection;
+
+import static pl.wavesoftware.wfirma.api.core.model.ApiModule.collectRequests;
 
 /**
  * <p>
@@ -54,7 +56,7 @@ import pl.wavesoftware.wfirma.api.core.model.requests.GetRequest;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "contractorsApiType")
-@XmlRootElement(name = "domain")
+@XmlRootElement(name = Api.ROOT_ELEMENT)
 public class ContractorsApi implements Api<Contractors> {
 
     @XmlElement(nillable = false)

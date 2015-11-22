@@ -24,6 +24,7 @@ import pl.wavesoftware.wfirma.api.core.model.GatewayFactory;
 import pl.wavesoftware.wfirma.api.simple.model.SimpleCredentials;
 
 import java.net.URI;
+import java.net.URISyntaxException;
 
 /**
  * @author Krzysztof Suszyński <krzysztof.suszynski@wavesoftware.pl>
@@ -47,9 +48,9 @@ public class SimpleGatewayFactory implements GatewayFactory {
     }
 
     private URI getDefaultAddress() {
-        return EidPreconditions.tryToExecute(new EidPreconditions.RiskyCode<URI>() {
+        return EidPreconditions.tryToExecute(new EidPreconditions.UnsafeSupplier<URI>() {
             @Override
-            public URI execute() throws Exception {
+            public URI get() throws URISyntaxException {
                 return new URI(Gateway.GATEWAY_ADDRESS);
             }
         }, "20150927:210839");

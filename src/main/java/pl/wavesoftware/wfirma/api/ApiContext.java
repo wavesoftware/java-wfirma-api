@@ -16,6 +16,7 @@
 
 package pl.wavesoftware.wfirma.api;
 
+import pl.wavesoftware.eid.exceptions.EidRuntimeException;
 import pl.wavesoftware.wfirma.api.core.model.GatewayFactory;
 import pl.wavesoftware.wfirma.api.oauth.model.OAuthCredentials;
 import pl.wavesoftware.wfirma.api.simple.model.SimpleCredentials;
@@ -35,7 +36,8 @@ public class ApiContext {
      * @param credentials a OAuth credentials
      */
     public ApiContext(OAuthCredentials credentials) {
-        throw new UnsupportedOperationException("OAuth method is not yet implemented");
+        throw new EidRuntimeException("20151007:235712", new UnsupportedOperationException(
+                "OAuth method is not yet implemented"));
     }
 
     /**

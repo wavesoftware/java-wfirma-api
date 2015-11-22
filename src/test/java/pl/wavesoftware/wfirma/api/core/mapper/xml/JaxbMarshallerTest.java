@@ -16,7 +16,6 @@
 package pl.wavesoftware.wfirma.api.core.mapper.xml;
 
 import com.openpojo.random.RandomFactory;
-import org.assertj.core.api.Assertions;
 import org.custommonkey.xmlunit.XMLUnit;
 import org.hamcrest.CoreMatchers;
 import org.joda.money.CurrencyUnit;
@@ -152,7 +151,7 @@ public class JaxbMarshallerTest {
         companies.getCompany().add(company);
         String output = instance.marshal(api);
         String expOutputFull = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n"
-            + "<domain>\n"
+            + "<api>\n"
             + "    <companies>\n"
             + "        <company>\n"
             + "            <name>Coca Cola</name>\n"
@@ -161,7 +160,7 @@ public class JaxbMarshallerTest {
             + "            <is_registered>1</is_registered>\n"
             + "        </company>\n"
             + "    </companies>\n"
-            + "</domain>\n";
+            + "</api>\n";
         assertThat(output).isEqualTo(expOutputFull);
         CompaniesApi resultApi = instance.unmarshal(expOutputFull);
         assertReflectionEquals(api, resultApi);
@@ -171,16 +170,16 @@ public class JaxbMarshallerTest {
         companies.getCompany().add(company);
         output = instance.marshal(api);
         assertThat(output).isEqualTo("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n"
-            + "<domain>\n"
+            + "<api>\n"
             + "    <companies>\n"
             + "        <company>\n"
             + "            <is_registered>1</is_registered>\n"
             + "        </company>\n"
             + "    </companies>\n"
-            + "</domain>\n");
+            + "</api>\n");
     }
 
-    @Test(expected = IllegalStateException.class)
+    @Test(expected = EidIllegalStateException.class)
     public void testOnInvalidInputString() {
         JaxbMarshaller<CompaniesApi> instance = JaxbMarshaller.create(CompaniesApi.class);
         String expOutputFull = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n"
@@ -221,7 +220,7 @@ public class JaxbMarshallerTest {
         invoices.getInvoice().add(invoice);
         String result = instance.marshal(api);
         String expected = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n"
-            + "<domain>\n"
+            + "<api>\n"
             + "    <invoices>\n"
             + "        <invoice>\n"
             + "            <id>13</id>\n"
@@ -245,7 +244,7 @@ public class JaxbMarshallerTest {
             + "            <type>normal</type>\n"
             + "        </invoice>\n"
             + "    </invoices>\n"
-            + "</domain>\n";
+            + "</api>\n";
         assertThat(result).isEqualTo(expected);
         InvoicesApi resultApi = instance.unmarshal(expected);
         assertThat(resultApi).isNotNull();
@@ -260,7 +259,7 @@ public class JaxbMarshallerTest {
     @Test
     public void testUnMarshalInheritance() {
         String input = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n"
-            + "<domain>\n"
+            + "<api>\n"
             + "    <invoices>\n"
             + "        <invoice>\n"
             + "            <id>13</id>\n"
@@ -268,7 +267,7 @@ public class JaxbMarshallerTest {
             + "            <type>proforma</type>\n"
             + "        </invoice>\n"
             + "    </invoices>\n"
-            + "</domain>\n";
+            + "</api>\n";
         JaxbMarshaller<InvoicesApi> instance = JaxbMarshaller.create(InvoicesApi.class);
         InvoicesApi resultApi = instance.unmarshal(input);
         assertThat(resultApi).isNotNull();
@@ -323,29 +322,33 @@ public class JaxbMarshallerTest {
 
     @Test
     public void testUnmarshalOnInvalidEntity() {
-        try {
-            JaxbMarshaller<JaxbInvalidEntity> instance = JaxbMarshaller.create(JaxbInvalidEntity.class);
-            assertThat(instance).isNotNull();
-            String xml = "<jaxbInvalidEntity>\n"
-                + "    <price>USD 920.78</price>\n"
-                + "    <name>sample</name>\n"
-                + "</jaxbInvalidEntity>";
-            JaxbInvalidEntity entity = instance.unmarshal(xml);
-            assertThat(entity).isNotNull();
-            assertThat(entity.getName()).isEqualTo("sample");
-            assertThat(entity.getPrice()).isNull();
-            xml = "<jaxbInvalidEntity>\n"
-                + "    <price>USD 920.78\n"
-                + "    <name>sample</name>\n"
-                + "</jaxbInvalidEntity>";
-            instance.unmarshal(xml);
-            Assertions.failBecauseExceptionWasNotThrown(RuntimeException.class);
-        } catch (IllegalStateException ex) {
-            assertThat(ex).hasCauseInstanceOf(JAXBException.class);
-            assertThat(ex.getLocalizedMessage()).contains("javax.xml.bind.UnmarshalException",
-                "org.xml.sax.SAXParseException; lineNumber: 4; columnNumber: 3; The element type"
-                + " \"price\" must be terminated by the matching end-tag \"</price>\"");
-        }
+        // given
+        JaxbMarshaller<JaxbInvalidEntity> instance = JaxbMarshaller.create(JaxbInvalidEntity.class);
+        assertThat(instance).isNotNull();
+        String xml = "<jaxbInvalidEntity>\n"
+            + "    <price>USD 920.78</price>\n"
+            + "    <name>sample</name>\n"
+            + "</jaxbInvalidEntity>";
+        JaxbInvalidEntity entity = instance.unmarshal(xml);
+        assertThat(entity).isNotNull();
+        assertThat(entity.getName()).isEqualTo("sample");
+        assertThat(entity.getPrice()).isNull();
+        xml = "<jaxbInvalidEntity>\n"
+            + "    <price>USD 920.78\n"
+            + "    <name>sample</name>\n"
+            + "</jaxbInvalidEntity>";
+
+
+        // then
+        thrown.expect(EidIllegalStateException.class);
+        thrown.expectCause(CoreMatchers.isA(JAXBException.class));
+        thrown.expectMessage(containsString("20150716:115101"));
+        thrown.expectMessage(containsString("javax.xml.bind.UnmarshalException"));
+        thrown.expectMessage(containsString("org.xml.sax.SAXParseException; lineNumber: 4; columnNumber: 3; The element type"
+                + " \"price\" must be terminated by the matching end-tag \"</price>\""));
+
+        // when
+        instance.unmarshal(xml);
     }
 
     @Test

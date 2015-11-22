@@ -16,13 +16,13 @@
 package pl.wavesoftware.wfirma.api.core.mapper.xml;
 
 import mockit.Deencapsulation;
-import org.assertj.core.api.Assertions;
 import org.assertj.core.data.MapEntry;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.mockito.internal.stubbing.answers.ThrowsExceptionClass;
 import org.w3c.dom.Document;
+import pl.wavesoftware.eid.exceptions.EidIllegalStateException;
 import pl.wavesoftware.wfirma.api.core.mapper.xml.UsesXmlCustomFormatter.Param;
 
 import java.io.IOException;
@@ -32,6 +32,7 @@ import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.CoreMatchers.any;
+import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.isA;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -48,7 +49,7 @@ public class XsiTypeToObjectPropertyFormatterTest {
     private static final String TYPE = "type";
 
     private static final String UN_FORMATTED = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n"
-        + "<domain>\n"
+        + "<api>\n"
         + "    <invoices>\n"
         + "        <invoice xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:type=\"normal\">\n"
         + "            <id>13</id>\n"
@@ -59,10 +60,10 @@ public class XsiTypeToObjectPropertyFormatterTest {
         + "            <paymentmethod>cash</paymentmethod>\n"
         + "        </invoice>\n"
         + "    </invoices>\n"
-        + "</domain>\n";
+        + "</api>\n";
 
     private static final String QUASI_FORMATTED = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n"
-        + "<domain>\n"
+        + "<api>\n"
         + "    <invoices>\n"
         + "        <invoice xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:type=\"normal\">\n"
         + "            <id>13</id>\n"
@@ -74,10 +75,10 @@ public class XsiTypeToObjectPropertyFormatterTest {
         + "            <paymentmethod>cash</paymentmethod>\n"
         + "        </invoice>\n"
         + "    </invoices>\n"
-        + "</domain>\n";
+        + "</api>\n";
 
     private static final String FORMATTED = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n"
-        + "<domain>\n"
+        + "<api>\n"
         + "    <invoices>\n"
         + "        <invoice>\n"
         + "            <id>13</id>\n"
@@ -90,10 +91,10 @@ public class XsiTypeToObjectPropertyFormatterTest {
         + "            <type>proforma</type>\n"
         + "        </invoice>\n"
         + "    </invoices>\n"
-        + "</domain>\n";
+        + "</api>\n";
 
     private static final String FORMATTED_CDATA = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n"
-        + "<domain>\n"
+        + "<api>\n"
         + "    <invoices>\n"
         + "        <invoice>\n"
         + "            <id>13</id>\n"
@@ -106,7 +107,7 @@ public class XsiTypeToObjectPropertyFormatterTest {
         + "            <type>proforma</type>\n"
         + "        </invoice>\n"
         + "    </invoices>\n"
-        + "</domain>\n";
+        + "</api>\n";
 
     @Test
     public void testFormat() {
@@ -121,14 +122,14 @@ public class XsiTypeToObjectPropertyFormatterTest {
 
     @Test
     public void testFormatUnconfigured() {
-        try {
-            XsiTypeToObjectPropertyFormatter instance = new XsiTypeToObjectPropertyFormatter();
-            instance.format(UN_FORMATTED);
-            Assertions.failBecauseExceptionWasNotThrown(IllegalStateException.class);
-        } catch (IllegalStateException ex) {
-            assertThat(ex).hasNoCause();
-            assertThat(ex).hasMessage("Value for `field` param is required, but not set!");
-        }
+        // given
+        XsiTypeToObjectPropertyFormatter instance = new XsiTypeToObjectPropertyFormatter();
+        // then
+        thrown.expect(EidIllegalStateException.class);
+        thrown.expectMessage(containsString("20151122:172000"));
+        thrown.expectMessage(containsString("Value for `field` param is required, but not set!"));
+        // when
+        instance.format(UN_FORMATTED);
     }
 
     @Test
@@ -213,15 +214,20 @@ public class XsiTypeToObjectPropertyFormatterTest {
 
     @Test
     public void testGetDoc() throws IOException {
-        thrown.expect(IllegalArgumentException.class);
-        thrown.expectMessage("[20150716:113147]: java.io.IOException: Stream closed");
-        thrown.expectCause(any(IOException.class));
-
+        // when
         XsiTypeToObjectPropertyFormatter instance = new XsiTypeToObjectPropertyFormatter();
         String sample = "sample";
         StringReader reader = new StringReader(sample);
         assertThat(reader.read()).inHexadecimal().isEqualTo(0x73);
         reader.close();
+
+        // then
+        thrown.expect(EidIllegalStateException.class);
+        thrown.expectMessage(containsString("20150716:113147"));
+        thrown.expectMessage(containsString("Stream closed"));
+        thrown.expectCause(any(IOException.class));
+
+        // when
         instance.getDoc(reader);
     }
 
@@ -232,8 +238,8 @@ public class XsiTypeToObjectPropertyFormatterTest {
         Document doc = mock(Document.class);
         when(doc.getNodeType()).thenAnswer(new ThrowsExceptionClass(InstantiationException.class));
         // then
-        thrown.expect(IllegalArgumentException.class);
-        thrown.expectMessage("[20150716:113135]: java.lang.InstantiationException");
+        thrown.expect(EidIllegalStateException.class);
+        thrown.expectMessage(containsString("20150716:113135"));
         thrown.expectCause(isA(InstantiationException.class));
         // when
         instance.dumpXml(doc);

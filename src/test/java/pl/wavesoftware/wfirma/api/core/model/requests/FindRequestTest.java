@@ -85,7 +85,7 @@ public class FindRequestTest {
         FindRequest<Contractors> instance = FindRequest.create(Contractors.class, parameters);
         String result = instance.getBody();
         assertThat(result).isEqualTo("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n"
-                + "<domain>\n"
+                + "<api>\n"
                 + "    <contractors>\n"
                 + "        <parameters>\n"
                 + "            <conditions>\n"
@@ -101,7 +101,7 @@ public class FindRequestTest {
                 + "            <limit>20</limit>\n"
                 + "        </parameters>\n"
                 + "    </contractors>\n"
-                + "</domain>\n");
+                + "</api>\n");
     }
 
     public void testExceptionOnUnimplementd() {
