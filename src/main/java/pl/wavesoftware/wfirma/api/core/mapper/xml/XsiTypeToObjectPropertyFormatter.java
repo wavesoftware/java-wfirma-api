@@ -151,16 +151,7 @@ public class XsiTypeToObjectPropertyFormatter implements XmlCustomFormatter {
     private void formatElement(Document document, Element el) {
         String attrType = XSI_SCHEMA + ":" + XSI_TYPE;
         if (el.hasAttribute(attrType)) {
-            Element type = null;
-            for (Node node : iterate(el.getChildNodes())) {
-                if (node.getNodeType() == Node.ELEMENT_NODE) {
-                    Element child = Element.class.cast(node);
-                    if (child.getTagName().equals(getConfig(FIELD))) {
-                        type = child;
-                        break;
-                    }
-                }
-            }
+            Element type = formatElementChildNodes(el);
             if (type == null) {
                 type = document.createElement(getConfig(FIELD));
                 el.appendChild(type);
@@ -169,6 +160,20 @@ public class XsiTypeToObjectPropertyFormatter implements XmlCustomFormatter {
             el.removeAttribute(attrType);
             el.removeAttribute("xmlns:xsi");
         }
+    }
+
+    private Element formatElementChildNodes(Element el) {
+        Element type = null;
+        for (Node node : iterate(el.getChildNodes())) {
+            if (node.getNodeType() == Node.ELEMENT_NODE) {
+                Element child = Element.class.cast(node);
+                if (child.getTagName().equals(getConfig(FIELD))) {
+                    type = child;
+                    break;
+                }
+            }
+        }
+        return type;
     }
 
     private boolean isTextNode(Node node) {

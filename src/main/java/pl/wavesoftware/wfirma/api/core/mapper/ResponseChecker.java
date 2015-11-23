@@ -45,7 +45,7 @@ import static pl.wavesoftware.eid.utils.EidPreconditions.checkState;
 @Slf4j
 public class ResponseChecker {
 
-    List<String> errorCodes = Lists.newArrayList(
+    private List<String> errorCodes = Lists.newArrayList(
         "ACTION NOT FOUND",
         "FATAL",
         "INPUT ERROR",

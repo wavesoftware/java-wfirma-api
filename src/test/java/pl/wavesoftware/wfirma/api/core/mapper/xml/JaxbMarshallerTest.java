@@ -137,6 +137,7 @@ public class JaxbMarshallerTest {
         Parameters input = sampleParameters();
         String xml = instance.marshal(input);
         Parameters output = instance.unmarshal(xml);
+        assertThat(output).isNotNull();
         assertReflectionEquals(input, output);
     }
 
