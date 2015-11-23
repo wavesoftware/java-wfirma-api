@@ -24,7 +24,11 @@ import pl.wavesoftware.eid.exceptions.EidIllegalStateException;
 import pl.wavesoftware.wfirma.api.core.model.WFirmaException;
 import pl.wavesoftware.wfirma.api.core.model.WFirmaSecurityException;
 
-import javax.xml.xpath.*;
+import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathConstants;
+import javax.xml.xpath.XPathExpression;
+import javax.xml.xpath.XPathExpressionException;
+import javax.xml.xpath.XPathFactory;
 import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
@@ -84,22 +88,30 @@ public class ResponseChecker {
                 return content;
             case "AUTH":
                 throw new WFirmaSecurityException("Auth failed for user: `%s`", login);
+            default:
+                throw switchOnErrors(xpath, content, code);
+        }
+    }
+
+    private WFirmaException switchOnErrors(XPath xpath, String content, String code)
+            throws XPathExpressionException {
+        switch (code) {
             case "ACTION NOT FOUND":
             case "FATAL":
             case "INPUT ERROR":
             case "OUT OF SERVICE":
             case "DENIED SCOPE REQUESTED":
             case "NOT FOUND":
-                throw new WFirmaException(code);
+                return new WFirmaException(code);
             case "ERROR":
-                handleError(xpath, content, code);
+                return handleError(xpath, content, code);
             default:
-                throw new WFirmaException("Unknown status code: %s", code);
+                return new WFirmaException("Unknown status code: %s", code);
         }
     }
 
-    private void handleError(XPath xpath, String content, String code) throws
-            XPathExpressionException, WFirmaException {
+    private static WFirmaException handleError(XPath xpath, String content, String code) throws
+            XPathExpressionException {
         XPathExpression errors = xpath.compile("//error/message");
         InputSource source = new InputSource();
         source.setCharacterStream(new StringReader(content));
@@ -109,9 +121,9 @@ public class ResponseChecker {
             errorsStr.add(errorNodes.item(i).getTextContent());
         }
         if (errorsStr.isEmpty()) {
-            throw new WFirmaException("%s: %s", code, "no error tags?!");
+            return new WFirmaException("%s: %s", code, "no error tags?!");
         }
-        throw new WFirmaException("%s: %s", code, errorsStr);
+        return new WFirmaException("%s: %s", code, errorsStr);
     }
 
 }
