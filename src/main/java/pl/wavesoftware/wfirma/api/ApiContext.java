@@ -16,7 +16,11 @@
 
 package pl.wavesoftware.wfirma.api;
 
-import pl.wavesoftware.wfirma.api.model.Credentials;
+import pl.wavesoftware.eid.exceptions.EidRuntimeException;
+import pl.wavesoftware.wfirma.api.core.model.GatewayFactory;
+import pl.wavesoftware.wfirma.api.oauth.model.OAuthCredentials;
+import pl.wavesoftware.wfirma.api.simple.model.SimpleCredentials;
+import pl.wavesoftware.wfirma.api.simple.mapper.SimpleGatewayFactory;
 
 /**
  *
@@ -24,19 +28,16 @@ import pl.wavesoftware.wfirma.api.model.Credentials;
  */
 public class ApiContext {
 
-    private final Credentials credentials;
-
-    Credentials getCredentials() {
-        return credentials;
-    }
+    private final GatewayFactory gatewayFactory;
 
     /**
-     * Constructor with OAuth
+     * Constructor with OAuth methon
      *
      * @param credentials a OAuth credentials
      */
     public ApiContext(OAuthCredentials credentials) {
-        this.credentials = credentials;
+        throw new EidRuntimeException("20151007:235712", new UnsupportedOperationException(
+                "OAuth method is not yet implemented"));
     }
 
     /**
@@ -45,7 +46,15 @@ public class ApiContext {
      * @param credentials a simple credentials
      */
     public ApiContext(SimpleCredentials credentials) {
-        this.credentials = credentials;
+        this.gatewayFactory = new SimpleGatewayFactory(credentials);
+    }
+
+    /**
+     * Gets a gateway factory
+     * @return a factory for given context
+     */
+    public GatewayFactory getGatewayFactory() {
+        return gatewayFactory;
     }
 
 }

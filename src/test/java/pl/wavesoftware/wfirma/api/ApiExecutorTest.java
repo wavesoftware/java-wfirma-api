@@ -15,22 +15,36 @@
  */
 package pl.wavesoftware.wfirma.api;
 
-import static com.github.tomakehurst.wiremock.client.WireMock.*;
+import com.github.tomakehurst.wiremock.client.MappingBuilder;
+import com.github.tomakehurst.wiremock.client.ResponseDefinitionBuilder;
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
-import java.io.IOException;
-import java.net.ServerSocket;
-import static org.assertj.core.api.Assertions.assertThat;
 import org.joda.money.CurrencyUnit;
 import org.joda.money.Money;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
-import pl.wavesoftware.wfirma.api.model.Credentials;
-import pl.wavesoftware.wfirma.api.model.Response;
-import pl.wavesoftware.wfirma.api.model.invoices.AbstractInvoice;
-import pl.wavesoftware.wfirma.api.model.invoices.Invoices;
-import pl.wavesoftware.wfirma.api.model.invoices.NormalInvoice;
-import pl.wavesoftware.wfirma.api.model.requests.GetRequest;
+import pl.wavesoftware.eid.exceptions.EidIllegalStateException;
+import pl.wavesoftware.wfirma.api.core.model.Gateway;
+import pl.wavesoftware.wfirma.api.core.model.GatewayFactory;
+import pl.wavesoftware.wfirma.api.core.model.PostRequest;
+import pl.wavesoftware.wfirma.api.core.model.Response;
+import pl.wavesoftware.wfirma.api.core.model.exceptions.WFirmaException;
+import pl.wavesoftware.wfirma.api.core.model.contractors.Contractors;
+import pl.wavesoftware.wfirma.api.core.model.invoices.AbstractInvoice;
+import pl.wavesoftware.wfirma.api.core.model.invoices.Invoices;
+import pl.wavesoftware.wfirma.api.core.model.invoices.NormalInvoice;
+import pl.wavesoftware.wfirma.api.core.model.requests.FindRequest;
+import pl.wavesoftware.wfirma.api.core.model.requests.GetRequest;
+import pl.wavesoftware.wfirma.api.simple.model.SimpleCredentials;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.ServerSocket;
+
+import static com.github.tomakehurst.wiremock.client.WireMock.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 /**
  *
@@ -55,37 +69,30 @@ public class ApiExecutorTest {
 
     @Before
     public void before() {
-        String expResultGateway = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
-                + "<api>\n"
-                + "    <invoices>\n"
-                + "        <invoice>\n"
-                + "            <id>6</id>\n"
-                + "            <type>normal</type>\n"
-                + "            <netto>765.45</netto>\n"
-                + "            <paymentstate>unpaid</paymentstate>\n"
-                + "        </invoice>\n"
-                + "    </invoices>\n"
-                + "    <status>\n"
-                + "        <code>OK</code>\n"
-                + "    </status>\n"
-                + "</api>\n"
-                + "\n";
-        stubFor(get(urlEqualTo("/invoices/get/6"))
+        String expResultGateway = resource("sample-invoises-response.xml");
+        ResponseDefinitionBuilder response1 = aResponse()
+                .withStatus(200)
+                .withHeader("Content-Type", "text/xml")
+                .withBody(expResultGateway);
+        MappingBuilder builder1 = get(urlEqualTo("/invoices/get/6"))
                 .withHeader("Accept", equalTo("text/xml"))
                 .withHeader("Authorization", equalTo("Basic bG9naW4xOnBhc3Mx"))
-                .willReturn(aResponse()
-                        .withStatus(200)
-                        .withHeader("Content-Type", "text/xml")
-                        .withBody(expResultGateway)));
+                .willReturn(response1);
+        stubFor(builder1);
     }
 
     @Test
     public void testExecute() throws Exception {
+        // given
         ApiContext ctx = new ApiContext(new SimpleCredentials("login1", "pass1"));
         ApiExecutor instance = new ApiExecutor(ctx);
-        instance.address = mockAddress;
+        instance.setAddress(mockAddress);
         GetRequest<Invoices> request = GetRequest.create(Invoices.class, 6L);
+
+        // when
         Response<Invoices> result = instance.execute(request);
+
+        // then
         assertThat(result).isNotNull();
         assertThat(result.getEntity()).isNotNull();
         Invoices entity = result.getEntity();
@@ -98,21 +105,50 @@ public class ApiExecutorTest {
     }
 
     @Test
-    public void testGetTypeForSimpleGateway() {
-        ApiContext ctx = new ApiContext(new SimpleCredentials("login1", "pass1"));
-        ApiExecutor instance = new ApiExecutor(ctx);
-        Class<? extends Credentials> expResult = SimpleCredentials.class;
-        Class<? extends Credentials> result = instance.getTypeForSimpleGateway();
-        assertThat(result).isEqualTo(expResult);
+    public void testExecute_Gateway_Request() throws WFirmaException {
+        // given
+        PostRequest<Contractors> request = FindRequest.create(Contractors.class);
+        Gateway gateway = mock(Gateway.class);
+        String unitTestResponse = "Unit Test Response";
+        when(gateway.post(request)).thenReturn(unitTestResponse);
+
+        // when
+        String response = ApiExecutor.execute(gateway, request);
+
+        // then
+        assertThat(response).isEqualTo(unitTestResponse);
     }
 
     @Test
-    public void testGetTypeForOAuthGateway() {
-        ApiContext ctx = new ApiContext(new SimpleCredentials("login1", "pass1"));
+    public void testExecute_MockContext() throws WFirmaException {
+        // given
+        ApiContext ctx = mock(ApiContext.class);
         ApiExecutor instance = new ApiExecutor(ctx);
-        Class<? extends Credentials> expResult = OAuthCredentials.class;
-        Class<? extends Credentials> result = instance.getTypeForOAuthGateway();
-        assertThat(result).isEqualTo(expResult);
+        GetRequest<Invoices> request = GetRequest.create(Invoices.class, 13L);
+        GatewayFactory factory = mock(GatewayFactory.class);
+        when(ctx.getGatewayFactory()).thenReturn(factory);
+        Gateway gateway = mock(Gateway.class);
+        when(factory.produce()).thenReturn(gateway);
+        String unitTestResponse = resource("sample-invoises-response.xml");
+        when(gateway.get(request)).thenReturn(unitTestResponse);
+
+        // when
+        Response<Invoices> response = instance.execute(request);
+
+        // then
+        assertThat(response).isNotNull();
+        Invoices invoices = response.getEntity();
+        assertThat(invoices).isNotNull();
+        assertThat(invoices.getInvoice()).hasSize(1);
+    }
+
+    private static String resource(String name) {
+        try (InputStream inputStream = ApiExecutorTest.class.getResourceAsStream(name)) {
+            java.util.Scanner s = new java.util.Scanner(inputStream).useDelimiter("\\A");
+            return s.hasNext() ? s.next() : "";
+        } catch (IOException e) {
+            throw new EidIllegalStateException("20151123:223050", e);
+        }
     }
 
 }

@@ -1,0 +1,56 @@
+<?xml version="1.0"?>
+<!--
+  ~ Copyright (c) 2014 Krzysztof Suszyński <krzysztof.suszynski@wavesoftware.pl>
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~      http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<xs:schema version="1.0"
+           xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           elementFormDefault="qualified">
+    <xs:element name="api">
+        <xs:complexType>
+            <xs:all>
+                <xs:element name="companies">
+                    <xs:complexType>
+                        <xs:all>
+                            <xs:element name="company">
+                                <xs:complexType>
+                                    <xs:all>
+                                        <xs:element type="xs:int" name="id"/>
+                                        <xs:element type="xs:string" name="name"/>
+                                        <xs:element type="xs:string" name="altname"/>
+                                        <xs:element type="xs:long" name="nip"/>
+                                        <xs:element type="xs:string" name="warehouse_type"/>
+                                        <xs:element type="xs:byte" name="vat_payer"/>
+                                        <xs:element type="xs:string" name="tax"/>
+                                        <xs:element type="xs:byte" name="is_registered"/>
+                                        <xs:element type="xs:byte" name="is_authorized" />
+                                        <xs:element type="xs:byte" name="edeclarations_verified" />
+                                    </xs:all>
+                                </xs:complexType>
+                            </xs:element>
+                        </xs:all>
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="status">
+                    <xs:complexType>
+                        <xs:all>
+                            <xs:element type="xs:string" name="code"/>
+                        </xs:all>
+                    </xs:complexType>
+                </xs:element>
+            </xs:all>
+        </xs:complexType>
+    </xs:element>
+</xs:schema>

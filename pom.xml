@@ -19,8 +19,9 @@
         <netbeans.hint.license>apache20</netbeans.hint.license>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <sonar.java.coveragePlugin>jacoco</sonar.java.coveragePlugin>
-        <maven.compiler.source>1.7</maven.compiler.source>
-        <maven.compiler.target>1.7</maven.compiler.target>
+        <sonar.java.source>7</sonar.java.source>
+        <maven.compiler.source>1.${sonar.java.source}</maven.compiler.source>
+        <maven.compiler.target>${maven.compiler.source}</maven.compiler.target>
         <coveralls.skip>${skipTests}</coveralls.skip>
     </properties>
 
@@ -44,6 +45,15 @@
     </ciManagement>
 
     <dependencies>
+        <!-- provided -->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.16.4</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- runtime & compile -->
         <dependency>
             <groupId>org.scribe</groupId>
             <artifactId>scribe</artifactId>
@@ -62,7 +72,7 @@
         <dependency>
             <groupId>com.google.code.findbugs</groupId>
             <artifactId>jsr305</artifactId>
-            <version>3.0.0</version>
+            <version>3.0.1</version>
             <type>jar</type>
         </dependency>
         <dependency>
@@ -87,13 +97,12 @@
             <version>2.6</version>
         </dependency>
         <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <version>1.12.6</version>
-            <type>jar</type>
+            <groupId>pl.wavesoftware</groupId>
+            <artifactId>eid-exceptions</artifactId>
+            <version>1.1.0</version>
         </dependency>
 
-        <!-- Tests -->
+        <!-- tests -->
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
