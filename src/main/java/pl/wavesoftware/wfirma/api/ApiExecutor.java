@@ -16,8 +16,15 @@
 package pl.wavesoftware.wfirma.api;
 
 import com.google.common.annotations.VisibleForTesting;
-import pl.wavesoftware.wfirma.api.core.model.*;
 import pl.wavesoftware.wfirma.api.core.mapper.xml.JaxbResponse;
+import pl.wavesoftware.wfirma.api.core.model.ApiEntityElement;
+import pl.wavesoftware.wfirma.api.core.model.Gateway;
+import pl.wavesoftware.wfirma.api.core.model.GatewayFactory;
+import pl.wavesoftware.wfirma.api.core.model.PostRequest;
+import pl.wavesoftware.wfirma.api.core.model.Request;
+import pl.wavesoftware.wfirma.api.core.model.Response;
+import pl.wavesoftware.wfirma.api.core.model.WFirmaException;
+import pl.wavesoftware.wfirma.api.core.model.WFirmaSecurityException;
 
 import java.net.URI;
 
