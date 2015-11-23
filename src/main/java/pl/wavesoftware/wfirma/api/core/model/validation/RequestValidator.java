@@ -22,7 +22,7 @@ import junit.extensions.PA;
 import pl.wavesoftware.wfirma.api.core.model.Api;
 import pl.wavesoftware.wfirma.api.core.model.ApiModule;
 import pl.wavesoftware.wfirma.api.core.model.Request;
-import pl.wavesoftware.wfirma.api.core.model.WFirmaException;
+import pl.wavesoftware.wfirma.api.core.model.exceptions.WFirmaException;
 import pl.wavesoftware.wfirma.api.core.model.requests.EditRequest;
 import pl.wavesoftware.wfirma.api.core.model.utils.ReadOnly;
 
@@ -34,7 +34,6 @@ import java.util.List;
 import static com.google.common.base.Preconditions.checkArgument;
 
 /**
- *
  * @author Krzysztof Suszyński <krzysztof.suszynski@wavesoftware.pl>
  */
 public class RequestValidator {

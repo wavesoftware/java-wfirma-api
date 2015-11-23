@@ -28,7 +28,7 @@ import pl.wavesoftware.wfirma.api.core.model.Gateway;
 import pl.wavesoftware.wfirma.api.core.model.GatewayFactory;
 import pl.wavesoftware.wfirma.api.core.model.PostRequest;
 import pl.wavesoftware.wfirma.api.core.model.Response;
-import pl.wavesoftware.wfirma.api.core.model.WFirmaException;
+import pl.wavesoftware.wfirma.api.core.model.exceptions.WFirmaException;
 import pl.wavesoftware.wfirma.api.core.model.contractors.Contractors;
 import pl.wavesoftware.wfirma.api.core.model.invoices.AbstractInvoice;
 import pl.wavesoftware.wfirma.api.core.model.invoices.Invoices;

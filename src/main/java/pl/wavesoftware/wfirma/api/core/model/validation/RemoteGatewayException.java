@@ -16,7 +16,7 @@
 
 package pl.wavesoftware.wfirma.api.core.model.validation;
 
-import pl.wavesoftware.wfirma.api.core.model.WFirmaException;
+import pl.wavesoftware.wfirma.api.core.model.exceptions.WFirmaException;
 
 /**
  * @author Krzysztof Suszyński <krzysztof.suszynski@wavesoftware.pl>

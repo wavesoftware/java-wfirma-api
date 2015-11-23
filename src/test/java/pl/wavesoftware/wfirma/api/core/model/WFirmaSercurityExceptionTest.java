@@ -18,6 +18,7 @@ package pl.wavesoftware.wfirma.api.core.model;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import org.junit.Test;
+import pl.wavesoftware.wfirma.api.core.model.exceptions.WFirmaSecurityException;
 
 /**
  *

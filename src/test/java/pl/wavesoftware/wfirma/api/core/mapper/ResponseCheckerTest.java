@@ -23,8 +23,8 @@ import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 import pl.wavesoftware.eid.exceptions.Eid;
 import pl.wavesoftware.eid.exceptions.EidIllegalStateException;
-import pl.wavesoftware.wfirma.api.core.model.WFirmaException;
-import pl.wavesoftware.wfirma.api.core.model.WFirmaSecurityException;
+import pl.wavesoftware.wfirma.api.core.model.exceptions.WFirmaException;
+import pl.wavesoftware.wfirma.api.core.model.exceptions.WFirmaSecurityException;
 
 import java.util.Arrays;
 import java.util.Collection;

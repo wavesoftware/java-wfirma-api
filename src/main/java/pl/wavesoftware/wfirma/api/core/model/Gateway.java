@@ -16,6 +16,7 @@
 package pl.wavesoftware.wfirma.api.core.model;
 
 import pl.wavesoftware.wfirma.api.core.mapper.ResponseListener;
+import pl.wavesoftware.wfirma.api.core.model.exceptions.WFirmaException;
 
 import javax.annotation.Nonnull;
 

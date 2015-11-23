@@ -22,6 +22,8 @@ import pl.wavesoftware.wfirma.api.core.model.PostRequest;
 import pl.wavesoftware.wfirma.api.core.model.logic.Parameter;
 import pl.wavesoftware.wfirma.api.core.model.logic.Parameters;
 
+import java.util.List;
+
 /**
  *
  * @author Krzysztof Suszyński <krzysztof.suszynski@wavesoftware.pl>
@@ -72,10 +74,12 @@ public final class DownloadRequest implements PostRequest<Invoices> {
         this.wFirmaId = wFirmaId;
         this.invoices = new Invoices();
         Parameters params = new Parameters();
-        params.getParameter().add(new Parameter("page", page.name()));
-        params.getParameter().add(new Parameter("address", dump(printAddress)));
-        params.getParameter().add(new Parameter("leaflet", dump(printLeaflet)));
-        params.getParameter().add(new Parameter("duplicate", dump(printAsDuplicate)));
+        List<Parameter> list = params.getParameter();
+        list.add(new Parameter("page", page.name()));
+        list.add(new Parameter("address", dump(printAddress)));
+        list.add(new Parameter("leaflet", dump(printLeaflet)));
+        list.add(new Parameter("duplicate", dump(printAsDuplicate)));
+        params.setParameter(list);
         invoices.setParameters(params);
     }
 

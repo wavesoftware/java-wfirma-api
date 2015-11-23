@@ -35,9 +35,14 @@ import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
-import pl.wavesoftware.wfirma.api.core.model.*;
 import pl.wavesoftware.wfirma.api.core.mapper.ResponseChecker;
 import pl.wavesoftware.wfirma.api.core.mapper.ResponseListener;
+import pl.wavesoftware.wfirma.api.core.model.Credentials;
+import pl.wavesoftware.wfirma.api.core.model.Gateway;
+import pl.wavesoftware.wfirma.api.core.model.PostRequest;
+import pl.wavesoftware.wfirma.api.core.model.Request;
+import pl.wavesoftware.wfirma.api.core.model.exceptions.WFirmaException;
+import pl.wavesoftware.wfirma.api.core.model.exceptions.WFirmaSecurityException;
 import pl.wavesoftware.wfirma.api.core.model.validation.RemoteGatewayException;
 import pl.wavesoftware.wfirma.api.core.model.validation.RequestValidator;
 
@@ -48,7 +53,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- *
  * @author Krzysztof Suszyński <krzysztof.suszynski@wavesoftware.pl>
  */
 class SimpleGateway implements Gateway {
@@ -67,7 +71,7 @@ class SimpleGateway implements Gateway {
      * A default constructor
      *
      * @param credentials a credentials
-     * @param gateway a gateway address
+     * @param gateway     a gateway address
      */
     SimpleGateway(Credentials credentials, URI gateway) {
         this.credentials = credentials;
@@ -89,10 +93,10 @@ class SimpleGateway implements Gateway {
         HttpHost target = getTargetHost();
         CredentialsProvider credsProvider = new BasicCredentialsProvider();
         credsProvider.setCredentials(
-            new AuthScope(target.getHostName(), target.getPort()),
-            new UsernamePasswordCredentials(credentials.getConsumerKey(), credentials.getConsumerSecret()));
+                new AuthScope(target.getHostName(), target.getPort()),
+                new UsernamePasswordCredentials(credentials.getConsumerKey(), credentials.getConsumerSecret()));
         try (CloseableHttpClient httpclient = HttpClients.custom()
-            .setDefaultCredentialsProvider(credsProvider).build()) {
+                .setDefaultCredentialsProvider(credsProvider).build()) {
 
             // Create AuthCache instance
             AuthCache authCache = new BasicAuthCache();
@@ -133,7 +137,7 @@ class SimpleGateway implements Gateway {
                     break;
                 default:
                     throw new WFirmaException("Unsupported URI scheme: "
-                        + gateway.getScheme() + ", supporting only: `http` and `https`");
+                            + gateway.getScheme() + ", supporting only: `http` and `https`");
             }
         }
         return new HttpHost(gateway.getHost(), port, gateway.getScheme());
@@ -148,7 +152,7 @@ class SimpleGateway implements Gateway {
             default:
                 StatusLine status = response.getStatusLine();
                 throw new WFirmaException("Connection error: %d - %s", status.getStatusCode(),
-                    status.getReasonPhrase());
+                        status.getReasonPhrase());
         }
     }
 

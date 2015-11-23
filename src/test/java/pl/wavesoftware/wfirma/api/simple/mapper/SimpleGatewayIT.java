@@ -29,6 +29,8 @@ import pl.wavesoftware.wfirma.api.core.model.companies.CompaniesGetRequest;
 import pl.wavesoftware.wfirma.api.core.model.contractors.Contractor;
 import pl.wavesoftware.wfirma.api.core.model.contractors.Contractors;
 import pl.wavesoftware.wfirma.api.core.model.contractors.ContractorsApi;
+import pl.wavesoftware.wfirma.api.core.model.exceptions.WFirmaException;
+import pl.wavesoftware.wfirma.api.core.model.exceptions.WFirmaSecurityException;
 import pl.wavesoftware.wfirma.api.core.model.logic.*;
 import pl.wavesoftware.wfirma.api.core.model.requests.AddRequest;
 import pl.wavesoftware.wfirma.api.core.model.requests.DeleteRequest;

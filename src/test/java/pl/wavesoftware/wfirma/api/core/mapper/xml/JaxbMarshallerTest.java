@@ -115,6 +115,7 @@ public class JaxbMarshallerTest {
         JaxbMarshaller<Parameters> instance = JaxbMarshaller.create(Parameters.class);
         Parameters params = sampleParameters();
         String result = instance.marshal(params);
+        assertThat(result).isNotEmpty();
         assertXMLEqual("comparing test xml to control xml", expectedXml, result);
     }
 
@@ -126,6 +127,7 @@ public class JaxbMarshallerTest {
         JaxbMarshaller<Parameters> instance = JaxbMarshaller.create(Parameters.class);
         Parameters expResult = sampleParameters();
         Parameters result = instance.unmarshal(expectedXml);
+        assertThat(result).isNotNull();
         assertReflectionEquals(expResult, result);
     }
 

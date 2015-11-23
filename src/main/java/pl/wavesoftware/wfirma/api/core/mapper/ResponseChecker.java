@@ -15,14 +15,15 @@
  */
 package pl.wavesoftware.wfirma.api.core.mapper;
 
+import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import pl.wavesoftware.eid.exceptions.Eid;
 import pl.wavesoftware.eid.exceptions.EidIllegalStateException;
-import pl.wavesoftware.wfirma.api.core.model.WFirmaException;
-import pl.wavesoftware.wfirma.api.core.model.WFirmaSecurityException;
+import pl.wavesoftware.wfirma.api.core.model.exceptions.WFirmaException;
+import pl.wavesoftware.wfirma.api.core.model.exceptions.WFirmaSecurityException;
 
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
@@ -43,6 +44,15 @@ import static pl.wavesoftware.eid.utils.EidPreconditions.checkState;
  */
 @Slf4j
 public class ResponseChecker {
+
+    List<String> errorCodes = Lists.newArrayList(
+        "ACTION NOT FOUND",
+        "FATAL",
+        "INPUT ERROR",
+        "OUT OF SERVICE",
+        "DENIED SCOPE REQUESTED",
+        "NOT FOUND"
+    );
 
     /**
      * Checks for response status, and throws appropriate exception if other then `OK`
@@ -95,14 +105,11 @@ public class ResponseChecker {
 
     private WFirmaException switchOnErrors(XPath xpath, String content, String code)
             throws XPathExpressionException {
+
+        if (errorCodes.contains(code)) {
+            return new WFirmaException(code);
+        }
         switch (code) {
-            case "ACTION NOT FOUND":
-            case "FATAL":
-            case "INPUT ERROR":
-            case "OUT OF SERVICE":
-            case "DENIED SCOPE REQUESTED":
-            case "NOT FOUND":
-                return new WFirmaException(code);
             case "ERROR":
                 return handleError(xpath, content, code);
             default:

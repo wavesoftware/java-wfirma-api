@@ -23,8 +23,8 @@ import pl.wavesoftware.wfirma.api.core.model.GatewayFactory;
 import pl.wavesoftware.wfirma.api.core.model.PostRequest;
 import pl.wavesoftware.wfirma.api.core.model.Request;
 import pl.wavesoftware.wfirma.api.core.model.Response;
-import pl.wavesoftware.wfirma.api.core.model.WFirmaException;
-import pl.wavesoftware.wfirma.api.core.model.WFirmaSecurityException;
+import pl.wavesoftware.wfirma.api.core.model.exceptions.WFirmaException;
+import pl.wavesoftware.wfirma.api.core.model.exceptions.WFirmaSecurityException;
 
 import java.net.URI;
 

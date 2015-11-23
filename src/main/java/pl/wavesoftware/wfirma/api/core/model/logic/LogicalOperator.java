@@ -15,18 +15,17 @@
  */
 package pl.wavesoftware.wfirma.api.core.model.logic;
 
-import static java.lang.String.format;
 import javax.xml.bind.annotation.XmlEnum;
 import javax.xml.bind.annotation.XmlEnumValue;
 import javax.xml.bind.annotation.XmlType;
 
 /**
- * <p>
+ * <p/>
  * Java class for logicalOperator.
- *
- * <p>
+ * <p/>
+ * <p/>
  * The following schema fragment specifies the expected content contained within this class.
- *
+ * <p/>
  * <pre>
  * &lt;simpleType name="logicalOperator">
  *   &lt;restriction base="{http://www.w3.org/2001/XMLSchema}string">
@@ -82,10 +81,10 @@ public enum LogicalOperator {
 
     /**
      * Creates a enum from string input as XML string
-     *
-     * <p>
+     * <p/>
+     * <p/>
      * Example
-     *
+     * <p/>
      * <pre>
      * LogicalOperator.fromValue("not like");
      * </pre>
@@ -99,7 +98,8 @@ public enum LogicalOperator {
                 return c;
             }
         }
-        throw new IllegalArgumentException(format("There is no enum value for `%s` string representaion", value));
+        String msg = String.format("There is no enum value for `%s` string representation", value);
+        throw new IllegalArgumentException(msg);
     }
 
 }

@@ -15,11 +15,13 @@
  */
 package pl.wavesoftware.wfirma.api.core.model.logic;
 
+import org.assertj.core.api.Assertions;
+import org.junit.Test;
+
 import java.util.Arrays;
 import java.util.List;
-import org.assertj.core.api.Assertions;
+
 import static org.assertj.core.api.Assertions.assertThat;
-import org.junit.Test;
 
 /**
  *
@@ -29,16 +31,16 @@ public class LogicalOperatorTest {
 
     @Test
     public void testValues() {
-        List<LogicalOperator> expResult = Arrays.asList(new LogicalOperator[]{
-            LogicalOperator.EQ,
-            LogicalOperator.GE,
-            LogicalOperator.GT,
-            LogicalOperator.LE,
-            LogicalOperator.LIKE,
-            LogicalOperator.LT,
-            LogicalOperator.NE,
-            LogicalOperator.NOT_LIKE
-        });
+        List<LogicalOperator> expResult = Arrays.asList(
+                LogicalOperator.EQ,
+                LogicalOperator.GE,
+                LogicalOperator.GT,
+                LogicalOperator.LE,
+                LogicalOperator.LIKE,
+                LogicalOperator.LT,
+                LogicalOperator.NE,
+                LogicalOperator.NOT_LIKE
+        );
         LogicalOperator[] result = LogicalOperator.values();
         assertThat(result).containsAll(expResult);
     }
@@ -68,7 +70,7 @@ public class LogicalOperatorTest {
             LogicalOperator.fromValue("this not exists");
             Assertions.failBecauseExceptionWasNotThrown(IllegalArgumentException.class);
         } catch (IllegalArgumentException iae) {
-            assertThat(iae).hasMessage("There is no enum value for `this not exists` string representaion");
+            assertThat(iae).hasMessage("There is no enum value for `this not exists` string representation");
         }
     }
 

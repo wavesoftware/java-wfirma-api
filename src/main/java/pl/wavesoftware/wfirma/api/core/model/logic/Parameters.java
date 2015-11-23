@@ -15,13 +15,13 @@
  */
 package pl.wavesoftware.wfirma.api.core.model.logic;
 
-import java.util.ArrayList;
-import java.util.List;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * <p>
@@ -156,7 +156,9 @@ public class Parameters {
      * <p>
      * For example, to add a new item, do as follows:
      * <pre>
-     *    getParameter().add(newItem);
+     *    list = getParameter();
+     *    list.add(newItem);
+     *    setParameter(list);
      * </pre>
      *
      *
@@ -169,11 +171,15 @@ public class Parameters {
         if (parameter == null) {
             parameter = new ArrayList<>();
         }
-        return parameter;
+        return new ArrayList<>(parameter);
     }
 
-    protected void setParameter(List<Parameter> parameter) {
-        this.parameter = parameter;
+    /**
+     * This is setter for parameter list
+     * @param parameter a new list of parameters
+     */
+    public void setParameter(List<Parameter> parameter) {
+        this.parameter = new ArrayList<>(parameter);
     }
 
 }

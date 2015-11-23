@@ -36,6 +36,7 @@ public class ObjectFactory {
      *
      */
     public ObjectFactory() {
+        // empty constructor by default in Jaxb
     }
 
     /**

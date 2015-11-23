@@ -22,7 +22,7 @@ import static org.assertj.core.api.Assertions.*;
 import org.joda.money.CurrencyUnit;
 import org.joda.money.Money;
 import org.junit.Test;
-import pl.wavesoftware.wfirma.api.core.model.WFirmaException;
+import pl.wavesoftware.wfirma.api.core.model.exceptions.WFirmaException;
 import pl.wavesoftware.wfirma.api.core.model.companies.Companies;
 import pl.wavesoftware.wfirma.api.core.model.companies.CompaniesGetRequest;
 import pl.wavesoftware.wfirma.api.core.model.companies.Company;

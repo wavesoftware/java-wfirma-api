@@ -18,13 +18,15 @@ package pl.wavesoftware.wfirma.api.simple.mapper;
 
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
-import pl.wavesoftware.eid.utils.EidPreconditions;
 import pl.wavesoftware.wfirma.api.core.model.Gateway;
 import pl.wavesoftware.wfirma.api.core.model.GatewayFactory;
 import pl.wavesoftware.wfirma.api.simple.model.SimpleCredentials;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+
+import static pl.wavesoftware.eid.utils.EidPreconditions.UnsafeSupplier;
+import static pl.wavesoftware.eid.utils.EidPreconditions.tryToExecute;
 
 /**
  * @author Krzysztof Suszyński <krzysztof.suszynski@wavesoftware.pl>
@@ -48,11 +50,14 @@ public class SimpleGatewayFactory implements GatewayFactory {
     }
 
     private URI getDefaultAddress() {
-        return EidPreconditions.tryToExecute(new EidPreconditions.UnsafeSupplier<URI>() {
-            @Override
-            public URI get() throws URISyntaxException {
-                return new URI(Gateway.GATEWAY_ADDRESS);
-            }
-        }, "20150927:210839");
+        return tryToExecute(new URISupplier(), "20150927:210839");
+    }
+
+    private static class URISupplier implements UnsafeSupplier<URI> {
+
+        @Override
+        public URI get() throws URISyntaxException {
+            return new URI(Gateway.GATEWAY_ADDRESS);
+        }
     }
 }
