@@ -136,7 +136,7 @@ public class SimpleGatewayIT {
         deleteRequest = createDeleteRequest(api.getContractors().getContractor().iterator().next());
         result = instance.get(deleteRequest);
         assertThat(result).isNotEmpty();
-        assertThat(result).containsSequence("Kontrahent: ", " został usunięty.");
+        assertThat(result).containsSequence("Kontrahent", "został usunięty.");
         result = instance.post(findRequest);
         assertThat(result).isWellFormedXml();
         assertThat(result).isValidByXsd(getTestPostXsd());

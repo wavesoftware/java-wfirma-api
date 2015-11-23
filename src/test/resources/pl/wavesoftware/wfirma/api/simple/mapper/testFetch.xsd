@@ -35,6 +35,8 @@
                                         <xs:element type="xs:byte" name="vat_payer"/>
                                         <xs:element type="xs:string" name="tax"/>
                                         <xs:element type="xs:byte" name="is_registered"/>
+                                        <xs:element type="xs:byte" name="is_authorized" />
+                                        <xs:element type="xs:byte" name="edeclarations_verified" />
                                     </xs:all>
                                 </xs:complexType>
                             </xs:element>

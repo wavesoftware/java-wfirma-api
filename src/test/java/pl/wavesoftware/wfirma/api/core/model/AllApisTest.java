@@ -13,20 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package pl.wavesoftware.wfirma.api.model;
+package pl.wavesoftware.wfirma.api.core.model;
 
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
-import java.util.ArrayList;
-import java.util.Collection;
-import static org.assertj.core.api.Assertions.assertThat;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.reflections.Reflections;
-import pl.wavesoftware.wfirma.api.core.model.Api;
-import pl.wavesoftware.wfirma.api.core.model.ApiEntityElement;
+
+import java.util.ArrayList;
+import java.util.Collection;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  *
